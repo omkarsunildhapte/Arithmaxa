@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;500;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  /* Arithmaxa Core Palette */
+  --brand-primary: #6366f1;
+  /* Indigo */
+  --brand-secondary: #818cf8;
+  /* Lighter Indigo */
+  --brand-accent: #3b82f6;
+  /* Blue accent */
+  --brand-dark: #050505;
+  /* True Black */
+  --brand-surface: #0f172a;
+  /* Slate Deep */
+  --brand-glass: rgba(15, 23, 42, 0.7);
+
+  /* Ionic Overrides */
+  --ion-background-color: var(--brand-dark);
+  --ion-background-color-rgb: 5, 5, 5;
+  --ion-text-color: #f8fafc;
+  --ion-text-color-rgb: 248, 250, 252;
+
+  --ion-color-primary: var(--brand-primary);
+  --ion-color-primary-rgb: 99, 102, 241;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #4f46e5;
+  --ion-color-primary-tint: #818cf8;
+
+  --ion-toolbar-background: #000000;
+  --ion-toolbar-color: #ffffff;
+  --ion-toolbar-border-color: rgba(255, 255, 255, 0.05);
+
+  --glass-effect: saturate(180%) blur(20px);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  background: var(--brand-dark);
+  color: var(--ion-text-color);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+/* Premium Modal Styling */
+.premium-modal {
+  --background: #050505;
+  --backdrop-opacity: 0.8;
+  --handle-background: rgba(255, 255, 255, 0.2);
+}
+
+.premium-modal::part(content) {
+  border-radius: 32px 32px 0 0 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Tool Shared UI */
+.tool-modal-content {
+  --background: #050505;
+  --padding-top: 20px;
+}
+
+.premium-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border-radius: 2rem;
+  padding: 1.5rem;
+  margin: 1rem;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  opacity: 0.8;
+}
+
+.huge-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  padding: 0;
+  outline: none;
+}
+
+.huge-input::placeholder {
+  color: rgba(255, 255, 255, 0.1);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.5rem;
+  padding: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.unit-selector {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.unit-selector ion-select {
+  --padding-start: 0;
+  --padding-end: 0;
+  --placeholder-color: #94a3b8;
+  --placeholder-opacity: 0.6;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.header-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.header-title {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* Ensure modal header matches rounding */
+.premium-modal ion-toolbar {
+  --min-height: 64px;
+  border-radius: 32px 32px 0 0;
+}

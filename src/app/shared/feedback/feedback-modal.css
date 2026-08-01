@@ -1,0 +1,274 @@
+ion-toolbar {
+  --background: #050505;
+  --border-color: rgba(255, 255, 255, 0.06);
+  --min-height: 60px;
+}
+
+.modal-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  height: 60px;
+}
+
+.modal-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #f8fafc;
+  letter-spacing: 0.02em;
+}
+
+.close-btn {
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 1.2rem;
+}
+
+/* Content */
+.feedback-content {
+  --background: #050505;
+  --padding-top: 0;
+}
+
+.feedback-body {
+  padding: 1rem 1.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.fb-section {
+  margin-bottom: 1.5rem;
+}
+
+.fb-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 0.75rem;
+}
+
+.fb-label-hint {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.6;
+}
+
+/* Stars */
+.stars-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  font-size: 2rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.15);
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s;
+}
+
+.star-btn:active {
+  transform: scale(0.88);
+}
+
+ion-icon.star-filled {
+  color: #fbbf24;
+  filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.5));
+}
+
+.rating-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: #475569;
+}
+
+/* Categories */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.cat-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.875rem;
+  padding: 0.65rem 0.5rem;
+  cursor: pointer;
+  font-family: 'Outfit', system-ui, sans-serif;
+  transition: all 0.2s ease;
+}
+
+.cat-btn.active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.cat-emoji {
+  font-size: 1.3rem;
+}
+
+.cat-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.cat-btn.active .cat-label {
+  color: #818cf8;
+}
+
+/* Textarea */
+.fb-textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  color: #f8fafc;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 0.9rem;
+  padding: 0.875rem 1rem;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+  line-height: 1.6;
+}
+
+.fb-textarea:focus {
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.fb-textarea::placeholder {
+  color: #334155;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 0.7rem;
+  color: #475569;
+  margin-top: 0.3rem;
+}
+
+.char-count.near-limit {
+  color: #f59e0b;
+}
+
+/* Submit */
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: linear-gradient(135deg, #6366f1, #818cf8);
+  color: #fff;
+  border: none;
+  border-radius: 0.875rem;
+  padding: 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: 'Outfit', system-ui, sans-serif;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  margin-bottom: 0.75rem;
+}
+
+.submit-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.submit-btn:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.submit-btn ion-icon {
+  font-size: 1.1rem;
+}
+
+.submitting-dots::after {
+  content: '...';
+  animation: dots 1s steps(3, end) infinite;
+  display: inline-block;
+  width: 1.5ch;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+@keyframes dots {
+  0%  { width: 0; }
+  33% { width: 0.5ch; }
+  66% { width: 1ch; }
+  100% { width: 1.5ch; }
+}
+
+.privacy-note {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #334155;
+  margin: 0;
+}
+
+/* Success state */
+.success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.success-ring {
+  width: 72px;
+  height: 72px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 2px solid rgba(16, 185, 129, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-ring ion-icon {
+  font-size: 2.5rem;
+  color: #10b981;
+}
+
+.success-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.success-desc {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+}

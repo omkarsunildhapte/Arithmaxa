@@ -1,0 +1,13 @@
+/* Redundant styles removed - now using Tailwind CSS utilities */
+ion-toolbar {
+  --background: var(--brand-dark);
+  --color: #ffffff;
+  --border-width: 0;
+  --min-height: 70px;
+  padding: 0 16px;
+}
+
+.ai-content {
+  --background: #050505;
+  height: 100%;
+}

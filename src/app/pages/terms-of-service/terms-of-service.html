@@ -1,0 +1,208 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" text="" icon="arrow-back-outline" class="back-btn"></ion-back-button>
+    </ion-buttons>
+    <div class="page-title-center">Terms of Service</div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="policy-content">
+  <div class="policy-container">
+
+    <!-- Hero -->
+    <div class="policy-hero">
+      <div class="hero-icon">📋</div>
+      <h1 class="policy-h1">Terms of Service</h1>
+      <p class="policy-meta-date">Effective: {{ effectiveDate }}</p>
+      <p class="policy-intro">
+        By using Arithmaxa, you agree to these terms. They're written to be clear and fair —
+        please read them before using the app.
+      </p>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="policy-section">
+      <h2>1. Acceptance of Terms</h2>
+      <p>
+        By downloading, installing, accessing, or using the Arithmaxa application ("the App"),
+        you agree to be bound by these Terms of Service ("Terms"). If you do not agree with
+        any part of these Terms, please do not use the App.
+      </p>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="policy-section">
+      <h2>2. Permitted Use</h2>
+      <p>
+        Arithmaxa is provided for <strong>personal, educational, and informational purposes</strong>.
+        You may use the App to perform calculations, access scientific functions, use unit converters,
+        and get AI-assisted math help.
+      </p>
+      <h3>You agree NOT to:</h3>
+      <ul>
+        <li>Use the App for any unlawful purpose or in violation of applicable laws or regulations.</li>
+        <li>Attempt to reverse-engineer, decompile, disassemble, or tamper with the App.</li>
+        <li>Use the AI Chat feature to generate harmful, offensive, illegal, or misleading content.</li>
+        <li>Share personal, confidential, medical, financial, or legally sensitive information in AI Chat.</li>
+        <li>Interfere with or disrupt the App's functionality or connected third-party services.</li>
+        <li>Misrepresent yourself or impersonate others when submitting feedback or contacting us.</li>
+      </ul>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="policy-section">
+      <h2>3. Accuracy of Calculations</h2>
+      <div class="warning-box">
+        <span>⚠️</span>
+        <div>
+          <strong>Important Disclaimer</strong>
+          <p>
+            Arithmaxa provides calculations for <strong>informational and educational purposes only</strong>.
+            Do not rely solely on calculator results for critical financial decisions, medical dosing,
+            structural engineering, legal analysis, or any situation where an error could cause harm.
+            Always verify important calculations independently with a qualified professional.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="policy-section">
+      <h2>4. AI Assistant</h2>
+      <ul>
+        <li>The AI Assistant is powered by third-party language models via OpenRouter and may produce inaccurate, incomplete, outdated, or misleading responses.</li>
+        <li>AI responses do <strong>not</strong> constitute professional advice — financial, medical, legal, or otherwise.</li>
+        <li>We are not responsible for any decision made based on AI-generated content.</li>
+        <li>Do not share personal, confidential, sensitive, or proprietary information in AI conversations.</li>
+        <li>AI features require internet connectivity and are subject to the availability and terms of third-party API providers.</li>
+        <li>We reserve the right to limit, modify, or remove AI features at any time.</li>
+      </ul>
+    </div>
+
+    <!-- Section 5 -->
+    <div class="policy-section">
+      <h2>5. Intellectual Property</h2>
+      <p>
+        The Arithmaxa app, including its name, logo, design, interface, code, and branding, is the
+        intellectual property of the developer. All rights are reserved.
+      </p>
+      <p>
+        You may not copy, reproduce, distribute, modify, create derivative works from, publicly display,
+        or commercially exploit any part of the App without prior written permission.
+      </p>
+      <p>
+        Third-party components used in Arithmaxa (including Ionic Framework, Angular, Tailwind CSS,
+        Outfit font, and Ionicons) are subject to their own respective licenses.
+      </p>
+    </div>
+
+    <!-- Section 6 -->
+    <div class="policy-section">
+      <h2>6. Disclaimer of Warranties</h2>
+      <p>
+        Arithmaxa is provided <strong>"as is"</strong> and <strong>"as available"</strong>, without
+        warranties of any kind — express, implied, or statutory — including but not limited to:
+      </p>
+      <ul>
+        <li>Merchantability or fitness for a particular purpose.</li>
+        <li>Accuracy, completeness, or reliability of any calculation or AI response.</li>
+        <li>Uninterrupted, error-free, or secure operation.</li>
+        <li>Compatibility with all devices, operating systems, or browsers.</li>
+        <li>Availability of third-party services (OpenRouter, exchange rate APIs).</li>
+      </ul>
+    </div>
+
+    <!-- Section 7 -->
+    <div class="policy-section">
+      <h2>7. Limitation of Liability</h2>
+      <p>
+        To the fullest extent permitted by applicable law, the developers and contributors of
+        Arithmaxa shall not be liable for:
+      </p>
+      <ul>
+        <li>Any direct, indirect, incidental, special, consequential, or punitive damages.</li>
+        <li>Loss of profits, revenue, data, goodwill, or business opportunities.</li>
+        <li>Errors or inaccuracies in calculation results or AI-generated content.</li>
+        <li>Decisions made based on App results or AI output.</li>
+        <li>Interruption or unavailability of the App or third-party API services.</li>
+        <li>Unauthorized access to or loss of locally stored data.</li>
+      </ul>
+    </div>
+
+    <!-- Section 8 -->
+    <div class="policy-section">
+      <h2>8. Privacy</h2>
+      <p>
+        Your use of Arithmaxa is governed by our
+        <a routerLink="/privacy" class="policy-link">Privacy Policy</a>,
+        which is incorporated into these Terms by reference. By using the App, you
+        also agree to the terms of our Privacy Policy.
+      </p>
+    </div>
+
+    <!-- Section 9 -->
+    <div class="policy-section">
+      <h2>9. Changes to Terms</h2>
+      <p>
+        We reserve the right to modify these Terms at any time. When changes are made,
+        we will update the effective date above. Material changes will be communicated
+        within the App. Your continued use of Arithmaxa after changes are posted
+        constitutes your acceptance of the revised Terms.
+      </p>
+    </div>
+
+    <!-- Section 10 -->
+    <div class="policy-section">
+      <h2>10. Termination</h2>
+      <p>
+        We reserve the right to suspend or terminate your access to the App at our sole
+        discretion, without prior notice, for conduct that violates these Terms, is
+        harmful to other users, or is otherwise deemed unacceptable.
+      </p>
+    </div>
+
+    <!-- Section 11 -->
+    <div class="policy-section">
+      <h2>11. Governing Law &amp; Disputes</h2>
+      <p>
+        These Terms shall be governed by and construed in accordance with applicable laws.
+        In the event of a dispute, both parties agree to first attempt resolution through
+        good-faith negotiation before pursuing formal legal action.
+      </p>
+    </div>
+
+    <!-- Section 12 -->
+    <div class="policy-section">
+      <h2>12. Contact</h2>
+      <p>For questions or concerns about these Terms of Service:</p>
+      <div class="contact-card">
+        <div class="contact-line">
+          <span>📧</span>
+          <a href="mailto:seaducktechnology2&#64;gmail.com" class="policy-link">seaducktechnology2&#64;gmail.com</a>
+        </div>
+        <div class="contact-line">
+          <span>🌐</span>
+          <span class="contact-text">Seaduck Technology — Arithmaxa</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related -->
+    <div class="related-links">
+      <a routerLink="/privacy" class="related-link">
+        <span>🔒</span>
+        <div>
+          <strong>Privacy Policy</strong>
+          <span>How we handle your data</span>
+        </div>
+        <span class="related-arrow">›</span>
+      </a>
+    </div>
+
+    <div class="policy-footer">
+      <p>Seaduck Technology © {{ currentYear }} · All rights reserved</p>
+    </div>
+
+  </div>
+</ion-content>

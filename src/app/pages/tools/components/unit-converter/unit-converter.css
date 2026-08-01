@@ -1,0 +1,21 @@
+ion-select {
+  --padding-start: 4px;
+  --padding-end: 4px;
+  font-size: 0.75rem;
+  min-height: 32px;
+}
+
+ion-select::part(icon) {
+  font-size: 14px;
+  opacity: 0.5;
+}
+
+input.huge-input {
+  line-height: 1;
+  margin-top: 8px;
+}
+
+/* Specific styling for the result card input to make it pop */
+.premium-card.bg-\[\#6366f1\]\/5 {
+  box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.2);
+}

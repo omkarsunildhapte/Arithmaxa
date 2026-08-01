@@ -1,0 +1,71 @@
+@if (isVisible()) {
+  <div class="consent-overlay" role="dialog" aria-modal="true" aria-label="Privacy Consent">
+    <div class="consent-card animate-fade-in">
+
+      <div class="consent-header">
+        <div class="consent-icon">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+        </div>
+        <div class="consent-headline">
+          <h3 class="consent-title">Your Privacy, Your Choice</h3>
+          <p class="consent-sub">Arithmaxa respects your data. Here's how we use storage.</p>
+        </div>
+      </div>
+
+      <p class="consent-text">
+        Your calculation history and settings are stored <strong>only on your device</strong>.
+        The AI Chat feature sends your queries to <strong>OpenRouter</strong> for processing.
+        No personal data is collected by us or sent to our servers.
+        <a routerLink="/privacy" class="consent-link">Read Privacy Policy</a>
+      </p>
+
+      @if (showCustomize()) {
+        <div class="consent-toggles">
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <span class="toggle-name">Essential Storage</span>
+              <span class="toggle-desc">History, settings & consent — always active</span>
+            </div>
+            <div class="toggle-switch active locked" title="Always required">
+              <div class="toggle-knob"></div>
+            </div>
+          </div>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <span class="toggle-name">Functional Storage</span>
+              <span class="toggle-desc">Feedback and additional app preferences</span>
+            </div>
+            <label class="toggle-switch" [class.active]="functional()">
+              <input type="checkbox" [checked]="functional()" (change)="setFunctional($any($event.target).checked)" class="sr-only">
+              <div class="toggle-knob"></div>
+            </label>
+          </div>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <span class="toggle-name">AI Chat Processing</span>
+              <span class="toggle-desc">Math queries sent to OpenRouter's API</span>
+            </div>
+            <label class="toggle-switch" [class.active]="aiProcessing()">
+              <input type="checkbox" [checked]="aiProcessing()" (change)="setAiProcessing($any($event.target).checked)" class="sr-only">
+              <div class="toggle-knob"></div>
+            </label>
+          </div>
+        </div>
+      }
+
+      <div class="consent-actions">
+        @if (showCustomize()) {
+          <button class="btn-primary" (click)="saveCustom()">Save Preferences</button>
+          <button class="btn-ghost" (click)="toggleCustomize()">Cancel</button>
+        } @else {
+          <button class="btn-primary" (click)="acceptAll()">Accept All</button>
+          <button class="btn-secondary" (click)="toggleCustomize()">Customize</button>
+          <button class="btn-ghost" (click)="acceptEssentialOnly()">Essential Only</button>
+        }
+      </div>
+
+    </div>
+  </div>
+}

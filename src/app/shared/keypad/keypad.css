@@ -1,0 +1,140 @@
+.tool-btn {
+  --color: #94a3b8;
+  --padding-start: 0;
+  --padding-end: 0;
+  font-size: 1.4rem;
+  margin: 0;
+  height: 32px;
+  --background: transparent;
+  --box-shadow: none;
+  transition: all 0.2s ease;
+}
+
+.tool-btn.active {
+  --color: #6366f1;
+  filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.4));
+}
+
+.backspace-btn {
+  --color: #6366f1;
+  font-size: 1.6rem;
+  --background: transparent;
+  --box-shadow: none;
+}
+
+
+
+
+
+.scientific-mode ion-button {
+  --border-radius: 12px;
+  min-height: 42px;
+  font-size: 0.9rem;
+}
+
+.scientific-mode .btn-sci.btn-operator {
+  font-size: 1.1rem;
+}
+
+/* ── Normal Mode Adjustments ── */
+.normal-mode ion-button {
+  --border-radius: 50%;
+  aspect-ratio: 1;
+  min-height: 56px;
+  font-size: 1.15rem;
+}
+
+.normal-mode .btn-equals {
+  --border-radius: 24px;
+}
+
+.keypad ion-button {
+  --box-shadow: none;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  margin: 0;
+  font-family: 'Outfit', system-ui, sans-serif;
+  letter-spacing: -0.5px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+/* ── Tactile Glass Style ── */
+.btn-sci {
+  --background: rgba(255, 255, 255, 0.05);
+  --background-hover: rgba(255, 255, 255, 0.08);
+  --background-activated: rgba(0, 0, 0, 0.2);
+  --color: #cbd5e1;
+  font-weight: 500;
+  border: none;
+  box-shadow: none;
+}
+
+.btn-sci.active {
+  --background: rgba(99, 102, 241, 0.15);
+  --color: #6366f1;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+}
+
+.btn-sci:active {
+  transform: scale(0.95);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.btn-sci.btn-operator {
+  --background: rgba(255, 255, 255, 0.1);
+  --color: #818cf8;
+}
+
+.btn-sci.btn-clear {
+  --color: #f87171;
+}
+
+.btn-equals {
+  grid-row: span 1;
+  --background: #6366f1;
+  --background-activated: #4f46e5;
+  --color: #ffffff;
+  font-weight: 700;
+  font-size: 2rem;
+  box-shadow: none;
+}
+
+.scientific-mode .btn-equals {
+  grid-column: span 2;
+  height: 42px;
+  aspect-ratio: auto;
+  --border-radius: 12px;
+}
+
+.normal-mode .btn-equals {
+  grid-column: span 2;
+  aspect-ratio: auto;
+  --border-radius: 32px;
+}
+
+/* Entry Animation */
+@keyframes buttonIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.keypad ion-button {
+  animation: buttonIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.spacer {
+  height: 48px;
+  visibility: hidden;
+}

@@ -1,0 +1,15 @@
+<div class="flex flex-col items-end justify-end p-6 min-h-[160px] text-right break-all bg-transparent">
+
+
+
+  <!-- Expression line (shown after = is pressed) -->
+  @if (calc.expression()) {
+    <div class="text-[#94a3b8] text-sm font-light mb-1 opacity-80 transition-all duration-300">{{ calc.expression() }}</div>
+  }
+
+  <!-- Main value -->
+  <div class="text-[clamp(2rem,10vw,4rem)] font-bold transition-all duration-300 leading-none tracking-[-1.5px]" [class.text-red-500]="calc.display() === 'Error'" [class.text-white]="calc.display() !== 'Error'">
+    {{ calc.display() || '0' }}
+  </div>
+
+</div>

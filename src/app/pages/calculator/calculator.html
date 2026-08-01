@@ -1,0 +1,27 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="md">
+    <div class="flex justify-between items-center px-4 py-2 bg-[#050505]">
+      <div class="flex items-center gap-2">
+        <ion-icon name="flash" class="text-[#fbbf24] text-xl filter drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"></ion-icon>
+        <span class="text-white text-lg font-black tracking-tight uppercase">Arithmaxa</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <ion-button class="text-[#94a3b8]" fill="clear" (click)="toggleHistory(true)">
+          <ion-icon name="time-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button class="text-[#94a3b8]" fill="clear" (click)="goToTools()">
+          <ion-icon name="grid-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button class="text-[#6366f1]" fill="clear" (click)="goToAi()">
+          <ion-icon name="sparkles-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="calc-content">
+  <div class="flex flex-col h-full bg-[#050505]">
+    <app-display></app-display>
+    <app-keypad class="flex-1"></app-keypad>
+  </div>
+</ion-content>

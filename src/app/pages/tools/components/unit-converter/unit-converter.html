@@ -1,0 +1,58 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <div class="header-container">
+      <span class="header-title">{{ type | titlecase }}</span>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="tool-modal-content">
+  <div class="tool-view animate-fade-in px-5 pb-10">
+    
+    <!-- Input Card -->
+    <div class="premium-card !m-0 !mb-4">
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold">From</span>
+        <div class="bg-white/5 rounded-lg px-2">
+          <ion-select [(ngModel)]="convFrom" (ionChange)="calculate()" interface="popover" toggle-icon="chevron-down-outline" class="text-xs font-bold text-white min-h-0 h-8">
+            @for (unit of units; track unit.value) {
+              <ion-select-option [value]="unit.value">{{ unit.label }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+      </div>
+      <input type="number" [(ngModel)]="convValue" (input)="calculate()" class="huge-input text-5xl" placeholder="0">
+    </div>
+
+    <!-- Swap Icon -->
+    <div class="flex justify-center -my-6 relative z-10">
+      <div class="w-12 h-12 rounded-full bg-[#6366f1] border-4 border-[#050505] flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.4)]">
+        <ion-icon name="swap-vertical-outline" class="text-white text-xl"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Result Card -->
+    <div class="premium-card !m-0 !mt-4 border-[#6366f1]/20 bg-[#6366f1]/5">
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-[10px] uppercase tracking-widest text-[#6366f1] font-bold">To</span>
+        <div class="bg-[#6366f1]/10 rounded-lg px-2">
+          <ion-select [(ngModel)]="convTo" (ionChange)="calculate()" interface="popover" toggle-icon="chevron-down-outline" class="text-xs font-bold text-[#818cf8] min-h-0 h-8">
+            @for (unit of units; track unit.value) {
+              <ion-select-option [value]="unit.value">{{ unit.label }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+      </div>
+      <input type="number" [(ngModel)]="convResult" (input)="calculateReverse()" class="huge-input text-5xl text-white" placeholder="0">
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="bg-black">
+  </ion-toolbar>
+</ion-footer>

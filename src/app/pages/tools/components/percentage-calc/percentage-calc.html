@@ -1,0 +1,39 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <div class="header-container">
+      <span class="header-title">Percentage Calc</span>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="tool-modal-content">
+  <div class="tool-view animate-fade-in">
+    <div class="premium-card">
+      <div class="unit-selector mb-6">
+        <ion-select [(ngModel)]="percType" (ionChange)="calculate()" toggle-icon="chevron-down-outline" interface="popover" label="Calculation Type" label-placement="stacked">
+          @for (type of percentageTypes; track type.value) {
+            <ion-select-option [value]="type.value">{{ type.label }}</ion-select-option>
+          }
+        </ion-select>
+      </div>
+      <div class="input-group">
+        <label>{{ percType === 'change' ? 'Initial Value' : 'Value X' }}</label>
+        <input type="number" [(ngModel)]="percVal1" (input)="calculate()" class="huge-input" placeholder="0">
+      </div>
+      <div class="input-group">
+        <label>{{ percType === 'change' ? 'New Value' : 'Value Y' }}</label>
+        <input type="number" [(ngModel)]="percVal2" (input)="calculate()" class="huge-input" placeholder="0">
+      </div>
+      <div class="glass-panel text-center">
+        <label>Final Result</label>
+        <div class="text-4xl font-black text-white mt-2">
+          {{ percResult() | number:'1.0-2' }}{{ percType === 'of' ? '' : '%' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

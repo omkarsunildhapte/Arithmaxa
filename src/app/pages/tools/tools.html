@@ -1,0 +1,32 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="bg-black">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="goToCalculator()" class="text-white">
+        <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <div class="flex items-center gap-2 px-2">
+      <ion-icon name="flash" class="text-[#fbbf24] text-xl drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]"></ion-icon>
+      <span class="text-white text-base font-black tracking-tight uppercase">Arithmaxa Tools</span>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true" class="ion-padding bg-black">
+  <div class="animate-fade-in max-w-lg mx-auto pt-4">
+    <div class="grid grid-cols-2 gap-3 px-4">
+      @for (tool of tools; track tool.id) {
+      <div (click)="selectTool(tool.id)"
+        class="relative group overflow-hidden w-[130px] flex flex-col items-center p-3.5 rounded-[1.75rem] bg-white/[0.03] border border-white/10 backdrop-blur-3xl transition-all duration-500 active:scale-95 hover:bg-white/[0.08] hover:border-white/20 mx-auto">
+        <div [style.background-color]="tool.color + '15'"
+          class="w-11 h-11 rounded-xl flex items-center justify-center text-lg mb-2.5 transition-transform duration-500 group-hover:scale-110">
+          <ion-icon [name]="tool.icon" [style.color]="tool.color"></ion-icon>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="text-white text-sm font-bold tracking-tight text-center">{{tool.name}}</span>
+          <span class="text-[#94a3b8] text-[9px] uppercase tracking-widest mt-0.5 opacity-60 text-center">{{tool.subtitle}}</span>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,35 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <div class="header-container">
+      <span class="header-title">Discount Calc</span>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="tool-modal-content">
+  <div class="tool-view animate-fade-in">
+    <div class="premium-card">
+      <div class="input-group">
+        <label>Original Price</label>
+        <input type="number" [(ngModel)]="originalPrice" (input)="calculate()" class="huge-input" placeholder="0.00">
+      </div>
+      <div class="input-group">
+        <label>Discount (%)</label>
+        <input type="number" [(ngModel)]="discountPercent" (input)="calculate()" class="huge-input" placeholder="0">
+      </div>
+      <div class="glass-panel text-center">
+        <label>Final Price</label>
+        <div class="text-6xl font-black text-white mt-2 mb-1">
+          {{ discountedPrice() | number:'1.0-2' }}
+        </div>
+        <div class="text-[10px] uppercase tracking-widest text-[#10b981] font-bold">
+          You Save: {{ (originalPrice - discountedPrice()) | number:'1.0-2' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
