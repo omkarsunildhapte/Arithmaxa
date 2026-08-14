@@ -5,16 +5,57 @@ ion-toolbar {
   --min-height: 70px;
   padding: 0 16px;
 }
+
 .animate-fade-in {
   animation: fadeIn 0.4s ease-out forwards;
 }
+
 @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Tool grid tile — was a plain <button>, now <ion-button fill="clear">.
+   Paint-level styling (background/border/radius/padding/backdrop-blur) has
+   to go through Ionic's CSS vars / ::part(native) since the actual visible
+   surface is inside the component's shadow DOM; layout-level Tailwind
+   classes (width, margin, transform, group-hover) still work directly on
+   the host as before. */
+.tool-tile {
+  --background: rgba(255, 255, 255, 0.03);
+  --background-hover: rgba(255, 255, 255, 0.08);
+  --background-activated: rgba(255, 255, 255, 0.08);
+  --border-radius: 1.75rem;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --box-shadow: none;
+  --padding-start: 0.875rem;
+  --padding-end: 0.875rem;
+  --padding-top: 0.875rem;
+  --padding-bottom: 0.875rem;
+  width: 130px;
+  height: auto;
+  margin: 0 auto;
+  text-transform: none;
+}
+
+.tool-tile::part(native) {
+  flex-direction: column;
+  backdrop-filter: blur(64px);
+  -webkit-backdrop-filter: blur(64px);
+  transition:
+    background 0.5s,
+    border-color 0.5s;
+}
+
+.tool-tile:hover {
+  --border-color: rgba(255, 255, 255, 0.2);
 }

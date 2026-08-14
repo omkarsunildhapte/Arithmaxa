@@ -12,41 +12,40 @@
 </ion-header>
 <ion-content class="tool-modal-content">
   <div class="tool-view animate-fade-in px-5 pb-10">
-    
     <!-- Input Card -->
     <div class="premium-card !m-0 !mb-4">
       <span class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold block mb-3">Parameters</span>
-      <div class="flex bg-white/5 p-1 rounded-xl border border-white/10 mb-6">
-        <button type="button"
-          [class]="'flex-1 py-2 rounded-lg text-xs font-black transition-all tracking-widest ' + (unit === 'metric' ? 'bg-[#fbbf24] text-black shadow-lg shadow-amber-500/20' : 'text-[#94a3b8]')"
-          (click)="switchUnit('metric')">METRIC</button>
-        <button type="button"
-          [class]="'flex-1 py-2 rounded-lg text-xs font-black transition-all tracking-widest ' + (unit === 'imperial' ? 'bg-[#fbbf24] text-black shadow-lg shadow-amber-500/20' : 'text-[#94a3b8]')"
-          (click)="switchUnit('imperial')">IMPERIAL</button>
-      </div>
+      <ion-segment [value]="unit" (ionChange)="onUnitChange($event)" class="unit-segment mb-6">
+        <ion-segment-button value="metric">
+          <ion-label>METRIC</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="imperial">
+          <ion-label>IMPERIAL</ion-label>
+        </ion-segment-button>
+      </ion-segment>
 
       @if (unit === 'metric') {
         <div class="input-group">
           <label>Weight (KG)</label>
-          <input type="number" [(ngModel)]="weightKg" (input)="calculate()" class="huge-input text-4xl" placeholder="70">
+          <ion-input type="number" [(ngModel)]="weightKg" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="70"></ion-input>
         </div>
         <div class="input-group !mb-0">
           <label>Height (CM)</label>
-          <input type="number" [(ngModel)]="heightCm" (input)="calculate()" class="huge-input text-4xl" placeholder="175">
+          <ion-input type="number" [(ngModel)]="heightCm" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="175"></ion-input>
         </div>
       } @else {
         <div class="input-group">
           <label>Weight (LBS)</label>
-          <input type="number" [(ngModel)]="weightLbs" (input)="calculate()" class="huge-input text-4xl" placeholder="154">
+          <ion-input type="number" [(ngModel)]="weightLbs" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="154"></ion-input>
         </div>
         <div class="flex gap-4">
           <div class="input-group flex-1 !mb-0">
             <label>Feet</label>
-            <input type="number" [(ngModel)]="heightFt" (input)="calculate()" class="huge-input text-4xl" placeholder="5">
+            <ion-input type="number" [(ngModel)]="heightFt" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="5"></ion-input>
           </div>
           <div class="input-group flex-1 !mb-0">
             <label>Inches</label>
-            <input type="number" [(ngModel)]="heightIn" (input)="calculate()" class="huge-input text-4xl" placeholder="9">
+            <ion-input type="number" [(ngModel)]="heightIn" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="9"></ion-input>
           </div>
         </div>
       }
@@ -63,9 +62,13 @@
     @if (bmiResult(); as r) {
       <div class="premium-card !m-0 !mt-4 border-[#fbbf24]/20 bg-[#fbbf24]/5 text-center">
         <span class="text-[10px] uppercase tracking-widest text-[#fbbf24] font-bold block mb-2">Your BMI Score</span>
-        <div class="text-7xl font-black text-white leading-none my-4">{{ r.bmi | number:'1.1-1' }}</div>
-        <div class="text-sm font-black tracking-[0.2em] uppercase text-[#fbbf24] mt-2">{{ r.category }}</div>
-        
+        <div class="text-7xl font-black text-white leading-none my-4">
+          {{ r.bmi | number: '1.1-1' }}
+        </div>
+        <div class="text-sm font-black tracking-[0.2em] uppercase text-[#fbbf24] mt-2">
+          {{ r.category }}
+        </div>
+
         <!-- Simple Scale Visual -->
         <div class="flex h-1.5 w-full bg-white/5 rounded-full mt-8 overflow-hidden">
           <div class="h-full bg-blue-400" [style.width.%]="20"></div>
@@ -79,11 +82,9 @@
         <p class="text-xs uppercase tracking-widest font-bold">Enter details to see BMI</p>
       </div>
     }
-
   </div>
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <ion-toolbar class="bg-black">
-  </ion-toolbar>
+  <ion-toolbar class="bg-black"> </ion-toolbar>
 </ion-footer>

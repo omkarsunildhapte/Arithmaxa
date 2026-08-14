@@ -6,9 +6,7 @@ describe('BmiCalc', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BmiCalc],
-      providers: [
-        provideIonicAngular()
-      ]
+      providers: [provideIonicAngular()],
     }).compileComponents();
   });
 

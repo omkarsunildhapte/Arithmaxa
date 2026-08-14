@@ -6,17 +6,15 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 describe('Home', () => {
   let component: Home;
   let fixture: ComponentFixture<Home>;
-  let router: any;
+  let router: Router;
 
   beforeEach(async () => {
     const routerSpy = { navigate: jest.fn() };
 
     await TestBed.configureTestingModule({
       imports: [Home],
-      providers: [
-        { provide: Router, useValue: routerSpy }
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      providers: [{ provide: Router, useValue: routerSpy }],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Home);

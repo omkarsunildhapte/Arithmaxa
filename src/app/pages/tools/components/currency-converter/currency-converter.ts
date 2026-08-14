@@ -1,38 +1,25 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import {
-  IonHeader, IonToolbar, IonButtons, IonButton, IonIcon,
-  IonContent, IonSelect, IonSelectOption, IonSpinner, ModalController, IonFooter
-} from '@ionic/angular/standalone';
+import { httpResource } from '@angular/common/http';
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonSelect, IonSelectOption, IonSpinner, ModalController, IonFooter, IonInput } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { closeOutline, swapVerticalOutline, chevronDownOutline, refreshOutline } from 'ionicons/icons';
+import { ExchangeResponse, SelectOption } from '@appTypes/index';
 
 addIcons({ closeOutline, swapVerticalOutline, chevronDownOutline, refreshOutline });
-
-interface ExchangeResponse {
-  result: string;
-  base_code: string;
-  rates: Record<string, number>;
-}
 
 @Component({
   selector: 'app-currency-converter',
   standalone: true,
-  imports: [
-    FormsModule, DecimalPipe,
-    IonHeader, IonToolbar, IonButtons, IonButton, IonIcon,
-    IonContent, IonSelect, IonSelectOption, IonSpinner, IonFooter
-  ],
+  imports: [FormsModule, DecimalPipe, IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonSelect, IonSelectOption, IonSpinner, IonFooter, IonInput],
   templateUrl: './currency-converter.html',
-  styleUrls: ['./currency-converter.css']
+  styleUrls: ['./currency-converter.css'],
 })
-export class CurrencyConverter implements OnInit {
-  private http = inject(HttpClient);
+export class CurrencyConverter {
   private modalCtrl = inject(ModalController);
 
-  readonly currencies = [
+  readonly currencies: SelectOption[] = [
     { value: 'USD', label: 'USD — US Dollar' },
     { value: 'EUR', label: 'EUR — Euro' },
     { value: 'GBP', label: 'GBP — British Pound' },
@@ -48,40 +35,43 @@ export class CurrencyConverter implements OnInit {
     { value: 'BRL', label: 'BRL — Brazilian Real' },
   ];
 
-  amount = 1;
-  fromCurrency = 'USD';
-  toCurrency = 'INR';
+  amount: number = 1;
+  fromCurrency: string = 'USD';
+  toCurrency: string = 'INR';
 
-  rates = signal<Record<string, number> | null>(null);
-  result = signal<number | null>(null);
-  loading = signal(false);
-  error = signal<string | null>(null);
-  lastUpdated = signal<string | null>(null);
+  private readonly ratesResource = httpResource<ExchangeResponse>(() => 'https://open.er-api.com/v6/latest/USD');
 
-  ngOnInit() { this.fetchRates(); }
+  readonly loading = this.ratesResource.isLoading;
+  readonly error = computed(() => (this.ratesResource.error() ? 'Could not fetch live rates. Check your connection and try again.' : null));
+  readonly result = signal<number | null>(null);
+  readonly lastUpdated = signal<string | null>(null);
 
-  dismiss() { this.modalCtrl.dismiss(); }
-
-  fetchRates() {
-    this.loading.set(true);
-    this.error.set(null);
-    this.http.get<ExchangeResponse>('https://open.er-api.com/v6/latest/USD').subscribe({
-      next: (data) => {
-        this.rates.set(data.rates);
+  constructor() {
+    // Re-stamp "Updated: ..." and recompute the displayed result every time
+    // fresh rates land (initial load, or a manual retry() reload) — replaces
+    // the old subscribe()'s `next` callback.
+    effect(() => {
+      // hasValue() is a proper guard here — calling .value() directly while
+      // the resource is in an error state throws (it rethrows the
+      // underlying HTTP error), it doesn't just return undefined.
+      if (this.ratesResource.hasValue()) {
         this.lastUpdated.set(new Date().toLocaleTimeString());
-        this.loading.set(false);
         this.calculate();
-      },
-      error: () => {
-        this.error.set('Could not fetch live rates. Check your connection and try again.');
-        this.loading.set(false);
       }
     });
   }
 
+  dismiss() {
+    this.modalCtrl.dismiss();
+  }
+
+  retry() {
+    this.ratesResource.reload();
+  }
+
   calculate() {
-    const r = this.rates();
-    if (!r) return;
+    if (!this.ratesResource.hasValue()) return;
+    const r = this.ratesResource.value().rates;
     const inUsd = this.amount / r[this.fromCurrency];
     this.result.set(inUsd * r[this.toCurrency]);
   }

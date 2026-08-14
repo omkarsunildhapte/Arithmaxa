@@ -7,10 +7,7 @@ describe('Tools', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Tools],
-      providers: [
-        provideIonicAngular(),
-        provideRouter([])
-      ]
+      providers: [provideIonicAngular(), provideRouter([])],
     }).compileComponents();
   });
 

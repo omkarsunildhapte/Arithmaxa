@@ -11,3 +11,102 @@ ion-toolbar {
   --background: #050505;
   height: 100%;
 }
+
+/* "Use expression" pill button — was a plain <button>, now <ion-button
+   fill="clear">; these vars strip Ionic's default chrome (uppercase text,
+   min-height, box-shadow) back down to the original bare-pill look. */
+.use-expr-btn {
+  --background: rgba(255, 255, 255, 0.05);
+  --background-activated: rgba(255, 255, 255, 0.1);
+  --background-hover: rgba(255, 255, 255, 0.08);
+  --border-radius: 999px;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --color: #818cf8;
+  --box-shadow: none;
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+  --padding-top: 0.5rem;
+  --padding-bottom: 0.5rem;
+  height: auto;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* Mic + send circular icon buttons — were plain <button>, now
+   <ion-button fill="clear"> with an icon-only slot. */
+.icon-only-btn {
+  --background: transparent;
+  --background-activated: transparent;
+  --background-hover: transparent;
+  --box-shadow: none;
+  --padding-start: 0;
+  --padding-end: 0;
+  --color: #94a3b8;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.icon-only-btn.recording {
+  --color: #ef4444;
+}
+
+.icon-only-btn.send-btn {
+  --color: #6366f1;
+}
+
+.icon-only-btn.send-btn[disabled] {
+  opacity: 0.3;
+}
+
+/* Small copy-to-clipboard button under each message bubble. */
+.copy-msg-btn {
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 0.9rem;
+  margin-top: 0.15rem;
+}
+
+/* Header toggle for on-device (LocalLLM) vs cloud (OpenRouter) processing. */
+.local-llm-btn {
+  --color: #94a3b8;
+}
+
+.local-llm-btn.active {
+  --color: #818cf8;
+}
+
+/* Photo attached via the Camera plugin — both the composer preview and the
+   inline copy rendered inside a sent message bubble. */
+.chat-image {
+  max-width: 8rem;
+  max-height: 8rem;
+  border-radius: 0.75rem;
+  object-fit: cover;
+  display: block;
+}
+
+/* "Reading photo…" hint while on-device OCR (TextRecognition) runs. */
+.ocr-status {
+  font-size: 0.72rem;
+  color: #818cf8;
+  font-style: italic;
+}
+
+/* Chat input — was a plain <textarea>, now <ion-textarea autoGrow>. */
+.chat-textarea {
+  --background: transparent;
+  --color: #ffffff;
+  --placeholder-color: #64748b;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0.5rem;
+  --padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+}

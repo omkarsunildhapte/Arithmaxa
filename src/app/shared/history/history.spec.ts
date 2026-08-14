@@ -1,33 +1,34 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { History } from './history';
-import { CalculatorService } from '../../../services/calculator/calculator.service';
+import { CalculatorService } from '@services/calculator/calculator.service';
 import { ModalController } from '@ionic/angular/standalone';
 import { DatePipe } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, WritableSignal, signal } from '@angular/core';
+import { HistoryItem } from '@appTypes/index';
 
 describe('History', () => {
   let component: History;
   let fixture: ComponentFixture<History>;
-  let mockCalc: any;
-  let modalCtrl: any;
+  let mockCalc: { history: WritableSignal<HistoryItem[]>; clearHistory: jest.Mock };
+  let modalCtrl: ModalController;
 
   beforeEach(async () => {
     mockCalc = {
       history: signal([]),
       clearHistory: jest.fn(),
     };
-    
+
     const modalSpy = {
-      dismiss: jest.fn().mockReturnValue(Promise.resolve())
+      dismiss: jest.fn().mockReturnValue(Promise.resolve()),
     };
 
     await TestBed.configureTestingModule({
       imports: [History, DatePipe],
       providers: [
         { provide: CalculatorService, useValue: mockCalc },
-        { provide: ModalController, useValue: modalSpy }
+        { provide: ModalController, useValue: modalSpy },
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(History);
@@ -56,9 +57,9 @@ describe('History', () => {
     const now = Date.now();
     mockCalc.history.set([
       { expression: '2+2', result: '4', timestamp: now },
-      { expression: '3*3', result: '9', timestamp: now + 1 }
+      { expression: '3*3', result: '9', timestamp: now + 1 },
     ]);
-    
+
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.empty-state')).toBeFalsy();
@@ -71,9 +72,9 @@ describe('History', () => {
   it('should call clearHistory on service when clear button is clicked', () => {
     mockCalc.history.set([{ expression: '2+2', result: '4', timestamp: Date.now() }]);
     fixture.detectChanges();
-    
+
     const compiled = fixture.nativeElement as HTMLElement;
-    const button = compiled.querySelector('ion-button[color="danger"]') as any;
+    const button = compiled.querySelector('ion-button[color="danger"]') as HTMLElement | null;
     if (button) {
       button.click();
     }

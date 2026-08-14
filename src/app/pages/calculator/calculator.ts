@@ -1,31 +1,20 @@
 import { Component, inject, signal } from '@angular/core';
-import {
-  IonContent,
-  IonHeader,
-  IonToolbar,
-  IonButton,
-  IonIcon,
-  NavController,
-  ModalController
-} from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonButton, IonIcon, NavController, ModalController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { sparklesOutline, gridOutline, timeOutline, closeOutline, trashOutline, flash } from 'ionicons/icons';
 import { Display } from '../../shared/display/display';
 import { Keypad } from '../../shared/keypad/keypad';
 import { History } from '../../shared/history/history';
-import { CalculatorService } from '../../../services/calculator/calculator.service';
+import { CalculatorService } from '@services/calculator/calculator.service';
 
 addIcons({ sparklesOutline, gridOutline, timeOutline, closeOutline, trashOutline, flash });
 
 @Component({
   selector: 'app-calculator',
   standalone: true,
-  imports: [
-    IonContent, IonHeader, IonToolbar, IonButton, IonIcon,
-    Display, Keypad
-  ],
+  imports: [IonContent, IonHeader, IonToolbar, IonButton, IonIcon, Display, Keypad],
   templateUrl: './calculator.html',
-  styleUrls: ['./calculator.css']
+  styleUrls: ['./calculator.css'],
 })
 export class Calculator {
   protected readonly calc = inject(CalculatorService);
@@ -37,7 +26,7 @@ export class Calculator {
     if (open) {
       const modal = await this.modalCtrl.create({
         component: History,
-        cssClass: 'full-height-modal'
+        cssClass: 'full-height-modal',
       });
       await modal.present();
       await modal.onWillDismiss();

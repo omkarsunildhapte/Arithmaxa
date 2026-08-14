@@ -7,10 +7,7 @@ describe('Calculator', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Calculator],
-      providers: [
-        provideIonicAngular(),
-        provideRouter([])
-      ]
+      providers: [provideIonicAngular(), provideRouter([])],
     }).compileComponents();
   });
 

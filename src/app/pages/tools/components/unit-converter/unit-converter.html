@@ -6,26 +6,25 @@
       </ion-button>
     </ion-buttons>
     <div class="header-container">
-      <span class="header-title">{{ type | titlecase }}</span>
+      <span class="header-title">{{ type() | titlecase }}</span>
     </div>
   </ion-toolbar>
 </ion-header>
 <ion-content class="tool-modal-content">
   <div class="tool-view animate-fade-in px-5 pb-10">
-    
     <!-- Input Card -->
     <div class="premium-card !m-0 !mb-4">
       <div class="flex justify-between items-center mb-4">
         <span class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold">From</span>
         <div class="bg-white/5 rounded-lg px-2">
           <ion-select [(ngModel)]="convFrom" (ionChange)="calculate()" interface="popover" toggle-icon="chevron-down-outline" class="text-xs font-bold text-white min-h-0 h-8">
-            @for (unit of units; track unit.value) {
+            @for (unit of units(); track unit.value) {
               <ion-select-option [value]="unit.value">{{ unit.label }}</ion-select-option>
             }
           </ion-select>
         </div>
       </div>
-      <input type="number" [(ngModel)]="convValue" (input)="calculate()" class="huge-input text-5xl" placeholder="0">
+      <ion-input type="number" [(ngModel)]="convValue" (ionInput)="calculate()" class="huge-input text-5xl" placeholder="0"></ion-input>
     </div>
 
     <!-- Swap Icon -->
@@ -41,18 +40,17 @@
         <span class="text-[10px] uppercase tracking-widest text-[#6366f1] font-bold">To</span>
         <div class="bg-[#6366f1]/10 rounded-lg px-2">
           <ion-select [(ngModel)]="convTo" (ionChange)="calculate()" interface="popover" toggle-icon="chevron-down-outline" class="text-xs font-bold text-[#818cf8] min-h-0 h-8">
-            @for (unit of units; track unit.value) {
+            @for (unit of units(); track unit.value) {
               <ion-select-option [value]="unit.value">{{ unit.label }}</ion-select-option>
             }
           </ion-select>
         </div>
       </div>
-      <input type="number" [(ngModel)]="convResult" (input)="calculateReverse()" class="huge-input text-5xl text-white" placeholder="0">
+      <ion-input type="number" [(ngModel)]="convResult" (ionInput)="calculateReverse()" class="huge-input text-5xl text-white" placeholder="0"></ion-input>
     </div>
   </div>
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <ion-toolbar class="bg-black">
-  </ion-toolbar>
+  <ion-toolbar class="bg-black"> </ion-toolbar>
 </ion-footer>

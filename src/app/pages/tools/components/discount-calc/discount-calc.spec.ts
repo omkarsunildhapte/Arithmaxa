@@ -6,9 +6,7 @@ describe('DiscountCalc', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DiscountCalc],
-      providers: [
-        provideIonicAngular()
-      ]
+      providers: [provideIonicAngular()],
     }).compileComponents();
   });
 

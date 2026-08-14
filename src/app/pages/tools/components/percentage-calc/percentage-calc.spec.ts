@@ -6,9 +6,7 @@ describe('PercentageCalc', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PercentageCalc],
-      providers: [
-        provideIonicAngular()
-      ]
+      providers: [provideIonicAngular()],
     }).compileComponents();
   });
 

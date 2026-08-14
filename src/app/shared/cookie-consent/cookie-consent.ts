@@ -1,16 +1,17 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IonIcon } from '@ionic/angular/standalone';
+import { IonIcon, IonButton, IonToggle } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { shieldCheckmarkOutline } from 'ionicons/icons';
-import { ConsentService, ConsentChoices } from '../../../services/consent/consent.service';
+import { ConsentService } from '@services/consent/consent.service';
+import { ConsentChoices } from '@appTypes/index';
 
 @Component({
   selector: 'app-cookie-consent',
   standalone: true,
-  imports: [RouterLink, IonIcon],
+  imports: [RouterLink, IonIcon, IonButton, IonToggle],
   templateUrl: './cookie-consent.html',
-  styleUrls: ['./cookie-consent.css']
+  styleUrls: ['./cookie-consent.css'],
 })
 export class CookieConsent {
   private consent = inject(ConsentService);
@@ -25,7 +26,7 @@ export class CookieConsent {
   }
 
   toggleCustomize(): void {
-    this.showCustomize.update(v => !v);
+    this.showCustomize.update((v) => !v);
   }
 
   setFunctional(checked: boolean): void {
@@ -34,6 +35,16 @@ export class CookieConsent {
 
   setAiProcessing(checked: boolean): void {
     this.aiProcessing.set(checked);
+  }
+
+  onFunctionalChange(event: Event): void {
+    const custom = event as CustomEvent<{ checked: boolean }>;
+    this.setFunctional(custom.detail.checked);
+  }
+
+  onAiProcessingChange(event: Event): void {
+    const custom = event as CustomEvent<{ checked: boolean }>;
+    this.setAiProcessing(custom.detail.checked);
   }
 
   acceptAll(): void {

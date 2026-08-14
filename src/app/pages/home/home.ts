@@ -1,35 +1,35 @@
-import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild, inject } from '@angular/core';
-import { IonContent, IonIcon, NavController, ModalController } from '@ionic/angular/standalone';
+import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, viewChild } from '@angular/core';
+import { IonContent, IonIcon, IonButton, IonFooter, NavController, ModalController } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { chevronForwardOutline, chatbubbleEllipsesOutline } from 'ionicons/icons';
 import { FeedbackModal } from '../../shared/feedback/feedback-modal';
+import { OnboardingSlide } from '@appTypes/index';
+addIcons({ chevronForwardOutline, chatbubbleEllipsesOutline });
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [IonContent, IonIcon, RouterLink],
+  imports: [IonContent, IonIcon, RouterLink, IonButton, IonFooter],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './home.html',
-  styleUrls: ['./home.css']
+  styleUrls: ['./home.css'],
 })
 export class Home implements AfterViewInit {
-  constructor() {
-    addIcons({ chevronForwardOutline, chatbubbleEllipsesOutline });
-  }
   private navCtrl = inject(NavController);
   private modalCtrl = inject(ModalController);
-  @ViewChild('swiperEl') private swiperEl!: ElementRef;
+  private readonly swiperEl = viewChild.required<ElementRef>('swiperEl');
 
-  slides = [
+  // prettier-ignore
+  slides: OnboardingSlide[] = [
     { title: 'Basic Arithmetic', htmlTitle: 'Basic<br>Arithmetic', description: 'Perform essential mathematical operations with lightning speed and unmatched precision.', image: 'onboarding/arithmetic.png' },
     { title: 'Occupational & Logic', htmlTitle: 'Occupational<br>&amp;<br>Logic', description: 'Handle complex logical grouping and advanced mathematical expressions with absolute ease.', image: 'onboarding/logic.png' },
     { title: 'Scientific Functions', htmlTitle: 'Scientific<br>Functions', description: 'Access high-level scientific functions: Logarithms, Trigonometry, and Power operations.', image: 'onboarding/scientific.png' },
-    { title: 'Calculation History', htmlTitle: 'Calculation<br>History', description: 'Never lose track of your work. Every result is stored and accessible at a single tap.', image: 'onboarding/history.png' }
+    { title: 'Calculation History', htmlTitle: 'Calculation<br>History', description: 'Never lose track of your work. Every result is stored and accessible at a single tap.', image: 'onboarding/history.png' },
   ];
 
   ngAfterViewInit(): void {
-    const el = this.swiperEl.nativeElement;
+    const el = this.swiperEl().nativeElement;
 
     Object.assign(el, {
       injectStyles: [
@@ -39,13 +39,13 @@ export class Home implements AfterViewInit {
           opacity: 1;
         }
         .swiper-pagination-bullet-active {
-          background: #fbbf24 !important;
+          background: #22d3ee !important;
           opacity: 1;
           width: 20px !important;
           border-radius: 4px !important;
         }
-        `
-      ]
+        `,
+      ],
     });
     el.initialize();
   }
@@ -64,4 +64,3 @@ export class Home implements AfterViewInit {
     await modal.present();
   }
 }
-

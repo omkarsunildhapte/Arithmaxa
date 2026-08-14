@@ -2,15 +2,14 @@
   <ion-toolbar>
     <div class="modal-topbar">
       <span class="modal-title">Share Feedback</span>
-      <button class="close-btn" (click)="close()">
-        <ion-icon name="close-outline"></ion-icon>
-      </button>
+      <ion-button fill="clear" class="close-btn" (click)="close()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
     </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="feedback-content">
-
   @if (submitted()) {
     <div class="success-state animate-fade-in">
       <div class="success-ring">
@@ -21,23 +20,14 @@
     </div>
   } @else {
     <div class="feedback-body">
-
       <!-- Star Rating -->
       <div class="fb-section">
         <label class="fb-label">How would you rate Arithmaxa?</label>
         <div class="stars-row">
           @for (i of stars; track i) {
-            <button
-              class="star-btn"
-              (click)="setRating(i)"
-              (mouseenter)="setHover(i)"
-              (mouseleave)="clearHover()"
-              [attr.aria-label]="i + ' star'">
-              <ion-icon
-                [name]="isStarFilled(i) ? 'star' : 'star-outline'"
-                [class.star-filled]="isStarFilled(i)">
-              </ion-icon>
-            </button>
+            <ion-button fill="clear" class="star-btn" (click)="setRating(i)" (mouseenter)="setHover(i)" (mouseleave)="clearHover()" [attr.aria-label]="i + ' star'">
+              <ion-icon slot="icon-only" [name]="isStarFilled(i) ? 'star' : 'star-outline'" [class.star-filled]="isStarFilled(i)"></ion-icon>
+            </ion-button>
           }
         </div>
         <div class="rating-labels">
@@ -51,13 +41,10 @@
         <label class="fb-label">What's this about?</label>
         <div class="categories-grid">
           @for (cat of categories; track cat.value) {
-            <button
-              class="cat-btn"
-              [class.active]="category() === cat.value"
-              (click)="setCategory(cat.value)">
+            <ion-button fill="clear" class="cat-btn" [class.active]="category() === cat.value" (click)="setCategory(cat.value)">
               <span class="cat-emoji">{{ cat.emoji }}</span>
               <span class="cat-label">{{ cat.label }}</span>
-            </button>
+            </ion-button>
           }
         </div>
       </div>
@@ -68,35 +55,25 @@
           Tell us more
           <span class="fb-label-hint">(min 5 characters)</span>
         </label>
-        <textarea
-          class="fb-textarea"
-          [value]="message()"
-          (input)="setMessage($any($event.target).value)"
-          placeholder="What do you love? What could be better?"
-          rows="4"
-          maxlength="600">
-        </textarea>
-        <div class="char-count" [class.near-limit]="message().length > 540">
-          {{ message().length }} / 600
-        </div>
+        <ion-textarea class="fb-textarea" [value]="message()" (ionInput)="onMessageInput($event)" placeholder="What do you love? What could be better?" [rows]="4" maxlength="600"></ion-textarea>
+        <div class="char-count" [class.near-limit]="message().length > 540">{{ message().length }} / 600</div>
       </div>
 
+      @if (submitError()) {
+        <p class="error-note">Couldn't send your feedback — check your connection and try again.</p>
+      }
+
       <!-- Submit -->
-      <button
-        class="submit-btn"
-        [disabled]="!canSubmit() || isSubmitting()"
-        (click)="submit()">
+      <ion-button expand="block" class="submit-btn" [disabled]="!canSubmit() || isSubmitting()" (click)="submit()">
         @if (isSubmitting()) {
           <span class="submitting-dots">Sending</span>
         } @else {
-          <ion-icon name="paper-plane-outline"></ion-icon>
+          <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
           <span>Submit Feedback</span>
         }
-      </button>
+      </ion-button>
 
-      <p class="privacy-note">Feedback is stored only on your device and never transmitted.</p>
-
+      <p class="privacy-note">Your feedback is sent to the Arithmaxa team by email. No name or email address is attached.</p>
     </div>
   }
-
 </ion-content>

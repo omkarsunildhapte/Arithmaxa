@@ -1,97 +1,8 @@
 import { Service, signal } from '@angular/core';
-
-// ── Safe expression parser (replaces eval) ────────────────────────────────────
-
-class ExpressionParser {
-  private pos = 0;
-
-  constructor(private readonly input: string) {}
-
-  parse(): number {
-    const result = this.expression();
-    if (this.pos !== this.input.length) {
-      throw new SyntaxError(`Unexpected token at ${this.pos}`);
-    }
-    return result;
-  }
-
-  private expression(): number {
-    let result = this.term();
-    for (;;) {
-      if (this.consume('+')) result += this.term();
-      else if (this.consume('-')) result -= this.term();
-      else break;
-    }
-    return result;
-  }
-
-  private term(): number {
-    let result = this.power();
-    for (;;) {
-      if (this.peek() === '*' && this.input[this.pos + 1] !== '*') {
-        this.pos++;
-        result *= this.power();
-      } else if (this.consume('/')) {
-        result /= this.power();
-      } else break;
-    }
-    return result;
-  }
-
-  private power(): number {
-    const base = this.unary();
-    if (this.peek() === '*' && this.input[this.pos + 1] === '*') {
-      this.pos += 2;
-      return Math.pow(base, this.power());
-    }
-    return base;
-  }
-
-  private unary(): number {
-    if (this.consume('-')) return -this.unary();
-    if (this.consume('+')) return this.unary();
-    return this.primary();
-  }
-
-  private primary(): number {
-    if (this.consume('(')) {
-      const result = this.expression();
-      if (!this.consume(')')) throw new SyntaxError('Expected )');
-      return result;
-    }
-    return this.number();
-  }
-
-  private number(): number {
-    const start = this.pos;
-    while (this.pos < this.input.length && /[\d.]/.test(this.input[this.pos])) {
-      this.pos++;
-    }
-    if (this.pos === start) throw new SyntaxError(`Expected number at ${this.pos}`);
-    return parseFloat(this.input.slice(start, this.pos));
-  }
-
-  private peek(): string {
-    return this.input[this.pos] ?? '';
-  }
-
-  private consume(ch: string): boolean {
-    if (this.input[this.pos] === ch) { this.pos++; return true; }
-    return false;
-  }
-}
-
-function evaluate(expr: string): number {
-  return new ExpressionParser(expr.trim()).parse();
-}
+import { HistoryItem } from '@appTypes/index';
+import { evaluate } from '@utils/expression-parser';
 
 // ── Service ───────────────────────────────────────────────────────────────────
-
-export interface HistoryItem {
-  expression: string;
-  result: string;
-  timestamp: number;
-}
 
 @Service()
 export class CalculatorService {
@@ -107,19 +18,19 @@ export class CalculatorService {
   private justCalculated = false;
 
   toggleScientific(): void {
-    this.isScientific.update(v => !v);
+    this.isScientific.update((v) => !v);
   }
 
   toggleUnit(): void {
-    this.isRadians.update(v => !v);
+    this.isRadians.update((v) => !v);
   }
 
   toggleInverse(): void {
-    this.isInverse.update(v => !v);
+    this.isInverse.update((v) => !v);
   }
 
   toggleHyperbolic(): void {
-    this.isHyperbolic.update(v => !v);
+    this.isHyperbolic.update((v) => !v);
   }
 
   abs(): void {
@@ -127,7 +38,7 @@ export class CalculatorService {
   }
 
   reciprocal(): void {
-    this.applyUnary(x => 1 / x);
+    this.applyUnary((x) => 1 / x);
   }
 
   e(): void {
@@ -173,7 +84,7 @@ export class CalculatorService {
     this.justCalculated = false;
 
     if (bracket) {
-      this.display.update(v => v + bracket);
+      this.display.update((v) => v + bracket);
       return;
     }
 
@@ -183,33 +94,33 @@ export class CalculatorService {
 
     // If last char is a number or a closing bracket, and we have open brackets to close, add ')'
     if (/[\d)]/.test(lastChar) && openCount > closeCount) {
-      this.display.update(v => v + ')');
+      this.display.update((v) => v + ')');
     } else {
       // Otherwise, add '('
-      this.display.update(v => v + '(');
+      this.display.update((v) => v + '(');
     }
   }
 
   modulo(): void {
     const val = this.display();
     if (!val || ['+', '-', '*', '/', '('].includes(val.slice(-1))) return;
-    this.display.update(v => v + '%');
+    this.display.update((v) => v + '%');
   }
 
   toggleSign(): void {
     const current = this.display();
     if (current === '0' || !current || current === 'Error') return;
-    
+
     // Split into segments to find the last number
     const segments = current.split(/([+\-*/%^()])/);
     let lastNum = segments.pop() || '';
-    
+
     if (lastNum.startsWith('-')) {
       lastNum = lastNum.substring(1);
     } else if (lastNum) {
       lastNum = '-' + lastNum;
     }
-    
+
     this.display.set(segments.join('') + lastNum);
   }
 
@@ -312,62 +223,61 @@ export class CalculatorService {
 
   // ── Scientific ─────────────────────────────────────────────────────────────
 
-  sqrt(): void      { this.applyUnary((x) => x < 0 ? NaN : Math.sqrt(x)); }
-  square(): void    { this.applyUnary((x) => Math.pow(x, 2)); }
-  power(): void     { this.setOperator('**'); }
-  rootY(): void     { this.setOperator('**(1/'); }
-  pow10(): void     { this.applyUnary((x) => Math.pow(10, x)); }
-  cube(): void      { this.applyUnary((x) => Math.pow(x, 3)); }
-  cbrt(): void      { this.applyUnary((x) => Math.cbrt(x)); }
-  log10(): void     { this.applyUnary((x) => x <= 0 ? NaN : Math.log10(x)); }
-  naturalLog(): void { this.applyUnary((x) => x <= 0 ? NaN : Math.log(x)); }
-  
-  sinh(): void      { this.applyUnary(Math.sinh); }
-  cosh(): void      { this.applyUnary(Math.cosh); }
-  tanh(): void      { this.applyUnary(Math.tanh); }
+  sqrt(): void {
+    this.applyUnary((x) => (x < 0 ? NaN : Math.sqrt(x)));
+  }
+  square(): void {
+    this.applyUnary((x) => Math.pow(x, 2));
+  }
+  power(): void {
+    this.setOperator('**');
+  }
+  rootY(): void {
+    this.setOperator('**(1/');
+  }
+  pow10(): void {
+    this.applyUnary((x) => Math.pow(10, x));
+  }
+  cube(): void {
+    this.applyUnary((x) => Math.pow(x, 3));
+  }
+  cbrt(): void {
+    this.applyUnary((x) => Math.cbrt(x));
+  }
+  log10(): void {
+    this.applyUnary((x) => (x <= 0 ? NaN : Math.log10(x)));
+  }
+  naturalLog(): void {
+    this.applyUnary((x) => (x <= 0 ? NaN : Math.log(x)));
+  }
+
+  sinh(): void {
+    this.applyUnary(Math.sinh);
+  }
+  cosh(): void {
+    this.applyUnary(Math.cosh);
+  }
+  tanh(): void {
+    this.applyUnary(Math.tanh);
+  }
   sin(): void {
-    this.applyUnary((x) => {
-      const angle = this.isRadians() ? x : (x * Math.PI) / 180;
-      return Math.sin(angle);
-    });
+    this.trig(Math.sin);
   }
-
   cos(): void {
-    this.applyUnary((x) => {
-      const angle = this.isRadians() ? x : (x * Math.PI) / 180;
-      return Math.cos(angle);
-    });
+    this.trig(Math.cos);
   }
-
   tan(): void {
-    this.applyUnary((x) => {
-      const angle = this.isRadians() ? x : (x * Math.PI) / 180;
-      const r = Math.tan(angle);
-      return Math.abs(r) > 1e10 ? NaN : r;
-    });
+    this.trig(Math.tan, (r) => (Math.abs(r) > 1e10 ? NaN : r));
   }
 
   asin(): void {
-    this.applyUnary((x) => {
-      if (x < -1 || x > 1) return NaN;
-      const r = Math.asin(x);
-      return this.isRadians() ? r : (r * 180) / Math.PI;
-    });
+    this.invTrig(Math.asin, (x) => x >= -1 && x <= 1);
   }
-
   acos(): void {
-    this.applyUnary((x) => {
-      if (x < -1 || x > 1) return NaN;
-      const r = Math.acos(x);
-      return this.isRadians() ? r : (r * 180) / Math.PI;
-    });
+    this.invTrig(Math.acos, (x) => x >= -1 && x <= 1);
   }
-
   atan(): void {
-    this.applyUnary((x) => {
-      const r = Math.atan(x);
-      return this.isRadians() ? r : (r * 180) / Math.PI;
-    });
+    this.invTrig(Math.atan);
   }
 
   asinh(): void {
@@ -375,39 +285,20 @@ export class CalculatorService {
   }
 
   acosh(): void {
-    this.applyUnary((x) => x < 1 ? NaN : Math.acosh(x));
+    this.applyUnary((x) => (x < 1 ? NaN : Math.acosh(x)));
   }
 
   atanh(): void {
-    this.applyUnary((x) => (x <= -1 || x >= 1) ? NaN : Math.atanh(x));
+    this.applyUnary((x) => (x <= -1 || x >= 1 ? NaN : Math.atanh(x)));
   }
   pi(): void {
-    if (this.display() === 'Error' || this.justCalculated) {
-      this.display.set(Math.PI.toString());
-      this.justCalculated = false;
-      return;
-    }
-    this.display.update(v => v + Math.PI.toString());
+    this.insertConstant(Math.PI);
   }
-
   tau(): void {
-    const val = (2 * Math.PI).toString();
-    if (this.display() === 'Error' || this.justCalculated) {
-      this.display.set(val);
-      this.justCalculated = false;
-      return;
-    }
-    this.display.update(v => v + val);
+    this.insertConstant(2 * Math.PI);
   }
-
   eSquared(): void {
-    const val = (Math.E * Math.E).toString();
-    if (this.display() === 'Error' || this.justCalculated) {
-      this.display.set(val);
-      this.justCalculated = false;
-      return;
-    }
-    this.display.update(v => v + val);
+    this.insertConstant(Math.E * Math.E);
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
@@ -424,7 +315,10 @@ export class CalculatorService {
       return;
     }
 
-    if (!isFinite(num)) { this.display.set('Error'); return; }
+    if (!isFinite(num)) {
+      this.display.set('Error');
+      return;
+    }
 
     const result = fn(num);
     if (!isFinite(result) || isNaN(result)) {
@@ -442,8 +336,41 @@ export class CalculatorService {
     return parseFloat(parseFloat(n.toString()).toPrecision(10)).toString();
   }
 
-  floor(): void     { this.applyUnary(Math.floor); }
-  ceil(): void      { this.applyUnary(Math.ceil); }
+  /** Applies a Math.* trig fn, converting the operand from degrees when isRadians() is off. */
+  private trig(fn: (x: number) => number, postProcess?: (r: number) => number): void {
+    this.applyUnary((x) => {
+      const angle = this.isRadians() ? x : (x * Math.PI) / 180;
+      const r = fn(angle);
+      return postProcess ? postProcess(r) : r;
+    });
+  }
+
+  /** Applies a Math.* inverse trig fn, converting the result back to degrees when isRadians() is off. */
+  private invTrig(fn: (x: number) => number, domainCheck?: (x: number) => boolean): void {
+    this.applyUnary((x) => {
+      if (domainCheck && !domainCheck(x)) return NaN;
+      const r = fn(x);
+      return this.isRadians() ? r : (r * 180) / Math.PI;
+    });
+  }
+
+  /** Inserts a constant (π, τ, e², …): replaces the display fresh after an error/calculation, else appends. */
+  private insertConstant(value: number): void {
+    const str = value.toString();
+    if (this.display() === 'Error' || this.justCalculated) {
+      this.display.set(str);
+      this.justCalculated = false;
+      return;
+    }
+    this.display.update((v) => v + str);
+  }
+
+  floor(): void {
+    this.applyUnary(Math.floor);
+  }
+  ceil(): void {
+    this.applyUnary(Math.ceil);
+  }
 
   factorial(): void {
     this.applyUnary((n) => {

@@ -20,16 +20,19 @@ ion-toolbar {
 }
 
 .close-btn {
+  --background: rgba(255, 255, 255, 0.07);
+  --background-activated: rgba(255, 255, 255, 0.12);
+  --border-radius: 50%;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --box-shadow: none;
+  --color: #94a3b8;
+  --padding-start: 0;
+  --padding-end: 0;
   width: 34px;
   height: 34px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #94a3b8;
+  margin: 0;
   font-size: 1.2rem;
 }
 
@@ -75,14 +78,17 @@ ion-toolbar {
 }
 
 .star-btn {
-  background: none;
-  border: none;
-  padding: 0.25rem;
-  cursor: pointer;
+  --background: transparent;
+  --background-activated: transparent;
+  --box-shadow: none;
+  --padding-start: 0.25rem;
+  --padding-end: 0.25rem;
+  --color: rgba(255, 255, 255, 0.15);
+  margin: 0;
+  height: auto;
   font-size: 2rem;
   line-height: 1;
-  color: rgba(255, 255, 255, 0.15);
-  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .star-btn:active {
@@ -103,28 +109,44 @@ ion-icon.star-filled {
 
 /* Categories */
 .categories-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 0.5rem;
 }
 
 .cat-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.3rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0.875rem;
-  padding: 0.65rem 0.5rem;
-  cursor: pointer;
+  --background: rgba(255, 255, 255, 0.04);
+  --background-activated: rgba(255, 255, 255, 0.08);
+  --border-radius: 0.875rem;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --box-shadow: none;
+  --padding-start: 0.5rem;
+  --padding-end: 0.5rem;
+  --padding-top: 0.65rem;
+  --padding-bottom: 0.65rem;
+  /* 3 per row, same math CSS grid's repeat(3, 1fr) would've given —
+     but as flex-basis, so an incomplete last row (5 items, not a
+     multiple of 3) centers via .categories-grid's justify-content
+     instead of leaving a dangling gap on one side. */
+  flex: 0 0 calc((100% - 1rem) / 3);
+  margin: 0;
+  height: auto;
+  text-transform: none;
   font-family: 'Outfit', system-ui, sans-serif;
   transition: all 0.2s ease;
 }
 
+.cat-btn::part(native) {
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
 .cat-btn.active {
-  background: rgba(99, 102, 241, 0.15);
-  border-color: rgba(99, 102, 241, 0.4);
+  --background: rgba(34, 211, 238, 0.12);
+  --border-color: rgba(56, 189, 248, 0.4);
 }
 
 .cat-emoji {
@@ -139,31 +161,29 @@ ion-icon.star-filled {
 }
 
 .cat-btn.active .cat-label {
-  color: #818cf8;
+  color: #38bdf8;
 }
 
 /* Textarea */
 .fb-textarea {
+  --background: rgba(255, 255, 255, 0.04);
+  --color: #f8fafc;
+  --placeholder-color: #334155;
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+  --padding-top: 0.875rem;
+  --padding-bottom: 0.875rem;
   width: 100%;
-  background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1rem;
-  color: #f8fafc;
   font-family: 'Outfit', system-ui, sans-serif;
   font-size: 0.9rem;
-  padding: 0.875rem 1rem;
-  resize: none;
-  outline: none;
-  transition: border-color 0.2s;
   line-height: 1.6;
+  transition: border-color 0.2s;
 }
 
-.fb-textarea:focus {
-  border-color: rgba(99, 102, 241, 0.4);
-}
-
-.fb-textarea::placeholder {
-  color: #334155;
+.fb-textarea.has-focus {
+  border-color: rgba(56, 189, 248, 0.45);
 }
 
 .char-count {
@@ -179,30 +199,29 @@ ion-icon.star-filled {
 
 /* Submit */
 .submit-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
-  background: linear-gradient(135deg, #6366f1, #818cf8);
-  color: #fff;
-  border: none;
-  border-radius: 0.875rem;
-  padding: 0.9rem;
+  --background: linear-gradient(135deg, #22d3ee 0%, #2563eb 100%);
+  --background-activated: linear-gradient(135deg, #22d3ee 0%, #2563eb 100%);
+  --box-shadow: none;
+  --border-radius: 0.875rem;
+  --color: #fff;
+  --padding-top: 0.9rem;
+  --padding-bottom: 0.9rem;
+  margin: 0 0 0.75rem;
+  height: auto;
   font-size: 0.9rem;
   font-weight: 700;
+  text-transform: none;
   font-family: 'Outfit', system-ui, sans-serif;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.15s;
-  margin-bottom: 0.75rem;
+  transition:
+    opacity 0.2s,
+    transform 0.15s;
 }
 
-.submit-btn:disabled {
+.submit-btn[disabled] {
   opacity: 0.4;
-  cursor: not-allowed;
 }
 
-.submit-btn:not(:disabled):active {
+.submit-btn:not([disabled]):active {
   transform: scale(0.97);
 }
 
@@ -220,10 +239,29 @@ ion-icon.star-filled {
 }
 
 @keyframes dots {
-  0%  { width: 0; }
-  33% { width: 0.5ch; }
-  66% { width: 1ch; }
-  100% { width: 1.5ch; }
+  0% {
+    width: 0;
+  }
+  33% {
+    width: 0.5ch;
+  }
+  66% {
+    width: 1ch;
+  }
+  100% {
+    width: 1.5ch;
+  }
+}
+
+.error-note {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  margin: 0 0 0.75rem;
 }
 
 .privacy-note {

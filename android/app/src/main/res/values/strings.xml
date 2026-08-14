@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Arithmaxa</string>
+    <string name="title_activity_main">Arithmaxa</string>
+    <string name="package_name">com.arithmaxa.app</string>
+    <string name="custom_url_scheme">com.arithmaxa.app</string>
+</resources>

@@ -1,1 +1,23 @@
-/* All styles moved to global styles.css */
+/* Metric/Imperial toggle — was two manually-toggled <button> elements with
+   a hand-rolled "active" background class; now a real <ion-segment>, whose
+   built-in sliding indicator replaces that manual toggle logic. Themed to
+   match the original amber pill via Ionic's documented CSS custom
+   properties instead of conditional Tailwind classes. */
+.unit-segment {
+  --background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.25rem;
+}
+
+.unit-segment ion-segment-button {
+  --color: #94a3b8;
+  --color-checked: #000000;
+  --indicator-color: #fbbf24;
+  --border-radius: 0.5rem;
+  min-height: 2rem;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}

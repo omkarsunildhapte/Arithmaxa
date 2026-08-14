@@ -1,24 +1,19 @@
 import { Component, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, ModalController
-} from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, ModalController, IonInput } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
-import { ToolsService } from '../../../../../services/tools/tools.service';
+import { ToolsService } from '@services/tools/tools.service';
 
 addIcons({ closeOutline });
 
 @Component({
   selector: 'app-discount-calc',
   standalone: true,
-  imports: [
-    FormsModule, DecimalPipe,
-    IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent
-  ],
+  imports: [FormsModule, DecimalPipe, IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonInput],
   templateUrl: './discount-calc.html',
-  styleUrls: ['./discount-calc.css']
+  styleUrls: ['./discount-calc.css'],
 })
 export class DiscountCalc {
   private toolsService = inject(ToolsService);
@@ -28,7 +23,9 @@ export class DiscountCalc {
   discountPercent: number = 0;
   discountedPrice = signal<number>(0);
 
-  dismiss() { this.modalCtrl.dismiss(); }
+  dismiss() {
+    this.modalCtrl.dismiss();
+  }
 
   calculate() {
     const res = this.toolsService.discount(this.originalPrice, this.discountPercent);

@@ -15,20 +15,18 @@
     <div class="premium-card">
       <div class="input-group">
         <label>Original Price</label>
-        <input type="number" [(ngModel)]="originalPrice" (input)="calculate()" class="huge-input" placeholder="0.00">
+        <ion-input type="number" [(ngModel)]="originalPrice" (ionInput)="calculate()" class="huge-input" placeholder="0.00"></ion-input>
       </div>
       <div class="input-group">
         <label>Discount (%)</label>
-        <input type="number" [(ngModel)]="discountPercent" (input)="calculate()" class="huge-input" placeholder="0">
+        <ion-input type="number" [(ngModel)]="discountPercent" (ionInput)="calculate()" class="huge-input" placeholder="0"></ion-input>
       </div>
       <div class="glass-panel text-center">
         <label>Final Price</label>
         <div class="text-6xl font-black text-white mt-2 mb-1">
-          {{ discountedPrice() | number:'1.0-2' }}
+          {{ discountedPrice() | number: '1.0-2' }}
         </div>
-        <div class="text-[10px] uppercase tracking-widest text-[#10b981] font-bold">
-          You Save: {{ (originalPrice - discountedPrice()) | number:'1.0-2' }}
-        </div>
+        <div class="text-[10px] uppercase tracking-widest text-[#10b981] font-bold">You Save: {{ originalPrice - discountedPrice() | number: '1.0-2' }}</div>
       </div>
     </div>
   </div>

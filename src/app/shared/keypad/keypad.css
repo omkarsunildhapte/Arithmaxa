@@ -22,13 +22,16 @@
   --box-shadow: none;
 }
 
-
-
-
-
 .scientific-mode ion-button {
   --border-radius: 12px;
-  min-height: 42px;
+  /* No min-height here on purpose — .auto-rows-fr on the grid (added only
+     in scientific mode, see keypad.html) divides the flex-1 grid's actual
+     available height evenly across however many rows the mode needs, and
+     grid's default align-items: stretch fills each button to its row. That
+     keeps the keypad always fitting the viewport with no scrollbar, even
+     though scientific mode can run to ~10 rows — the tradeoff is rows (and
+     tap targets) get proportionally shorter on smaller screens instead of
+     ever overflowing. */
   font-size: 0.9rem;
 }
 
@@ -40,26 +43,11 @@
 .normal-mode ion-button {
   --border-radius: 50%;
   aspect-ratio: 1;
-  min-height: 56px;
   font-size: 1.15rem;
 }
 
 .normal-mode .btn-equals {
   --border-radius: 24px;
-}
-
-.keypad ion-button {
-  --box-shadow: none;
-  --padding-start: 0;
-  --padding-end: 0;
-  --padding-top: 0;
-  --padding-bottom: 0;
-  margin: 0;
-  font-family: 'Outfit', system-ui, sans-serif;
-  letter-spacing: -0.5px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.2s ease;
 }
 
 /* ── Tactile Glass Style ── */
@@ -90,10 +78,6 @@
   --color: #818cf8;
 }
 
-.btn-sci.btn-clear {
-  --color: #f87171;
-}
-
 .btn-equals {
   grid-row: span 1;
   --background: #6366f1;
@@ -106,7 +90,9 @@
 
 .scientific-mode .btn-equals {
   grid-column: span 2;
-  height: 42px;
+  /* No fixed height here either, same reason as .scientific-mode
+     ion-button above — a fixed px height would either overflow a shorter
+     fluid row or leave a gap in a taller one. */
   aspect-ratio: auto;
   --border-radius: 12px;
 }
@@ -117,24 +103,8 @@
   --border-radius: 32px;
 }
 
-/* Entry Animation */
-@keyframes buttonIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.keypad ion-button {
-  animation: buttonIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-}
-
-.spacer {
-  height: 48px;
-  visibility: hidden;
-}
+/* Dead code removed: an unscoped `.keypad ion-button` rule (no element in
+   this template ever carries a `.keypad` class — <app-keypad> in
+   calculator.html only has `.flex-1`) drove an entry animation and its
+   @keyframes buttonIn that never actually ran, plus a `.spacer` rule and a
+   `.btn-sci.btn-clear` modifier with no matching element in keypad.html. */

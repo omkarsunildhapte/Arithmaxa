@@ -2,11 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { App } from './app';
 import { provideIonicAngular, Platform } from '@ionic/angular/standalone';
 import { provideRouter } from '@angular/router';
-import { NavigationService } from '../services/navigation/navigation.service';
+import { NavigationService } from '@services/navigation/navigation.service';
 
 describe('App', () => {
-  let navServiceSpy: any;
-  let platformSpy: any;
+  let navServiceSpy: Partial<NavigationService>;
+  let platformSpy: Partial<Platform>;
 
   beforeEach(async () => {
     navServiceSpy = { init: jest.fn() };
@@ -14,12 +14,7 @@ describe('App', () => {
 
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [
-        provideIonicAngular(),
-        provideRouter([]),
-        { provide: NavigationService, useValue: navServiceSpy },
-        { provide: Platform, useValue: platformSpy }
-      ]
+      providers: [provideIonicAngular(), provideRouter([]), { provide: NavigationService, useValue: navServiceSpy }, { provide: Platform, useValue: platformSpy }],
     }).compileComponents();
   });
 

@@ -1,24 +1,19 @@
 import { Component, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, ModalController, IonFooter
-} from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, ModalController, IonFooter, IonInput, IonSegment, IonSegmentButton, IonLabel } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
-import { ToolsService } from '../../../../../services/tools/tools.service';
+import { ToolsService } from '@services/tools/tools.service';
 
 addIcons({ closeOutline });
 
 @Component({
   selector: 'app-bmi-calc',
   standalone: true,
-  imports: [
-    DecimalPipe, FormsModule,
-    IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonFooter
-  ],
+  imports: [DecimalPipe, FormsModule, IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonFooter, IonInput, IonSegment, IonSegmentButton, IonLabel],
   templateUrl: './bmi-calc.html',
-  styleUrls: ['./bmi-calc.css']
+  styleUrls: ['./bmi-calc.css'],
 })
 export class BmiCalc {
   private toolsService = inject(ToolsService);
@@ -34,7 +29,14 @@ export class BmiCalc {
 
   bmiResult = signal<{ bmi: number; category: string } | null>(null);
 
-  dismiss() { this.modalCtrl.dismiss(); }
+  dismiss() {
+    this.modalCtrl.dismiss();
+  }
+
+  onUnitChange(event: Event): void {
+    const custom = event as CustomEvent<{ value: 'metric' | 'imperial' }>;
+    this.switchUnit(custom.detail.value);
+  }
 
   switchUnit(u: 'metric' | 'imperial') {
     this.unit = u;
@@ -48,7 +50,7 @@ export class BmiCalc {
       this.bmiResult.set(this.toolsService.calculateBmi(this.weightKg, heightM));
     } else {
       if (!this.weightLbs || !this.heightFt) return;
-      const totalInches = (this.heightFt * 12) + (this.heightIn ?? 0);
+      const totalInches = this.heightFt * 12 + (this.heightIn ?? 0);
       const heightM = totalInches * 0.0254;
       const weightKg = this.weightLbs * 0.453592;
       this.bmiResult.set(this.toolsService.calculateBmi(weightKg, heightM));

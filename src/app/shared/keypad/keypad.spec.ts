@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Keypad } from './keypad';
-import { CalculatorService } from '../../../services/calculator/calculator.service';
+import { CalculatorService } from '@services/calculator/calculator.service';
 import { CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
 describe('Keypad', () => {
   let component: Keypad;
   let fixture: ComponentFixture<Keypad>;
-  let calcService: any;
+  let calcService: CalculatorService;
 
   beforeEach(async () => {
     const calcSpy = {
@@ -29,15 +29,13 @@ describe('Keypad', () => {
       toggleInverse: jest.fn(),
       isScientific: signal(false),
       isRadians: signal(true),
-      isInverse: signal(false)
+      isInverse: signal(false),
     };
 
     await TestBed.configureTestingModule({
       imports: [Keypad],
-      providers: [
-        { provide: CalculatorService, useValue: calcSpy }
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      providers: [{ provide: CalculatorService, useValue: calcSpy }],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Keypad);
@@ -58,6 +56,22 @@ describe('Keypad', () => {
   it('should call toggleInverse via service', () => {
     component.calc.toggleInverse();
     expect(calcService.toggleInverse).toHaveBeenCalled();
+  });
+
+  it('pressKey() calls appendNumber for a number key', () => {
+    component.pressKey({ label: '7', value: '7', type: 'number' });
+    expect(calcService.appendNumber).toHaveBeenCalledWith('7');
+    expect(calcService.setOperator).not.toHaveBeenCalled();
+  });
+
+  it('pressKey() calls setOperator for an operator key', () => {
+    component.pressKey({ label: '÷', value: '/', type: 'operator' });
+    expect(calcService.setOperator).toHaveBeenCalledWith('/');
+    expect(calcService.appendNumber).not.toHaveBeenCalled();
+  });
+
+  it('numpadKeys covers the full ÷,7-9,×,4-6,−,1-3,+,0 sequence in grid order', () => {
+    expect(component.numpadKeys.map((k) => k.label)).toEqual(['÷', '7', '8', '9', '×', '4', '5', '6', '−', '1', '2', '3', '+', '0']);
   });
 
   it('should navigate to tools', () => {

@@ -10,7 +10,7 @@ ion-select::part(icon) {
   opacity: 0.5;
 }
 
-input.huge-input {
+ion-input.huge-input {
   line-height: 1;
   margin-top: 8px;
 }

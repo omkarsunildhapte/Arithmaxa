@@ -1,14 +1,15 @@
 import { Service, inject } from '@angular/core';
-import { 
-  Platform, 
-  ModalController, 
-  AlertController, 
-  ActionSheetController, 
-  PopoverController,
-  ToastController
-} from '@ionic/angular/standalone';
+import { Platform, ModalController, AlertController, ActionSheetController, PopoverController, ToastController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+
+// Legacy Cordova/Capacitor "app" plugin surface (`navigator.app.exitApp()`),
+// not part of TS's DOM lib. Declared minimally rather than casting to `any`.
+declare global {
+  interface Navigator {
+    app?: { exitApp?: () => void };
+  }
+}
 
 @Service()
 export class NavigationService {
@@ -44,13 +45,10 @@ export class NavigationService {
 
       if (url === '/' || url === '/home' || url === '/arithmaxa') {
         const currentTime = Date.now();
-        
+
         if (currentTime - this.lastBackPress < this.EXIT_TIME_THRESHOLD) {
           // Double tap detected -> Exit app
-          const nav = (navigator as any);
-          if (nav.app && nav.app.exitApp) {
-            nav.app.exitApp();
-          }
+          navigator.app?.exitApp?.();
         } else {
           // First tap -> Show toast
           this.lastBackPress = currentTime;
@@ -67,7 +65,7 @@ export class NavigationService {
       message: 'Press back again to exit',
       duration: 2000,
       position: 'bottom',
-      cssClass: 'exit-toast'
+      cssClass: 'exit-toast',
     });
     await toast.present();
   }

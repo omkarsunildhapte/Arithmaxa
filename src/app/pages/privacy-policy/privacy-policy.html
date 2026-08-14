@@ -9,16 +9,12 @@
 
 <ion-content class="policy-content">
   <div class="policy-container">
-
     <!-- Hero -->
     <div class="policy-hero">
       <div class="hero-icon">🔒</div>
       <h1 class="policy-h1">Privacy Policy</h1>
       <p class="policy-meta-date">Last Updated: {{ lastUpdated }}</p>
-      <p class="policy-intro">
-        Arithmaxa is built with a privacy-first approach. Your calculations stay on
-        your device. We don't run ads, and we don't sell your data.
-      </p>
+      <p class="policy-intro">Arithmaxa is built with a privacy-first approach. Your calculations stay on your device. We don't run ads, and we don't sell your data.</p>
     </div>
 
     <!-- Quick summary cards -->
@@ -47,30 +43,19 @@
       <h3>Stored Only On Your Device</h3>
       <p>All of the following is kept in your browser's localStorage and never transmitted to us:</p>
       <ul>
-        <li>
-          <strong>Calculation History</strong> — Your recent calculations (up to 20 entries), including expressions, results, and timestamps.
-        </li>
-        <li>
-          <strong>App Preferences</strong> — Calculator mode (basic / scientific), angle unit (radians / degrees), and display state.
-        </li>
-        <li>
-          <strong>Privacy Consent</strong> — Your choices from this consent dialog, stored as <code>arithmaxa_consent_v1</code>.
-        </li>
-        <li>
-          <strong>Feedback</strong> — Any feedback you submit is stored locally as <code>arithmaxa_feedback_v1</code> and never transmitted.
-        </li>
+        <li><strong>Calculation History</strong> — Your recent calculations (up to 20 entries), including expressions, results, and timestamps.</li>
+        <li><strong>App Preferences</strong> — Calculator mode (basic / scientific), angle unit (radians / degrees), and display state.</li>
+        <li><strong>Privacy Consent</strong> — Your choices from this consent dialog, stored as <code>arithmaxa_consent_v1</code>.</li>
       </ul>
 
       <h3>Sent to Third-Party Services</h3>
       <ul>
         <li>
-          <strong>AI Chat Messages</strong> — When you use the AI Assistant, your math question and the conversation context are sent to
-          <strong>OpenRouter's API</strong> for AI model processing. OpenRouter handles this data per their own privacy policy.
-          You can disable AI Chat processing in the cookie preferences.
+          <strong>AI Chat Messages</strong> — When you use the AI Assistant, your math question and the conversation context are sent to <strong>OpenRouter's API</strong> for AI model processing.
+          OpenRouter handles this data per their own privacy policy. You can disable AI Chat processing in the cookie preferences.
         </li>
-        <li>
-          <strong>Currency Exchange Rates</strong> — The currency converter tool may fetch live exchange rates from external financial data APIs. No personal data is included in these requests.
-        </li>
+        <li><strong>Currency Exchange Rates</strong> — The currency converter tool may fetch live exchange rates from external financial data APIs. No personal data is included in these requests.</li>
+        <li><strong>Feedback</strong> — Feedback you submit (your star rating, category, and message) is sent by email to the Arithmaxa team so we can act on it. No name or email address is attached to it.</li>
       </ul>
     </div>
 
@@ -79,12 +64,10 @@
       <h2>2. Device Permissions</h2>
       <ul>
         <li>
-          <strong>Microphone</strong> — Requested only when you tap the voice input button in AI Chat. Audio is processed entirely by your browser's
-          built-in Web Speech API. We do not receive, store, or process audio.
+          <strong>Microphone</strong> — Requested only when you tap the voice input button in AI Chat. Audio is processed entirely by your browser's built-in Web Speech API. We do not receive, store,
+          or process audio.
         </li>
-        <li>
-          <strong>Local Storage</strong> — Used to persist your history, settings, and consent choices between sessions.
-        </li>
+        <li><strong>Local Storage</strong> — Used to persist your history, settings, and consent choices between sessions.</li>
       </ul>
       <p>No other device permissions are requested or used.</p>
     </div>
@@ -95,7 +78,7 @@
       <ul>
         <li>Deliver calculator and AI assistant functionality.</li>
         <li>Remember your preferences across sessions.</li>
-        <li>Improve the app using locally stored feedback (never transmitted).</li>
+        <li>Improve the app using the feedback you send us.</li>
       </ul>
       <p>We do <strong>not</strong> sell, rent, share, or monetize your data in any way.</p>
     </div>
@@ -109,11 +92,8 @@
           <span class="tp-badge">AI Chat Feature</span>
         </div>
         <p>
-          AI chat messages are processed by OpenRouter and its partner model providers.
-          Please review the
-          <a href="https://openrouter.ai/privacy" target="_blank" rel="noopener noreferrer" class="policy-link">
-            OpenRouter Privacy Policy
-          </a>
+          AI chat messages are processed by OpenRouter and its partner model providers. Please review the
+          <a href="https://openrouter.ai/privacy" target="_blank" rel="noopener noreferrer" class="policy-link"> OpenRouter Privacy Policy </a>
           to understand how they handle prompt data.
         </p>
       </div>
@@ -162,12 +142,8 @@
       </div>
 
       <div class="actions-row">
-        <button class="action-btn danger" (click)="clearAllData()">
-          🗑️ Delete All My Data
-        </button>
-        <a routerLink="/" class="action-btn secondary">
-          ⚙️ Manage Consent
-        </a>
+        <ion-button fill="clear" class="action-btn danger" (click)="clearAllData()">🗑️ Delete All My Data</ion-button>
+        <a routerLink="/" class="action-btn secondary"> ⚙️ Manage Consent </a>
       </div>
     </div>
 
@@ -175,8 +151,7 @@
     <div class="policy-section">
       <h2>6. Children's Privacy</h2>
       <p>
-        Arithmaxa does not knowingly collect personal information from anyone under the age of 13.
-        If you believe a child has provided data through AI Chat, please contact us so we can take
+        Arithmaxa does not knowingly collect personal information from anyone under the age of 13. If you believe a child has provided data through AI Chat, please contact us so we can take
         appropriate action.
       </p>
     </div>
@@ -185,9 +160,8 @@
     <div class="policy-section">
       <h2>7. Security</h2>
       <p>
-        All local data is protected by your device's operating system and browser security.
-        Transmissions to the OpenRouter API use industry-standard HTTPS/TLS encryption.
-        We cannot guarantee absolute security of data transmitted over the internet.
+        All local data is protected by your device's operating system and browser security. Transmissions to the OpenRouter API use industry-standard HTTPS/TLS encryption. We cannot guarantee absolute
+        security of data transmitted over the internet.
       </p>
     </div>
 
@@ -195,10 +169,8 @@
     <div class="policy-section">
       <h2>8. Local Storage vs Cookies</h2>
       <p>
-        Arithmaxa uses <strong>browser localStorage</strong>, not traditional HTTP cookies.
-        localStorage data is stored entirely on your device and is not automatically sent
-        to any server with HTTP requests, unlike cookies. You can clear it at any time
-        via your browser settings or using the "Delete All My Data" button above.
+        Arithmaxa uses <strong>browser localStorage</strong>, not traditional HTTP cookies. localStorage data is stored entirely on your device and is not automatically sent to any server with HTTP
+        requests, unlike cookies. You can clear it at any time via your browser settings or using the "Delete All My Data" button above.
       </p>
     </div>
 
@@ -206,10 +178,8 @@
     <div class="policy-section">
       <h2>9. Changes to This Policy</h2>
       <p>
-        We may update this Privacy Policy from time to time. When we do, we will update
-        the "Last Updated" date above and notify you within the app if the changes are
-        material. Continued use of Arithmaxa after an update constitutes acceptance
-        of the revised policy.
+        We may update this Privacy Policy from time to time. When we do, we will update the "Last Updated" date above and notify you within the app if the changes are material. Continued use of
+        Arithmaxa after an update constitutes acceptance of the revised policy.
       </p>
     </div>
 
@@ -220,11 +190,11 @@
       <div class="contact-card">
         <div class="contact-line">
           <span>📧</span>
-          <a href="mailto:seaducktechnology2&#64;gmail.com" class="policy-link">seaducktechnology2&#64;gmail.com</a>
+          <a href="mailto:vernoka.tech&#64;gmail.com" class="policy-link">vernoka.tech&#64;gmail.com</a>
         </div>
         <div class="contact-line">
           <span>🌐</span>
-          <span class="contact-text">Seaduck Technology — Arithmaxa</span>
+          <span class="contact-text">Vernoka Technology — Arithmaxa</span>
         </div>
       </div>
     </div>
@@ -242,8 +212,7 @@
     </div>
 
     <div class="policy-footer">
-      <p>Seaduck Technology © {{ currentYear }} · All rights reserved</p>
+      <p>Vernoka Technology © {{ currentYear }} · All rights reserved</p>
     </div>
-
   </div>
 </ion-content>

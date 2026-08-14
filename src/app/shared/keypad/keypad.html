@@ -1,7 +1,6 @@
-<div class="flex flex-col gap-3 p-4 transition-all duration-300 bg-[#050505]" [class.scientific-mode]="calc.isScientific()" [class.normal-mode]="!calc.isScientific()">
-  
+<div class="flex flex-col h-full min-h-0 gap-3 p-4 transition-all duration-300 bg-[#050505]" [class.scientific-mode]="calc.isScientific()" [class.normal-mode]="!calc.isScientific()">
   <!-- ── Sub Toolbar ── -->
-  <div class="flex justify-between items-center px-2 pb-3 border-b border-white/5 mb-2">
+  <div class="shrink-0 flex justify-between items-center px-2 pb-3 border-b border-white/5 mb-2">
     <div class="flex gap-5">
       <ion-button class="tool-btn" [class.active]="calc.isScientific()" (click)="calc.toggleScientific()">
         <ion-icon name="grid-outline"></ion-icon>
@@ -15,7 +14,11 @@
     </ion-button>
   </div>
 
-  <div class="grid grid-cols-4 flex-1" [class.gap-2]="calc.isScientific()" [class.gap-3]="!calc.isScientific()">
+  <div
+    class="grid grid-cols-4 flex-1 min-h-0 auto-rows-fr"
+    [class.gap-2]="calc.isScientific()"
+    [class.gap-3]="!calc.isScientific()"
+  >
     <!-- ── Scientific Only Rows ── -->
     @if (calc.isScientific()) {
       <!-- Row 1 -->
@@ -25,14 +28,14 @@
       <ion-button class="btn-sci" (click)="calc.isInverse() ? calc.square() : calc.sqrt()">{{ calc.isInverse() ? 'x²' : '√' }}</ion-button>
 
       <!-- Row 2 -->
-      <ion-button class="btn-sci" (click)="calc.isHyperbolic() ? (calc.isInverse() ? calc.asinh() : calc.sinh()) : (calc.isInverse() ? calc.asin() : calc.sin())">
-        {{ calc.isHyperbolic() ? (calc.isInverse() ? 'sinh⁻¹' : 'sinh') : (calc.isInverse() ? 'sin⁻¹' : 'sin') }}
+      <ion-button class="btn-sci" (click)="calc.isHyperbolic() ? (calc.isInverse() ? calc.asinh() : calc.sinh()) : calc.isInverse() ? calc.asin() : calc.sin()">
+        {{ calc.isHyperbolic() ? (calc.isInverse() ? 'sinh⁻¹' : 'sinh') : calc.isInverse() ? 'sin⁻¹' : 'sin' }}
       </ion-button>
-      <ion-button class="btn-sci" (click)="calc.isHyperbolic() ? (calc.isInverse() ? calc.acosh() : calc.cosh()) : (calc.isInverse() ? calc.acos() : calc.cos())">
-        {{ calc.isHyperbolic() ? (calc.isInverse() ? 'cosh⁻¹' : 'cosh') : (calc.isInverse() ? 'cos⁻¹' : 'cos') }}
+      <ion-button class="btn-sci" (click)="calc.isHyperbolic() ? (calc.isInverse() ? calc.acosh() : calc.cosh()) : calc.isInverse() ? calc.acos() : calc.cos()">
+        {{ calc.isHyperbolic() ? (calc.isInverse() ? 'cosh⁻¹' : 'cosh') : calc.isInverse() ? 'cos⁻¹' : 'cos' }}
       </ion-button>
-      <ion-button class="btn-sci" (click)="calc.isHyperbolic() ? (calc.isInverse() ? calc.atanh() : calc.tanh()) : (calc.isInverse() ? calc.atan() : calc.tan())">
-        {{ calc.isHyperbolic() ? (calc.isInverse() ? 'tanh⁻¹' : 'tanh') : (calc.isInverse() ? 'tan⁻¹' : 'tan') }}
+      <ion-button class="btn-sci" (click)="calc.isHyperbolic() ? (calc.isInverse() ? calc.atanh() : calc.tanh()) : calc.isInverse() ? calc.atan() : calc.tan()">
+        {{ calc.isHyperbolic() ? (calc.isInverse() ? 'tanh⁻¹' : 'tanh') : calc.isInverse() ? 'tan⁻¹' : 'tan' }}
       </ion-button>
       <ion-button class="btn-sci" (click)="calc.isInverse() ? calc.factorial() : calc.abs()">{{ calc.isInverse() ? 'x!' : '|x|' }}</ion-button>
 
@@ -65,24 +68,9 @@
       <ion-button class="btn-sci btn-operator" (click)="calc.toggleSign()">+/-</ion-button>
       <ion-button class="btn-sci" (click)="calc.clear()">AC</ion-button>
     }
-    <ion-button class="btn-sci btn-operator" (click)="calc.setOperator('/')">÷</ion-button>
-
-    <ion-button class="btn-sci" (click)="calc.appendNumber('7')">7</ion-button>
-    <ion-button class="btn-sci" (click)="calc.appendNumber('8')">8</ion-button>
-    <ion-button class="btn-sci" (click)="calc.appendNumber('9')">9</ion-button>
-    <ion-button class="btn-sci btn-operator" (click)="calc.setOperator('*')">×</ion-button>
-
-    <ion-button class="btn-sci" (click)="calc.appendNumber('4')">4</ion-button>
-    <ion-button class="btn-sci" (click)="calc.appendNumber('5')">5</ion-button>
-    <ion-button class="btn-sci" (click)="calc.appendNumber('6')">6</ion-button>
-    <ion-button class="btn-sci btn-operator" (click)="calc.setOperator('-')">−</ion-button>
-
-    <ion-button class="btn-sci" (click)="calc.appendNumber('1')">1</ion-button>
-    <ion-button class="btn-sci" (click)="calc.appendNumber('2')">2</ion-button>
-    <ion-button class="btn-sci" (click)="calc.appendNumber('3')">3</ion-button>
-    <ion-button class="btn-sci btn-operator" (click)="calc.setOperator('+')">+</ion-button>
-
-    <ion-button class="btn-sci" (click)="calc.appendNumber('0')">0</ion-button>
+    @for (key of numpadKeys; track key.label) {
+      <ion-button class="btn-sci" [class.btn-operator]="key.type === 'operator'" (click)="pressKey(key)">{{ key.label }}</ion-button>
+    }
     <ion-button class="btn-sci" (click)="calc.appendDecimal()">.</ion-button>
     <ion-button class="btn-equals" (click)="calc.calculate()">=</ion-button>
   </div>

@@ -1,19 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;500;700&display=swap');
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  /* Arithmaxa Core Palette */
-  --brand-primary: #6366f1;
-  /* Indigo */
-  --brand-secondary: #818cf8;
-  /* Lighter Indigo */
-  --brand-accent: #3b82f6;
-  /* Blue accent */
+  /* Arithmaxa Core Palette — matches public/logo.png's actual cyan→blue
+     gradient (previously indigo/violet, which didn't match the app icon). */
+  --brand-primary: #22d3ee;
+  /* Cyan */
+  --brand-secondary: #2563eb;
+  /* Deep blue */
+  --brand-accent: #38bdf8;
+  /* Sky blue accent */
   --brand-dark: #050505;
   /* True Black */
   --brand-surface: #0f172a;
   /* Slate Deep */
   --brand-glass: rgba(15, 23, 42, 0.7);
+  /* Primary → secondary CTA gradient — reused as-is by feedback-modal.css's
+     .submit-btn and cookie-consent.css's .consent-icon/.btn-primary. */
+  --brand-gradient: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
 
   /* Ionic Overrides */
   --ion-background-color: var(--brand-dark);
@@ -22,11 +26,11 @@
   --ion-text-color-rgb: 248, 250, 252;
 
   --ion-color-primary: var(--brand-primary);
-  --ion-color-primary-rgb: 99, 102, 241;
-  --ion-color-primary-contrast: #ffffff;
-  --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #4f46e5;
-  --ion-color-primary-tint: #818cf8;
+  --ion-color-primary-rgb: 34, 211, 238;
+  --ion-color-primary-contrast: #04141a;
+  --ion-color-primary-contrast-rgb: 4, 20, 26;
+  --ion-color-primary-shade: #06b6d4;
+  --ion-color-primary-tint: #67e8f9;
 
   --ion-toolbar-background: #000000;
   --ion-toolbar-color: #ffffff;
@@ -46,7 +50,11 @@ html,
 body {
   height: 100%;
   margin: 0;
-  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  font-family:
+    'Outfit',
+    system-ui,
+    -apple-system,
+    sans-serif;
   background: var(--brand-dark);
   color: var(--ion-text-color);
 }
@@ -119,19 +127,22 @@ body {
   opacity: 0.8;
 }
 
+/* Used on <ion-input> (was a plain <input> — background/border/padding are
+   non-inherited, so they have to go through Ionic's CSS custom properties
+   to reach the shadow-DOM-rendered field; color/font-size/font-weight are
+   inherited CSS properties and still cascade through normally). */
 .huge-input {
   width: 100%;
-  background: transparent;
-  border: none;
-  color: #ffffff;
+  --background: transparent;
+  --color: #ffffff;
+  --placeholder-color: rgba(255, 255, 255, 0.1);
+  --placeholder-opacity: 1;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
   font-size: 2.5rem;
   font-weight: 700;
-  padding: 0;
-  outline: none;
-}
-
-.huge-input::placeholder {
-  color: rgba(255, 255, 255, 0.1);
 }
 
 .glass-panel {
@@ -140,22 +151,6 @@ body {
   border-radius: 1.5rem;
   padding: 1.25rem;
   margin-top: 1.5rem;
-}
-
-.unit-selector {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1rem;
-  padding: 0.5rem 1rem;
-}
-
-.unit-selector ion-select {
-  --padding-start: 0;
-  --padding-end: 0;
-  --placeholder-color: #94a3b8;
-  --placeholder-opacity: 0.6;
-  font-size: 0.9rem;
-  font-weight: 500;
 }
 
 .header-container {
@@ -183,4 +178,202 @@ body {
 .premium-modal ion-toolbar {
   --min-height: 64px;
   border-radius: 32px 32px 0 0;
+}
+
+/* Legal page shell — shared verbatim by privacy-policy.ts and
+   terms-of-service.ts (the only two components that use these classes).
+   Lives here instead of each component's own styleUrls so it's defined
+   once instead of duplicated across both ~250-line stylesheets. Anything
+   that differs between the two pages (e.g. terms-of-service's .warning-box,
+   privacy-policy's .summary-row/.third-party-card/.rights-list/.action-btn)
+   stays in that page's own CSS file. */
+.page-title-center {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+.policy-content {
+  --background: #050505;
+}
+
+.policy-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+.policy-hero {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.hero-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.policy-h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  margin: 0 0 0.3rem;
+  background: linear-gradient(135deg, #fff 40%, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.policy-meta-date {
+  font-size: 0.72rem;
+  color: #475569;
+  margin: 0 0 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.policy-intro {
+  font-size: 0.88rem;
+  color: #94a3b8;
+  line-height: 1.65;
+  margin: 0 auto;
+  max-width: 520px;
+}
+
+.policy-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  margin-bottom: 0.875rem;
+}
+
+.policy-section h2 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0 0 0.875rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.policy-section h3 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6366f1;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 1rem 0 0.5rem;
+}
+
+.policy-section p {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.7;
+  margin: 0 0 0.75rem;
+}
+
+.policy-section p:last-child {
+  margin-bottom: 0;
+}
+
+.policy-section ul {
+  padding-left: 1.2rem;
+  margin: 0 0 0.75rem;
+}
+
+.policy-section li {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.7;
+  margin-bottom: 0.4rem;
+}
+
+.policy-section li strong {
+  color: #e2e8f0;
+}
+
+.policy-link {
+  color: #818cf8;
+  text-decoration: underline;
+}
+
+.contact-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.875rem;
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.contact-line {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+}
+
+.contact-text {
+  color: #94a3b8;
+}
+
+.related-links {
+  margin-bottom: 0.875rem;
+}
+
+.related-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 1rem;
+  padding: 0.875rem 1rem;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.related-link:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.related-link > span:first-child {
+  font-size: 1.2rem;
+}
+
+.related-link strong {
+  display: block;
+  font-size: 0.85rem;
+  color: #e2e8f0;
+}
+
+.related-link div span {
+  display: block;
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.related-arrow {
+  margin-left: auto;
+  font-size: 1.2rem;
+  color: #475569;
+}
+
+.policy-footer {
+  text-align: center;
+  padding-top: 1rem;
+  font-size: 0.72rem;
+  color: #334155;
 }

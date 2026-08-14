@@ -6,9 +6,7 @@ describe('AgeCalc', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AgeCalc],
-      providers: [
-        provideIonicAngular()
-      ]
+      providers: [provideIonicAngular()],
     }).compileComponents();
   });
 

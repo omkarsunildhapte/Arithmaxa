@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ModalController } from '@ionic/angular/standalone';
-import { CalculatorService } from '../../../services/calculator/calculator.service';
+import { CalculatorService } from '@services/calculator/calculator.service';
 import { IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent } from '@ionic/angular/standalone';
 import { DatePipe } from '@angular/common';
 import { addIcons } from 'ionicons';
@@ -13,7 +13,7 @@ addIcons({ closeOutline, trashOutline, timeOutline });
   standalone: true,
   imports: [IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, DatePipe],
   templateUrl: './history.html',
-  styleUrls: ['./history.css']
+  styleUrls: ['./history.css'],
 })
 export class History {
   protected readonly calc = inject(CalculatorService);

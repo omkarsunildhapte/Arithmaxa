@@ -1,7 +1,6 @@
 @if (isVisible()) {
   <div class="consent-overlay" role="dialog" aria-modal="true" aria-label="Privacy Consent">
     <div class="consent-card animate-fade-in">
-
       <div class="consent-header">
         <div class="consent-icon">
           <ion-icon name="shield-checkmark-outline"></ion-icon>
@@ -13,9 +12,8 @@
       </div>
 
       <p class="consent-text">
-        Your calculation history and settings are stored <strong>only on your device</strong>.
-        The AI Chat feature sends your queries to <strong>OpenRouter</strong> for processing.
-        No personal data is collected by us or sent to our servers.
+        Your calculation history and settings are stored <strong>only on your device</strong>. The AI Chat feature sends your queries to <strong>OpenRouter</strong> for processing. No personal data is
+        collected by us or sent to our servers.
         <a routerLink="/privacy" class="consent-link">Read Privacy Policy</a>
       </p>
 
@@ -26,9 +24,7 @@
               <span class="toggle-name">Essential Storage</span>
               <span class="toggle-desc">History, settings & consent — always active</span>
             </div>
-            <div class="toggle-switch active locked" title="Always required">
-              <div class="toggle-knob"></div>
-            </div>
+            <ion-toggle checked disabled class="consent-toggle" title="Always required" aria-label="Essential Storage (always required)"></ion-toggle>
           </div>
 
           <div class="toggle-row">
@@ -36,10 +32,7 @@
               <span class="toggle-name">Functional Storage</span>
               <span class="toggle-desc">Feedback and additional app preferences</span>
             </div>
-            <label class="toggle-switch" [class.active]="functional()">
-              <input type="checkbox" [checked]="functional()" (change)="setFunctional($any($event.target).checked)" class="sr-only">
-              <div class="toggle-knob"></div>
-            </label>
+            <ion-toggle [checked]="functional()" (ionChange)="onFunctionalChange($event)" class="consent-toggle" aria-label="Functional Storage"></ion-toggle>
           </div>
 
           <div class="toggle-row">
@@ -47,25 +40,21 @@
               <span class="toggle-name">AI Chat Processing</span>
               <span class="toggle-desc">Math queries sent to OpenRouter's API</span>
             </div>
-            <label class="toggle-switch" [class.active]="aiProcessing()">
-              <input type="checkbox" [checked]="aiProcessing()" (change)="setAiProcessing($any($event.target).checked)" class="sr-only">
-              <div class="toggle-knob"></div>
-            </label>
+            <ion-toggle [checked]="aiProcessing()" (ionChange)="onAiProcessingChange($event)" class="consent-toggle" aria-label="AI Chat Processing"></ion-toggle>
           </div>
         </div>
       }
 
       <div class="consent-actions">
         @if (showCustomize()) {
-          <button class="btn-primary" (click)="saveCustom()">Save Preferences</button>
-          <button class="btn-ghost" (click)="toggleCustomize()">Cancel</button>
+          <ion-button fill="clear" class="btn-primary" (click)="saveCustom()">Save Preferences</ion-button>
+          <ion-button fill="clear" class="btn-ghost" (click)="toggleCustomize()">Cancel</ion-button>
         } @else {
-          <button class="btn-primary" (click)="acceptAll()">Accept All</button>
-          <button class="btn-secondary" (click)="toggleCustomize()">Customize</button>
-          <button class="btn-ghost" (click)="acceptEssentialOnly()">Essential Only</button>
+          <ion-button fill="clear" class="btn-primary" (click)="acceptAll()">Accept All</ion-button>
+          <ion-button fill="clear" class="btn-secondary" (click)="toggleCustomize()">Customize</ion-button>
+          <ion-button fill="clear" class="btn-ghost" (click)="acceptEssentialOnly()">Essential Only</ion-button>
         }
       </div>
-
     </div>
   </div>
 }

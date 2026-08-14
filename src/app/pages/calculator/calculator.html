@@ -19,9 +19,9 @@
     </div>
   </ion-toolbar>
 </ion-header>
-<ion-content class="calc-content">
+<ion-content class="calc-content" [scrollY]="false">
   <div class="flex flex-col h-full bg-[#050505]">
-    <app-display></app-display>
-    <app-keypad class="flex-1"></app-keypad>
+    <app-display class="shrink-0"></app-display>
+    <app-keypad class="flex-1 min-h-0"></app-keypad>
   </div>
 </ion-content>

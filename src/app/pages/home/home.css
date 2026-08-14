@@ -15,9 +15,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 40px 40px;
   mask-image: radial-gradient(circle at center, black, transparent 80%);
   pointer-events: none;
@@ -45,14 +43,16 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 4px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(251, 191, 36, 0.06);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    inset 0 0 20px rgba(34, 211, 238, 0.08);
 }
 
 .logo-img {
   width: 76%;
   height: 76%;
   object-fit: contain;
-  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.4));
+  filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.45));
 }
 
 .app-title {
@@ -60,16 +60,16 @@
   font-weight: 900;
   margin: 0;
   letter-spacing: -1.5px;
-  background: linear-gradient(135deg, #ffffff 30%, #fbbf24);
+  background: linear-gradient(135deg, #ffffff 30%, #22d3ee);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.15));
+  filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.2));
   line-height: 1;
 }
 
 .app-subtitle {
   font-size: 0.72rem;
-  color: #fbbf24;
+  color: #38bdf8;
   text-transform: uppercase;
   letter-spacing: 5px;
   margin: 0;
@@ -90,7 +90,7 @@
 swiper-container {
   flex: 1;
   width: 100%;
-  --swiper-pagination-color: #fbbf24;
+  --swiper-pagination-color: #22d3ee;
   --swiper-pagination-bullet-inactive-color: rgba(255, 255, 255, 0.25);
   --swiper-pagination-bullet-inactive-opacity: 1;
   --swiper-pagination-bullet-size: 6px;
@@ -158,6 +158,11 @@ swiper-slide {
 }
 
 /* ── Footer ── */
+ion-footer {
+  --background: #0d0b21;
+  background: #0d0b21;
+}
+
 .footer-section {
   padding: 12px 32px 28px;
   display: flex;
@@ -169,24 +174,31 @@ swiper-slide {
 }
 
 .explore-btn {
+  --background: linear-gradient(135deg, #22d3ee 0%, #2563eb 100%);
+  --background-activated: linear-gradient(135deg, #22d3ee 0%, #2563eb 100%);
+  --color: #ffffff;
+  --border-radius: 50px;
+  --box-shadow: none;
+  --padding-top: 17px;
+  --padding-bottom: 17px;
+  --padding-start: 28px;
+  --padding-end: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   width: 100%;
   max-width: 300px;
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  color: #0d0b21;
-  border: none;
-  border-radius: 50px;
-  padding: 17px 28px;
+  height: auto;
+  margin: 0;
   font-size: 0.95rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 2px;
-  cursor: pointer;
   transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 12px 30px rgba(251, 191, 36, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 12px 30px rgba(37, 99, 235, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
   position: relative;
   overflow: hidden;
 }
@@ -220,7 +232,7 @@ swiper-slide {
 
 .explore-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 18px 40px rgba(251, 191, 36, 0.45);
+  box-shadow: 0 18px 40px rgba(37, 99, 235, 0.5);
 }
 
 .explore-btn:hover ion-icon {
@@ -240,13 +252,27 @@ swiper-slide {
   flex-wrap: wrap;
 }
 
+/* .legal-link is shared between real <a routerLink> tags and the
+   <ion-button> feedback trigger — plain CSS styles the anchors, the
+   matching Ionic CSS custom properties style the button's shadow-rendered
+   surface; each element ignores whichever set doesn't apply to it. */
 .legal-link {
+  --background: transparent;
+  --background-activated: transparent;
+  --background-hover: transparent;
+  --box-shadow: none;
+  --color: rgba(148, 163, 184, 0.5);
+  --padding-start: 0;
+  --padding-end: 0;
   color: rgba(148, 163, 184, 0.5);
   font-size: 0.68rem;
   font-weight: 500;
   text-decoration: none;
   background: none;
   border: none;
+  margin: 0;
+  height: auto;
+  text-transform: none;
   cursor: pointer;
   font-family: 'Outfit', system-ui, sans-serif;
   padding: 0;
@@ -255,6 +281,7 @@ swiper-slide {
 
 .legal-link:hover {
   color: rgba(148, 163, 184, 0.85);
+  --color: rgba(148, 163, 184, 0.85);
 }
 
 .link-sep {
@@ -263,22 +290,39 @@ swiper-slide {
   pointer-events: none;
 }
 
+/* Unlike the plain Privacy/Terms links, this is an actual action (opens
+   the feedback modal) — a small cyan pill sets it apart so it reads as
+   tappable instead of blending into the static legal-links row. */
 .feedback-trigger {
+  --color: #38bdf8;
+  color: #38bdf8;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+  font-weight: 600;
+  padding: 5px 12px !important;
+  border-radius: 100px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s;
 }
 
 .feedback-trigger ion-icon {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 
-/* ── Animations ── */
-.animate-fade-in {
-  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.feedback-trigger:hover {
+  color: #7dd3fc;
+  --color: #7dd3fc;
+  background: rgba(56, 189, 248, 0.18);
+  border-color: rgba(56, 189, 248, 0.4);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* .animate-fade-in / @keyframes fadeIn used on .header-section and
+   .slide-content below are the global ones from src/styles.css — Angular's
+   emulated encapsulation scopes selectors but not @keyframes names, so a
+   second same-named @keyframes here would silently race the global one
+   instead of layering on top of it. */
