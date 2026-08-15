@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, ModalController, IonInput } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, ModalController, IonInput, IonFooter } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
 import { ToolsService } from '@services/tools/tools.service';
@@ -11,7 +11,7 @@ addIcons({ closeOutline });
 @Component({
   selector: 'app-discount-calc',
   standalone: true,
-  imports: [FormsModule, DecimalPipe, IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonInput],
+  imports: [FormsModule, DecimalPipe, IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonInput, IonFooter],
   templateUrl: './discount-calc.html',
   styleUrls: ['./discount-calc.css'],
 })

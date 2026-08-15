@@ -2,10 +2,10 @@ import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, v
 import { IonContent, IonIcon, IonButton, IonFooter, NavController, ModalController } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { chevronForwardOutline, chatbubbleEllipsesOutline } from 'ionicons/icons';
+import { chevronForwardOutline } from 'ionicons/icons';
 import { FeedbackModal } from '../../shared/feedback/feedback-modal';
 import { OnboardingSlide } from '@appTypes/index';
-addIcons({ chevronForwardOutline, chatbubbleEllipsesOutline });
+addIcons({ chevronForwardOutline });
 
 @Component({
   selector: 'app-home',
@@ -22,10 +22,10 @@ export class Home implements AfterViewInit {
 
   // prettier-ignore
   slides: OnboardingSlide[] = [
-    { title: 'Basic Arithmetic', htmlTitle: 'Basic<br>Arithmetic', description: 'Perform essential mathematical operations with lightning speed and unmatched precision.', image: 'onboarding/arithmetic.png' },
-    { title: 'Occupational & Logic', htmlTitle: 'Occupational<br>&amp;<br>Logic', description: 'Handle complex logical grouping and advanced mathematical expressions with absolute ease.', image: 'onboarding/logic.png' },
-    { title: 'Scientific Functions', htmlTitle: 'Scientific<br>Functions', description: 'Access high-level scientific functions: Logarithms, Trigonometry, and Power operations.', image: 'onboarding/scientific.png' },
-    { title: 'Calculation History', htmlTitle: 'Calculation<br>History', description: 'Never lose track of your work. Every result is stored and accessible at a single tap.', image: 'onboarding/history.png' },
+    { title: 'Basic Arithmetic', htmlTitle: 'Basic<br>Arithmetic', description: 'Perform essential mathematical operations with lightning speed and unmatched precision.' },
+    { title: 'Occupational & Logic', htmlTitle: 'Occupational<br>&amp;<br>Logic', description: 'Handle complex logical grouping and advanced mathematical expressions with absolute ease.' },
+    { title: 'Scientific Functions', htmlTitle: 'Scientific<br>Functions', description: 'Access high-level scientific functions: Logarithms, Trigonometry, and Power operations.' },
+    { title: 'Calculation History', htmlTitle: 'Calculation<br>History', description: 'Never lose track of your work. Every result is stored and accessible at a single tap.' },
   ];
 
   ngAfterViewInit(): void {
@@ -39,7 +39,7 @@ export class Home implements AfterViewInit {
           opacity: 1;
         }
         .swiper-pagination-bullet-active {
-          background: #22d3ee !important;
+          background: #22ecf3 !important;
           opacity: 1;
           width: 20px !important;
           border-radius: 4px !important;

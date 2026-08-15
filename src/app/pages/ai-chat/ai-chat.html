@@ -5,8 +5,8 @@
     </ion-buttons>
     <ion-title>
       <div class="flex items-center justify-center gap-2">
-        <ion-icon name="sparkles-outline" class="text-[#818cf8] text-xl filter drop-shadow-[0_0_8px_rgba(129,140,248,0.5)]"></ion-icon>
-        <span class="text-white font-black tracking-tight uppercase">Arithmaxa AI</span>
+        <ion-icon name="sparkles-outline" class="text-[var(--brand-accent)] text-xl filter drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]"></ion-icon>
+        <span class="text-white font-black tracking-tight uppercase">AI</span>
       </div>
     </ion-title>
     <ion-buttons slot="end">
@@ -31,9 +31,9 @@
 <ion-content class="ai-content">
   <div class="px-4 pt-4 pb-2 space-y-4" #messagesEl>
     @if (ai.messages().length === 0 && !ai.loading()) {
-      <div class="flex flex-col items-center justify-center text-center p-8 opacity-40 mt-20">
-        <ion-icon name="sparkles-outline" class="text-6xl mb-4"></ion-icon>
-        <p class="text-sm font-light leading-relaxed">Ask me anything about math or tap <strong>Use expression</strong> to explain your current calculation.</p>
+      <div class="flex flex-col items-center justify-center text-center p-8 mt-20">
+        <ion-icon name="sparkles-outline" class="text-[var(--brand-accent)] text-6xl mb-4 opacity-60 filter drop-shadow-[0_0_16px_rgba(56,189,248,0.4)]"></ion-icon>
+        <p class="text-sm font-light leading-relaxed opacity-40">Ask me anything about math or tap <strong>Use expression</strong> to explain your current calculation.</p>
       </div>
     }
 
@@ -41,7 +41,7 @@
       <div class="flex flex-col" [class.items-end]="msg.role === 'user'" [class.items-start]="msg.role === 'assistant'">
         <div
           class="max-w-[85%] p-4 rounded-3xl text-sm leading-relaxed backdrop-blur-xl border border-white/5"
-          [class]="msg.role === 'user' ? 'bg-[#6366f1]/20 text-white' : 'bg-white/5 text-slate-200'"
+          [class]="msg.role === 'user' ? 'bg-[var(--brand-primary)]/20 text-white' : 'bg-white/5 text-slate-200'"
         >
           @if (msg.imageUrl) {
             <img [src]="msg.imageUrl" alt="Attached photo" class="chat-image mb-2" />
@@ -59,7 +59,7 @@
     @if (ai.loading()) {
       <div class="flex flex-col items-start">
         <div class="p-4 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/5">
-          <ion-spinner name="dots" class="text-[#818cf8]"></ion-spinner>
+          <ion-spinner name="dots" class="text-[var(--brand-accent)]"></ion-spinner>
         </div>
       </div>
     }
@@ -73,7 +73,7 @@
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <div class="px-4 pt-3 pb-5 bg-[#050505] border-t border-white/5">
+  <div class="px-4 pt-3 pb-5 bg-[var(--brand-dark)] border-t border-white/5">
     @if (calc.display() && calc.display() !== 'Error') {
       <div class="flex justify-end mb-2">
         <ion-button fill="clear" class="use-expr-btn active:scale-95 transition-all" (click)="useExpression()">
@@ -98,9 +98,11 @@
       <ion-button fill="clear" class="icon-only-btn" [disabled]="recognizingText()" (click)="attachPhoto()">
         <ion-icon name="camera-outline" slot="icon-only"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" class="icon-only-btn" [class.recording]="isRecording()" [disabled]="!micAvailable()" (click)="toggleMic()">
-        <ion-icon slot="icon-only" [name]="isRecording() ? 'mic-outline' : 'mic-off-outline'"></ion-icon>
-      </ion-button>
+      @if (isRecording() || !prompt.trim()) {
+        <ion-button fill="clear" class="icon-only-btn" [class.recording]="isRecording()" [disabled]="!micAvailable()" (click)="toggleMic()">
+          <ion-icon slot="icon-only" [name]="isRecording() ? 'mic-outline' : 'mic-off-outline'"></ion-icon>
+        </ion-button>
+      }
       <ion-textarea
         class="flex-1 chat-textarea"
         [placeholder]="isRecording() ? 'Listening...' : 'Ask a math question...'"

@@ -1,1 +1,30 @@
-/* All styles moved to global styles.css */
+/* Same "no shared outer card" treatment as percentage-calc.css — each
+   section (Original Price, Discount %, Final Price) gets its own
+   lightweight box instead of all three sharing one premium-card, spaced
+   apart by the parent's flex gap instead of individual margins.
+   margin-bottom/margin-top: 0 override .input-group's and .glass-panel's
+   global margins (styles.css), which would otherwise double up with that
+   gap. */
+.input-card {
+  margin-bottom: 0;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.25rem;
+  padding: 1rem 1.25rem;
+}
+
+/* Final Price — tinted to match the brand-primary accent used across the
+   other redesigned tools instead of the plain neutral glass-panel look. */
+.result-panel {
+  margin-top: 0;
+  border-color: rgba(34, 236, 243, 0.2);
+  background: rgba(34, 236, 243, 0.06);
+}
+
+.result-value {
+  color: var(--brand-primary);
+}
+
+.savings-value {
+  color: var(--brand-primary);
+}

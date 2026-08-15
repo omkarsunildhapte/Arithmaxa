@@ -2,11 +2,11 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { backspaceOutline, timeOutline, resizeOutline, calculatorOutline, gridOutline, flaskOutline } from 'ionicons/icons';
+import { backspaceOutline } from 'ionicons/icons';
 import { CalculatorService } from '@services/calculator/calculator.service';
 import { KeypadKey } from '@appTypes/index';
 
-addIcons({ backspaceOutline, timeOutline, resizeOutline, calculatorOutline, gridOutline, flaskOutline });
+addIcons({ backspaceOutline });
 
 @Component({
   selector: 'app-keypad',

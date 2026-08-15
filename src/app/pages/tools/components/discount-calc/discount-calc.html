@@ -11,23 +11,28 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="tool-modal-content">
-  <div class="tool-view animate-fade-in">
-    <div class="premium-card">
-      <div class="input-group">
-        <label>Original Price</label>
-        <ion-input type="number" [(ngModel)]="originalPrice" (ionInput)="calculate()" class="huge-input" placeholder="0.00"></ion-input>
+  <!-- No outer premium-card wrapper — each section below carries its own
+       lightweight box instead of sharing one big card, matching
+       percentage-calc's redesign. -->
+  <div class="tool-view animate-fade-in flex flex-col gap-4 px-5 py-4">
+    <div class="input-group input-card">
+      <label>Original Price</label>
+      <ion-input type="number" [(ngModel)]="originalPrice" (ionInput)="calculate()" class="huge-input" placeholder="0.00"></ion-input>
+    </div>
+    <div class="input-group input-card">
+      <label>Discount (%)</label>
+      <ion-input type="number" [(ngModel)]="discountPercent" (ionInput)="calculate()" class="huge-input" placeholder="0"></ion-input>
+    </div>
+    <div class="glass-panel result-panel text-center">
+      <label>Final Price</label>
+      <div class="text-6xl font-black mt-2 mb-1 result-value">
+        {{ discountedPrice() | number: '1.0-2' }}
       </div>
-      <div class="input-group">
-        <label>Discount (%)</label>
-        <ion-input type="number" [(ngModel)]="discountPercent" (ionInput)="calculate()" class="huge-input" placeholder="0"></ion-input>
-      </div>
-      <div class="glass-panel text-center">
-        <label>Final Price</label>
-        <div class="text-6xl font-black text-white mt-2 mb-1">
-          {{ discountedPrice() | number: '1.0-2' }}
-        </div>
-        <div class="text-[10px] uppercase tracking-widest text-[#10b981] font-bold">You Save: {{ originalPrice - discountedPrice() | number: '1.0-2' }}</div>
-      </div>
+      <div class="text-[10px] uppercase tracking-widest font-bold savings-value">You Save: {{ originalPrice - discountedPrice() | number: '1.0-2' }}</div>
     </div>
   </div>
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="bg-[var(--brand-dark)]"> </ion-toolbar>
+</ion-footer>

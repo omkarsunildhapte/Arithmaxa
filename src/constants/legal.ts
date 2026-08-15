@@ -5,4 +5,4 @@
  * one file was edited. Update this in one place when the policy text
  * actually changes.
  */
-export const LEGAL_LAST_UPDATED = 'January 1, 2025';
+export const LEGAL_LAST_UPDATED = 'August 15, 2026';

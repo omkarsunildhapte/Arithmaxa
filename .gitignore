@@ -47,5 +47,6 @@ Thumbs.db
 # Signing keys / certificates — never committed.
 android/**/*.jks
 android/**/*.keystore
+android/keystore.properties
 *.p12
 *.mobileprovision

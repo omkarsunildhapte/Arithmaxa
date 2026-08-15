@@ -16,6 +16,6 @@ ion-input.huge-input {
 }
 
 /* Specific styling for the result card input to make it pop */
-.premium-card.bg-\[\#6366f1\]\/5 {
-  box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.2);
+.result-card {
+  box-shadow: 0 10px 30px -10px rgba(6, 165, 218, 0.2);
 }

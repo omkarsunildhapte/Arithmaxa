@@ -1,8 +1,9 @@
 /* Metric/Imperial toggle — was two manually-toggled <button> elements with
    a hand-rolled "active" background class; now a real <ion-segment>, whose
    built-in sliding indicator replaces that manual toggle logic. Themed to
-   match the original amber pill via Ionic's documented CSS custom
-   properties instead of conditional Tailwind classes. */
+   match the brand-accent pill (previously amber) used across the other
+   redesigned tools via Ionic's documented CSS custom properties instead of
+   conditional Tailwind classes. */
 .unit-segment {
   --background: rgba(255, 255, 255, 0.05);
   border-radius: 0.75rem;
@@ -10,14 +11,48 @@
   padding: 0.25rem;
 }
 
+/* --color-checked was #000000 (black) — reads fine if the checked
+   indicator is a filled pill behind the text, but Ionic's md-mode segment
+   (this app's mode, see app.config.ts) renders the indicator as a thin
+   underline instead, so the checked label sits directly on the card's own
+   dark background. Black-on-near-black made the active tab's label
+   effectively invisible; brand-accent both fixes that and doubles as the
+   same color as the underline itself for extra emphasis. */
+/* font-size/letter-spacing/padding all tightened from the original 2-tab
+   sizing (0.75rem, 0.1em letter-spacing, default padding) — that fit
+   METRIC/IMPERIAL fine, but adding the METERS tab left only ~1/3 the width
+   per label, which truncated all three ("MET…", "IMPER…") at the old
+   sizing. */
 .unit-segment ion-segment-button {
   --color: #94a3b8;
-  --color-checked: #000000;
-  --indicator-color: #fbbf24;
+  --color-checked: var(--brand-accent);
+  --indicator-color: var(--brand-accent);
   --border-radius: 0.5rem;
+  --padding-start: 0.25rem;
+  --padding-end: 0.25rem;
   min-height: 2rem;
-  font-size: 0.75rem;
+  font-size: 0.62rem;
   font-weight: 900;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
+}
+
+/* Same "no shared outer card" treatment as percentage-calc/discount-calc —
+   Parameters, Weight, and Height each get their own lightweight box
+   instead of all sharing one premium-card, spaced by the parent's flex
+   gap instead of individual margins. */
+.input-card {
+  margin-bottom: 0;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.25rem;
+  padding: 1rem 1.25rem;
+}
+
+/* Your BMI Score — tinted to match the brand-accent used across the other
+   redesigned tools instead of the old amber. */
+.result-panel {
+  margin-top: 0;
+  border-color: rgba(6, 165, 218, 0.2);
+  background: rgba(6, 165, 218, 0.06);
 }

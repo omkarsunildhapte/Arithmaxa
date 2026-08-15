@@ -16,7 +16,7 @@
 
 <ion-content class="ion-padding history-container">
   @if (calc.history().length === 0) {
-    <div class="flex flex-col items-center justify-center h-full text-center p-8 animate-fade-in opacity-40">
+    <div class="empty-state flex flex-col items-center justify-center h-full text-center p-8 animate-fade-in opacity-40">
       <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-3xl mb-4 border border-white/10">
         <ion-icon name="time-outline"></ion-icon>
       </div>
@@ -26,13 +26,10 @@
   } @else {
     <div class="flex flex-col gap-4 animate-fade-in">
       @for (item of calc.history(); track item.timestamp) {
-        <div class="p-5 rounded-3xl bg-white/5 border border-white/5 backdrop-blur-xl transition-all active:scale-[0.98]">
-          <div class="flex justify-between items-center mb-3">
-            <span class="text-[10px] uppercase font-black tracking-widest text-[#6366f1] opacity-80">{{ item.timestamp | date: 'MMM d, HH:mm' }}</span>
-          </div>
+        <div class="history-card p-5 rounded-3xl bg-white/5 border border-white/5 backdrop-blur-xl transition-all active:scale-[0.98]">
           <div class="flex flex-col items-end gap-1">
             <div class="text-[#94a3b8] text-sm font-light break-all">{{ item.expression }}</div>
-            <div class="text-white text-2xl font-black break-all leading-none mt-1"><span class="text-[#6366f1] mr-1 opacity-50">=</span> {{ item.result }}</div>
+            <div class="text-white text-2xl font-black break-all leading-none mt-1"><span class="text-[var(--brand-accent)] mr-1 opacity-50">=</span> {{ item.result }}</div>
           </div>
         </div>
       }

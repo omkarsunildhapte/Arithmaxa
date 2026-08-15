@@ -1,6 +1,6 @@
 export * from './exchange-response';
 export * from './chat-message';
-export * from './openrouter-response';
+export * from './chat-response';
 export * from './feedback';
 export * from './consent-choices';
 export * from './history-item';

@@ -4,7 +4,7 @@
    defined once globally instead of duplicated in both stylesheets. Only
    rules unique to this page live here. */
 ion-toolbar {
-  --background: #050505;
+  --background: var(--brand-dark);
   --border-color: rgba(255, 255, 255, 0.06);
   position: relative;
 }
@@ -24,10 +24,11 @@ ion-toolbar {
   padding: 0.875rem;
 }
 
-.warning-box > span {
+.warning-box > ion-icon {
   font-size: 1.2rem;
   flex-shrink: 0;
   padding-top: 2px;
+  color: #fbbf24;
 }
 
 .warning-box strong {

@@ -1,12 +1,12 @@
 .home-content {
-  --background: #0d0b21;
+  --background: var(--brand-dark);
 }
 
 .welcome-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: radial-gradient(circle at top right, #1a1645, #0d0b21);
+  background: radial-gradient(circle at top right, var(--brand-surface), var(--brand-dark));
   position: relative;
   overflow: hidden;
 }
@@ -19,6 +19,39 @@
   background-size: 40px 40px;
   mask-image: radial-gradient(circle at center, black, transparent 80%);
   pointer-events: none;
+}
+
+/* Lets a user bypass the onboarding carousel straight to the calculator —
+   same destination as .explore-btn (goToCalculator()), just reachable
+   without swiping through every slide first. env(safe-area-inset-top)
+   matters here specifically because it's position: absolute against
+   .welcome-container, so it doesn't get ion-content's automatic safe-area
+   padding the way normal in-flow content does. */
+.skip-btn {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 14px);
+  right: 8px;
+  z-index: 10;
+  --color: rgba(148, 163, 184, 0.5);
+  color: rgba(148, 163, 184, 0.5);
+  --background: transparent;
+  --background-activated: transparent;
+  --background-hover: transparent;
+  --box-shadow: none;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  height: auto;
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition: color 0.2s;
+}
+
+.skip-btn:hover {
+  --color: rgba(148, 163, 184, 0.85);
+  color: rgba(148, 163, 184, 0.85);
 }
 
 /* ── Header ── */
@@ -45,14 +78,14 @@
   margin-bottom: 4px;
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.5),
-    inset 0 0 20px rgba(34, 211, 238, 0.08);
+    inset 0 0 20px rgba(34, 236, 243, 0.08);
 }
 
 .logo-img {
   width: 76%;
   height: 76%;
   object-fit: contain;
-  filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.45));
+  filter: drop-shadow(0 0 10px rgba(34, 236, 243, 0.45));
 }
 
 .app-title {
@@ -60,16 +93,16 @@
   font-weight: 900;
   margin: 0;
   letter-spacing: -1.5px;
-  background: linear-gradient(135deg, #ffffff 30%, #22d3ee);
+  background: linear-gradient(135deg, #ffffff 30%, var(--brand-primary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.2));
+  filter: drop-shadow(0 0 20px rgba(34, 236, 243, 0.2));
   line-height: 1;
 }
 
 .app-subtitle {
   font-size: 0.72rem;
-  color: #38bdf8;
+  color: var(--brand-accent);
   text-transform: uppercase;
   letter-spacing: 5px;
   margin: 0;
@@ -90,7 +123,7 @@
 swiper-container {
   flex: 1;
   width: 100%;
-  --swiper-pagination-color: #22d3ee;
+  --swiper-pagination-color: var(--brand-primary);
   --swiper-pagination-bullet-inactive-color: rgba(255, 255, 255, 0.25);
   --swiper-pagination-bullet-inactive-opacity: 1;
   --swiper-pagination-bullet-size: 6px;
@@ -105,62 +138,51 @@ swiper-slide {
   height: 100%;
 }
 
+/* No slide image anymore (text-only slides) — justify-content: center on
+   the single .slide-text child is what vertically centers it in the space
+   the image used to occupy, so no extra centering wrapper is needed. */
 .slide-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 16px 28px 36px;
-  gap: 24px;
+  padding: 16px 32px 36px;
   height: 100%;
   width: 100%;
-}
-
-.slide-image-wrapper {
-  flex-shrink: 0;
-  width: 220px;
-  height: 220px;
-  filter: drop-shadow(0 0 32px rgba(99, 102, 241, 0.25));
-}
-
-.slide-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
 }
 
 .slide-text {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
 }
 
 .slide-title {
-  font-size: 2rem;
+  font-size: 1.9rem;
   font-weight: 900;
   color: #ffffff;
   text-transform: uppercase;
   letter-spacing: -0.5px;
-  line-height: 1;
+  line-height: 1.1;
   text-align: center;
   margin: 0;
 }
 
 .slide-desc {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: rgba(148, 163, 184, 0.9);
   font-weight: 300;
   line-height: 1.6;
   text-align: center;
-  max-width: 240px;
+  max-width: 280px;
   margin: 0;
 }
 
 /* ── Footer ── */
 ion-footer {
-  --background: #0d0b21;
-  background: #0d0b21;
+  --background: var(--brand-dark);
+  background: var(--brand-dark);
 }
 
 .footer-section {
@@ -174,8 +196,8 @@ ion-footer {
 }
 
 .explore-btn {
-  --background: linear-gradient(135deg, #22d3ee 0%, #2563eb 100%);
-  --background-activated: linear-gradient(135deg, #22d3ee 0%, #2563eb 100%);
+  --background: var(--brand-gradient);
+  --background-activated: var(--brand-gradient);
   --color: #ffffff;
   --border-radius: 50px;
   --box-shadow: none;
@@ -197,7 +219,7 @@ ion-footer {
   letter-spacing: 2px;
   transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   box-shadow:
-    0 12px 30px rgba(37, 99, 235, 0.4),
+    0 12px 30px rgba(3, 69, 125, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.08);
   position: relative;
   overflow: hidden;
@@ -232,7 +254,7 @@ ion-footer {
 
 .explore-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 18px 40px rgba(37, 99, 235, 0.5);
+  box-shadow: 0 18px 40px rgba(3, 69, 125, 0.5);
 }
 
 .explore-btn:hover ion-icon {
@@ -290,36 +312,9 @@ ion-footer {
   pointer-events: none;
 }
 
-/* Unlike the plain Privacy/Terms links, this is an actual action (opens
-   the feedback modal) — a small cyan pill sets it apart so it reads as
-   tappable instead of blending into the static legal-links row. */
-.feedback-trigger {
-  --color: #38bdf8;
-  color: #38bdf8;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-weight: 600;
-  padding: 5px 12px !important;
-  border-radius: 100px;
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  transition:
-    background 0.2s,
-    border-color 0.2s,
-    color 0.2s;
-}
-
-.feedback-trigger ion-icon {
-  font-size: 0.8rem;
-}
-
-.feedback-trigger:hover {
-  color: #7dd3fc;
-  --color: #7dd3fc;
-  background: rgba(56, 189, 248, 0.18);
-  border-color: rgba(56, 189, 248, 0.4);
-}
+/* .feedback-trigger no longer needs its own rule — now that it's icon-free
+   plain text, the shared .legal-link rule above (color/size/hover/height)
+   is all it needs to read identically to the Privacy/Terms <a> links. */
 
 /* .animate-fade-in / @keyframes fadeIn used on .header-section and
    .slide-content below are the global ones from src/styles.css — Angular's

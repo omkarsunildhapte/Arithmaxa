@@ -23,9 +23,7 @@ export class FeedbackService {
   async submit(rating: number, category: FeedbackCategory, message: string): Promise<boolean> {
     const trimmed = message.trim().slice(0, 600);
     const res = await firstValueFrom(
-      this.http
-        .post<FeedbackResponse>(FEEDBACK_URL, { rating, category, message: trimmed })
-        .pipe(catchError(() => of<FeedbackResponse>({ ok: false, error: 'Network error' }))),
+      this.http.post<FeedbackResponse>(FEEDBACK_URL, { rating, category, message: trimmed }).pipe(catchError(() => of<FeedbackResponse>({ ok: false, error: 'Network error' }))),
     );
     return res.ok;
   }

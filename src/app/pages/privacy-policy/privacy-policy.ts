@@ -1,15 +1,43 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IonHeader, IonToolbar, IonContent, IonBackButton, IonButtons, IonButton } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonContent, IonBackButton, IonButtons, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline } from 'ionicons/icons';
+import {
+  arrowBackOutline,
+  lockClosedOutline,
+  saveOutline,
+  sparklesOutline,
+  banOutline,
+  trashOutline,
+  settingsOutline,
+  cubeOutline,
+  earthOutline,
+  flagOutline,
+  mailOutline,
+  globeOutline,
+  documentTextOutline,
+} from 'ionicons/icons';
 import { ConsentService } from '@services/consent/consent.service';
 import { LEGAL_LAST_UPDATED } from '@constants/index';
-addIcons({ arrowBackOutline });
+addIcons({
+  arrowBackOutline,
+  lockClosedOutline,
+  saveOutline,
+  sparklesOutline,
+  banOutline,
+  trashOutline,
+  settingsOutline,
+  cubeOutline,
+  earthOutline,
+  flagOutline,
+  mailOutline,
+  globeOutline,
+  documentTextOutline,
+});
 @Component({
   selector: 'app-privacy-policy',
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonContent, IonBackButton, IonButtons, RouterLink, IonButton],
+  imports: [IonHeader, IonToolbar, IonContent, IonBackButton, IonButtons, RouterLink, IonButton, IonIcon],
   templateUrl: './privacy-policy.html',
   styleUrls: ['./privacy-policy.css'],
 })

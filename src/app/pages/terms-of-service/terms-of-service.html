@@ -11,7 +11,7 @@
   <div class="policy-container">
     <!-- Hero -->
     <div class="policy-hero">
-      <div class="hero-icon">📋</div>
+      <div class="hero-icon"><ion-icon name="document-text-outline"></ion-icon></div>
       <h1 class="policy-h1">Terms of Service</h1>
       <p class="policy-meta-date">Effective: {{ effectiveDate }}</p>
       <p class="policy-intro">By using Arithmaxa, you agree to these terms. They're written to be clear and fair — please read them before using the app.</p>
@@ -49,7 +49,7 @@
     <div class="policy-section">
       <h2>3. Accuracy of Calculations</h2>
       <div class="warning-box">
-        <span>⚠️</span>
+        <ion-icon name="warning-outline"></ion-icon>
         <div>
           <strong>Important Disclaimer</strong>
           <p>
@@ -65,11 +65,14 @@
     <div class="policy-section">
       <h2>4. AI Assistant</h2>
       <ul>
-        <li>The AI Assistant is powered by third-party language models via OpenRouter and may produce inaccurate, incomplete, outdated, or misleading responses.</li>
+        <li>
+          On supported devices, the AI Assistant answers on-device using the operating system's built-in AI; otherwise it's powered by third-party language models via OpenRouter, reached through our
+          own backend. Either way, it may produce inaccurate, incomplete, outdated, or misleading responses.
+        </li>
         <li>AI responses do <strong>not</strong> constitute professional advice — financial, medical, legal, or otherwise.</li>
         <li>We are not responsible for any decision made based on AI-generated content.</li>
         <li>Do not share personal, confidential, sensitive, or proprietary information in AI conversations.</li>
-        <li>AI features require internet connectivity and are subject to the availability and terms of third-party API providers.</li>
+        <li>On-device AI works offline; the cloud fallback requires internet connectivity and is subject to the availability and terms of third-party API providers.</li>
         <li>We reserve the right to limit, modify, or remove AI features at any time.</li>
       </ul>
     </div>
@@ -151,11 +154,11 @@
       <p>For questions or concerns about these Terms of Service:</p>
       <div class="contact-card">
         <div class="contact-line">
-          <span>📧</span>
+          <ion-icon name="mail-outline" class="contact-icon"></ion-icon>
           <a href="mailto:vernoka.tech&#64;gmail.com" class="policy-link">vernoka.tech&#64;gmail.com</a>
         </div>
         <div class="contact-line">
-          <span>🌐</span>
+          <ion-icon name="globe-outline" class="contact-icon"></ion-icon>
           <span class="contact-text">Vernoka Technology — Arithmaxa</span>
         </div>
       </div>
@@ -164,7 +167,7 @@
     <!-- Related -->
     <div class="related-links">
       <a routerLink="/privacy" class="related-link">
-        <span>🔒</span>
+        <ion-icon name="lock-closed-outline" class="related-icon"></ion-icon>
         <div>
           <strong>Privacy Policy</strong>
           <span>How we handle your data</span>

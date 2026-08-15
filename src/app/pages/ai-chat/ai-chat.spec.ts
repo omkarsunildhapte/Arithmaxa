@@ -65,8 +65,6 @@ describe('AiChatPage', () => {
       messages: signal([]),
       loading: signal(false),
       error: signal(null),
-      apiKey: signal('test-key'),
-      selectedModel: signal('test-model'),
       localAvailable: signal('unavailable'),
       useLocal: signal(false),
     };

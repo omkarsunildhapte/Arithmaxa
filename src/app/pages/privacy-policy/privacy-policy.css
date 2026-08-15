@@ -4,7 +4,7 @@
    it's defined once globally instead of duplicated in both stylesheets.
    Only rules unique to this page live here. */
 ion-toolbar {
-  --background: #050505;
+  --background: var(--brand-dark);
   --border-color: rgba(255, 255, 255, 0.06);
   position: relative;
 }
@@ -26,7 +26,7 @@ ion-toolbar {
   border-radius: 0.3rem;
   padding: 0.1rem 0.35rem;
   font-size: 0.78rem;
-  color: #818cf8;
+  color: var(--brand-primary);
   font-family: 'Courier New', monospace;
 }
 
@@ -39,8 +39,8 @@ ion-toolbar {
 }
 
 .summary-card {
-  background: rgba(99, 102, 241, 0.06);
-  border: 1px solid rgba(99, 102, 241, 0.12);
+  background: rgba(34, 236, 243, 0.06);
+  border: 1px solid rgba(34, 236, 243, 0.12);
   border-radius: 1rem;
   padding: 0.85rem 0.6rem;
   display: flex;
@@ -52,6 +52,7 @@ ion-toolbar {
 
 .sc-icon {
   font-size: 1.4rem;
+  color: var(--brand-primary);
 }
 
 .summary-card strong {
@@ -89,8 +90,8 @@ ion-toolbar {
 }
 
 .tp-badge {
-  background: rgba(99, 102, 241, 0.15);
-  color: #818cf8;
+  background: rgba(34, 236, 243, 0.15);
+  color: var(--brand-primary);
   font-size: 0.62rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -130,6 +131,7 @@ ion-toolbar {
   font-size: 1.1rem;
   padding-top: 2px;
   flex-shrink: 0;
+  color: var(--brand-accent);
 }
 
 .right-row strong {
@@ -155,57 +157,85 @@ ion-toolbar {
   margin-top: 0.5rem;
 }
 
-/* .action-btn is shared between a real <ion-button> (Delete All My Data)
+/* .action-btn is shared between a real <ion-button> (Delete All Data)
    and a plain <a routerLink> (Manage Consent) styled to match it — plain
    CSS properties style the anchor, the matching Ionic CSS custom
    properties style the button's shadow-rendered surface; each element
-   ignores whichever set doesn't apply to it. */
+   ignores whichever set doesn't apply to it. flex: 1 (rather than sizing
+   to content) is what keeps both buttons on one row instead of each
+   taking a full-width row of its own — they split .actions-row evenly.
+   white-space: nowrap keeps each label on a single line; that only works
+   because the labels were kept short enough (e.g. "Delete Data", not
+   "Delete All My Data") to actually fit half the row down to a ~320px
+   viewport — a longer label here would force the whole button back onto
+   its own full-width row instead of just wrapping text. min-width: 0
+   overrides the flex item default of min-width: auto so the button can
+   still shrink to that label's width instead of some larger implicit
+   floor. */
 .action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  gap: 0.25rem;
   border: none;
   border-radius: 0.75rem;
   --border-radius: 0.75rem;
   --box-shadow: none;
-  padding: 0.6rem 0.9rem;
+  padding: 0.6rem 0.35rem;
   --padding-top: 0.6rem;
   --padding-bottom: 0.6rem;
-  --padding-start: 0.9rem;
-  --padding-end: 0.9rem;
+  --padding-start: 0.35rem;
+  --padding-end: 0.35rem;
   margin: 0;
   height: auto;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
+  text-align: center;
   text-transform: none;
   font-family: 'Outfit', system-ui, sans-serif;
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
   transition:
     opacity 0.15s,
     transform 0.15s;
 }
 
-.action-btn.danger {
-  background: rgba(239, 68, 68, 0.12);
-  --background: rgba(239, 68, 68, 0.12);
-  color: #f87171;
-  --color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  --border-width: 1px;
-  --border-style: solid;
-  --border-color: rgba(239, 68, 68, 0.2);
+.action-btn ion-icon {
+  font-size: 0.9rem;
+  flex-shrink: 0;
 }
 
+/* Delete All Data is a real <ion-button>, with two separate places a
+   border can render: the host element's own box (plain `border`, flush
+   with the button's actual outer edge) or the shadow-DOM inner
+   .button-native surface (the --border-* custom properties, inset within
+   the host). We want the outer one — so only `border` is set here, and
+   --border-width is left unset (fill="clear" draws no border of its own
+   by default) so the inner surface doesn't also draw a second, inset
+   ring. */
+.action-btn.danger {
+  background: rgba(239, 68, 68, 0.16);
+  color: #f87171;
+  --color: #f87171;
+  border: 2px solid rgba(239, 68, 68, 0.5);
+  /* Plain box-shadow, same as border above — renders on the host, not the
+     shadow-DOM inner surface, so it isn't doubled by --box-shadow (already
+     none from the base .action-btn rule). Red glow spreading outward reads
+     as more urgent/destructive than the flat tinted fill alone. */
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.35);
+}
+
+/* Manage Consent is a plain <a> — no shadow DOM, so `border` is the only
+   thing that ever renders here regardless. */
 .action-btn.secondary {
-  background: rgba(255, 255, 255, 0.06);
-  --background: rgba(255, 255, 255, 0.06);
-  color: #94a3b8;
-  --color: #94a3b8;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  --border-width: 1px;
-  --border-style: solid;
-  --border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(6, 165, 218, 0.12);
+  --background: rgba(6, 165, 218, 0.12);
+  color: var(--brand-accent);
+  --color: var(--brand-accent);
+  border: 2px solid rgba(6, 165, 218, 0.5);
 }
 
 .action-btn:active {

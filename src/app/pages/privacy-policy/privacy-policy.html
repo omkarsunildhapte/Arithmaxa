@@ -11,7 +11,7 @@
   <div class="policy-container">
     <!-- Hero -->
     <div class="policy-hero">
-      <div class="hero-icon">🔒</div>
+      <div class="hero-icon"><ion-icon name="lock-closed-outline"></ion-icon></div>
       <h1 class="policy-h1">Privacy Policy</h1>
       <p class="policy-meta-date">Last Updated: {{ lastUpdated }}</p>
       <p class="policy-intro">Arithmaxa is built with a privacy-first approach. Your calculations stay on your device. We don't run ads, and we don't sell your data.</p>
@@ -20,17 +20,17 @@
     <!-- Quick summary cards -->
     <div class="summary-row">
       <div class="summary-card">
-        <span class="sc-icon">💾</span>
+        <ion-icon name="save-outline" class="sc-icon"></ion-icon>
         <strong>Local First</strong>
         <span>History & settings stay on your device only</span>
       </div>
       <div class="summary-card">
-        <span class="sc-icon">🤖</span>
+        <ion-icon name="sparkles-outline" class="sc-icon"></ion-icon>
         <strong>AI Chat</strong>
-        <span>Queries sent to OpenRouter — no other servers</span>
+        <span>Answered on-device first — cloud only as fallback</span>
       </div>
       <div class="summary-card">
-        <span class="sc-icon">🚫</span>
+        <ion-icon name="ban-outline" class="sc-icon"></ion-icon>
         <strong>No Ads</strong>
         <span>No analytics, trackers, or ad networks</span>
       </div>
@@ -45,17 +45,29 @@
       <ul>
         <li><strong>Calculation History</strong> — Your recent calculations (up to 20 entries), including expressions, results, and timestamps.</li>
         <li><strong>App Preferences</strong> — Calculator mode (basic / scientific), angle unit (radians / degrees), and display state.</li>
-        <li><strong>Privacy Consent</strong> — Your choices from this consent dialog, stored as <code>arithmaxa_consent_v1</code>.</li>
+        <li>
+          <strong>Privacy Consent</strong> — Your choices from this consent dialog, stored as <code>arithmaxa_consent_v1</code> in localStorage, and mirrored into a matching device cookie on
+          Android/iOS builds (see Section 8 below).
+        </li>
       </ul>
 
       <h3>Sent to Third-Party Services</h3>
       <ul>
         <li>
-          <strong>AI Chat Messages</strong> — When you use the AI Assistant, your math question and the conversation context are sent to <strong>OpenRouter's API</strong> for AI model processing.
-          OpenRouter handles this data per their own privacy policy. You can disable AI Chat processing in the cookie preferences.
+          <strong>AI Chat Messages</strong> — On devices that support it (recent Pixel and iPhone models), your question is answered entirely <strong>on-device</strong> using Google's or Apple's
+          built-in AI — nothing leaves your phone. On other devices, or whenever on-device processing isn't available, your question and conversation context are instead sent to
+          <strong>our own backend server</strong>, which forwards them to <strong>OpenRouter's API</strong> for processing and returns the answer; our backend does not store the message. You can
+          disable AI Chat processing in the cookie preferences.
+        </li>
+        <li>
+          <strong>Photos You Attach</strong> — If you attach a photo in AI Chat, on-device text recognition reads any text in it first — that never leaves your device. Only if no text can be read from
+          the photo (e.g. a diagram) is the image itself sent through the same path as AI Chat Messages above.
         </li>
         <li><strong>Currency Exchange Rates</strong> — The currency converter tool may fetch live exchange rates from external financial data APIs. No personal data is included in these requests.</li>
-        <li><strong>Feedback</strong> — Feedback you submit (your star rating, category, and message) is sent by email to the Arithmaxa team so we can act on it. No name or email address is attached to it.</li>
+        <li>
+          <strong>Feedback</strong> — Feedback you submit (your star rating, category, and message) is sent by email to the Arithmaxa team so we can act on it. No name or email address is attached to
+          it.
+        </li>
       </ul>
     </div>
 
@@ -64,8 +76,11 @@
       <h2>2. Device Permissions</h2>
       <ul>
         <li>
-          <strong>Microphone</strong> — Requested only when you tap the voice input button in AI Chat. Audio is processed entirely by your browser's built-in Web Speech API. We do not receive, store,
-          or process audio.
+          <strong>Microphone</strong> — Requested only when you tap the voice input button in AI Chat. Speech is converted to text entirely on your device by the operating system's built-in speech
+          recognition. We do not receive, store, or process audio.
+        </li>
+        <li>
+          <strong>Camera</strong> — Requested only when you tap the attach-photo button in AI Chat, to take a picture of a problem. See "Photos You Attach" in Section 1 for how that image is handled.
         </li>
         <li><strong>Local Storage</strong> — Used to persist your history, settings, and consent choices between sessions.</li>
       </ul>
@@ -92,9 +107,10 @@
           <span class="tp-badge">AI Chat Feature</span>
         </div>
         <p>
-          AI chat messages are processed by OpenRouter and its partner model providers. Please review the
+          When on-device AI isn't available or a photo needs to be read, AI chat messages are sent to our own backend server, which forwards them to OpenRouter and its partner model providers for
+          processing. Please review the
           <a href="https://openrouter.ai/privacy" target="_blank" rel="noopener noreferrer" class="policy-link"> OpenRouter Privacy Policy </a>
-          to understand how they handle prompt data.
+          to understand how they handle prompt data. On-device AI (Google's or Apple's built-in models) never involves OpenRouter or our servers at all.
         </p>
       </div>
     </div>
@@ -105,35 +121,35 @@
       <p>You have full control over your data:</p>
       <div class="rights-list">
         <div class="right-row">
-          <span class="right-icon">🗑️</span>
+          <ion-icon name="trash-outline" class="right-icon"></ion-icon>
           <div>
             <strong>Delete History</strong>
             <span>Clear your calculation history directly from the History panel inside the app.</span>
           </div>
         </div>
         <div class="right-row">
-          <span class="right-icon">⚙️</span>
+          <ion-icon name="settings-outline" class="right-icon"></ion-icon>
           <div>
             <strong>Change Consent</strong>
             <span>Withdraw or update your privacy choices at any time. (Button below.)</span>
           </div>
         </div>
         <div class="right-row">
-          <span class="right-icon">📦</span>
+          <ion-icon name="cube-outline" class="right-icon"></ion-icon>
           <div>
             <strong>Data Portability</strong>
             <span>All data is in your browser's localStorage — use DevTools → Application → Local Storage to inspect or export.</span>
           </div>
         </div>
         <div class="right-row">
-          <span class="right-icon">🇪🇺</span>
+          <ion-icon name="earth-outline" class="right-icon"></ion-icon>
           <div>
             <strong>GDPR Rights (EU / EEA)</strong>
             <span>You have rights to access, rectify, erase, and port your data. Contact us for requests.</span>
           </div>
         </div>
         <div class="right-row">
-          <span class="right-icon">🇺🇸</span>
+          <ion-icon name="flag-outline" class="right-icon"></ion-icon>
           <div>
             <strong>CCPA Rights (California)</strong>
             <span>You have the right to know what data is collected, delete it, and opt out of its sale (we don't sell data).</span>
@@ -142,8 +158,8 @@
       </div>
 
       <div class="actions-row">
-        <ion-button fill="clear" class="action-btn danger" (click)="clearAllData()">🗑️ Delete All My Data</ion-button>
-        <a routerLink="/" class="action-btn secondary"> ⚙️ Manage Consent </a>
+        <ion-button fill="clear" class="action-btn danger" (click)="clearAllData()"><ion-icon name="trash-outline"></ion-icon><span>Delete Data</span></ion-button>
+        <a routerLink="/" class="action-btn secondary"><ion-icon name="settings-outline"></ion-icon><span>Manage Consent</span></a>
       </div>
     </div>
 
@@ -169,8 +185,10 @@
     <div class="policy-section">
       <h2>8. Local Storage vs Cookies</h2>
       <p>
-        Arithmaxa uses <strong>browser localStorage</strong>, not traditional HTTP cookies. localStorage data is stored entirely on your device and is not automatically sent to any server with HTTP
-        requests, unlike cookies. You can clear it at any time via your browser settings or using the "Delete All My Data" button above.
+        Arithmaxa primarily uses <strong>browser/app localStorage</strong>, not traditional HTTP cookies, for your history, settings, and consent choices — this data stays entirely on your device and
+        isn't automatically sent to any server. On Android and iOS builds, your consent decision is also mirrored into a real device cookie (holding the same value as localStorage) so it's available
+        through native cookie storage as well; this cookie is never sent to us or to any server, it stays on your device the same way localStorage does. You can clear both at any time via the "Delete
+        All My Data" button above.
       </p>
     </div>
 
@@ -189,11 +207,11 @@
       <p>For privacy inquiries, data deletion requests, or to exercise your rights:</p>
       <div class="contact-card">
         <div class="contact-line">
-          <span>📧</span>
+          <ion-icon name="mail-outline" class="contact-icon"></ion-icon>
           <a href="mailto:vernoka.tech&#64;gmail.com" class="policy-link">vernoka.tech&#64;gmail.com</a>
         </div>
         <div class="contact-line">
-          <span>🌐</span>
+          <ion-icon name="globe-outline" class="contact-icon"></ion-icon>
           <span class="contact-text">Vernoka Technology — Arithmaxa</span>
         </div>
       </div>
@@ -202,7 +220,7 @@
     <!-- Related -->
     <div class="related-links">
       <a routerLink="/terms" class="related-link">
-        <span>📋</span>
+        <ion-icon name="document-text-outline" class="related-icon"></ion-icon>
         <div>
           <strong>Terms of Service</strong>
           <span>Rules governing app use</span>

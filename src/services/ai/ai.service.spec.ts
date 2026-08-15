@@ -3,9 +3,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { AiService } from './ai.service';
-import { OPENROUTER_URL } from '@constants/index';
+import { AI_CHAT_PATH } from '@constants/index';
+import { environment } from '../../environments/environment';
 import { LocalLLM } from '@capacitor/local-llm';
 import { NetworkService } from '@services/network/network.service';
+
+const CHAT_URL = `${environment.backendUrl}${AI_CHAT_PATH}`;
 
 jest.mock('@capacitor/local-llm', () => ({
   LocalLLM: {
@@ -38,18 +41,18 @@ describe('AiService', () => {
     expect(service.loading()).toBe(true);
     expect(service.messages()).toEqual([{ role: 'user', content: 'What is 2+2?' }]);
 
-    httpMock.expectOne(OPENROUTER_URL).flush({ choices: [{ message: { content: '4' } }] });
+    httpMock.expectOne(CHAT_URL).flush({ content: '4' });
   });
 
   it('ignores an empty (whitespace-only) prompt', () => {
     service.ask('   ');
     expect(service.messages()).toEqual([]);
-    httpMock.expectNone(OPENROUTER_URL);
+    httpMock.expectNone(CHAT_URL);
   });
 
   it('appends the assistant reply and clears loading on a successful response', () => {
     service.ask('What is 2+2?');
-    httpMock.expectOne(OPENROUTER_URL).flush({ choices: [{ message: { content: '4' } }] });
+    httpMock.expectOne(CHAT_URL).flush({ content: '4' });
 
     expect(service.loading()).toBe(false);
     expect(service.error()).toBeNull();
@@ -59,18 +62,27 @@ describe('AiService', () => {
     ]);
   });
 
+  it('sends no Authorization header and no API key anywhere in the request', () => {
+    service.ask('What is 2+2?');
+
+    const req = httpMock.expectOne(CHAT_URL);
+    expect(req.request.headers.has('Authorization')).toBe(false);
+    expect(JSON.stringify(req.request.body)).not.toContain('apiKey');
+    req.flush({ content: '4' });
+  });
+
   it('on an error response, sets the error message and rolls back the just-added user message', () => {
     service.ask('What is 2+2?');
-    httpMock.expectOne(OPENROUTER_URL).flush({ error: { message: 'Invalid API key' } }, { status: 401, statusText: 'Unauthorized' });
+    httpMock.expectOne(CHAT_URL).flush({ error: 'Server is not configured with an OpenRouter API key.' }, { status: 500, statusText: 'Internal Server Error' });
 
     expect(service.loading()).toBe(false);
-    expect(service.error()).toBe('Invalid API key');
+    expect(service.error()).toBe('Server is not configured with an OpenRouter API key.');
     expect(service.messages()).toEqual([]);
   });
 
   it('clearMessages() empties the conversation and clears any error', () => {
     service.ask('hi');
-    httpMock.expectOne(OPENROUTER_URL).flush({ choices: [{ message: { content: 'hello' } }] });
+    httpMock.expectOne(CHAT_URL).flush({ content: 'hello' });
 
     service.clearMessages();
 
@@ -83,13 +95,13 @@ describe('AiService', () => {
 
     expect(service.messages()).toEqual([{ role: 'user', content: '', imageUrl: 'data:image/jpeg;base64,abc123' }]);
 
-    const req = httpMock.expectOne(OPENROUTER_URL);
-    const userPart = req.request.body.messages[1];
+    const req = httpMock.expectOne(CHAT_URL);
+    const userPart = req.request.body.messages[0];
     expect(userPart.content).toEqual([
       { type: 'text', text: '' },
       { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,abc123' } },
     ]);
-    req.flush({ choices: [{ message: { content: 'That looks like 2 + 2.' } }] });
+    req.flush({ content: 'That looks like 2 + 2.' });
   });
 
   it('checkLocalAvailability() reflects LocalLLM.systemAvailability()', async () => {
@@ -118,7 +130,7 @@ describe('AiService', () => {
     expect(service.localAvailable()).toBe('available');
   });
 
-  it('ask() routes to the on-device model instead of OpenRouter when useLocal is on and the model is available', async () => {
+  it('ask() routes to the on-device model instead of the cloud when useLocal is on and the model is available', async () => {
     service.localAvailable.set('available');
     service.useLocal.set(true);
     jest.mocked(LocalLLM.prompt).mockResolvedValue({ text: 'On-device answer' });
@@ -126,7 +138,7 @@ describe('AiService', () => {
     service.ask('What is 2+2?');
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    httpMock.expectNone(OPENROUTER_URL);
+    httpMock.expectNone(CHAT_URL);
     expect(LocalLLM.prompt).toHaveBeenCalledWith(expect.objectContaining({ prompt: 'What is 2+2?' }));
     expect(service.loading()).toBe(false);
     expect(service.messages()).toEqual([
@@ -146,7 +158,7 @@ describe('AiService', () => {
     service.ask('2x + 4 = 14', 'data:image/jpeg;base64,abc123');
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    httpMock.expectNone(OPENROUTER_URL);
+    httpMock.expectNone(CHAT_URL);
     expect(LocalLLM.prompt).toHaveBeenCalledWith(expect.objectContaining({ prompt: '2x + 4 = 14' }));
   });
 
@@ -155,7 +167,7 @@ describe('AiService', () => {
 
     service.ask('', 'data:image/jpeg;base64,abc123');
 
-    httpMock.expectOne(OPENROUTER_URL).flush({ choices: [{ message: { content: 'A math problem.' } }] });
+    httpMock.expectOne(CHAT_URL).flush({ content: 'A math problem.' });
     expect(LocalLLM.prompt).not.toHaveBeenCalled();
   });
 
@@ -182,7 +194,7 @@ describe('AiService', () => {
 
     offlineService.ask('What is 2+2?');
 
-    offlineHttpMock.expectNone(OPENROUTER_URL);
+    offlineHttpMock.expectNone(CHAT_URL);
     expect(offlineService.loading()).toBe(false);
     expect(offlineService.error()).toBe("You're offline. Check your connection and try again.");
     expect(offlineService.messages()).toEqual([]);

@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonSelect, IonSelectOption, ModalController, IonInput } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonSelect, IonSelectOption, ModalController, IonInput, IonFooter } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { closeOutline, chevronDownOutline } from 'ionicons/icons';
 import { ToolsService } from '@services/tools/tools.service';
@@ -12,7 +12,7 @@ addIcons({ closeOutline, chevronDownOutline });
 @Component({
   selector: 'app-percentage-calc',
   standalone: true,
-  imports: [FormsModule, DecimalPipe, IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonSelect, IonSelectOption, IonInput],
+  imports: [FormsModule, DecimalPipe, IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonSelect, IonSelectOption, IonInput, IonFooter],
   templateUrl: './percentage-calc.html',
   styleUrls: ['./percentage-calc.css'],
 })

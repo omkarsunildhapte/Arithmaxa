@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { PrivacyPolicy } from './privacy-policy';
 import { ConsentService } from '@services/consent/consent.service';
+import { LEGAL_LAST_UPDATED } from '@constants/index';
 
 describe('PrivacyPolicy', () => {
   let consentServiceMock: { clearAllData: jest.Mock };
@@ -17,7 +18,7 @@ describe('PrivacyPolicy', () => {
   it('creates and exposes a fixed last-updated date', () => {
     const fixture = TestBed.createComponent(PrivacyPolicy);
     expect(fixture.componentInstance).toBeTruthy();
-    expect(fixture.componentInstance.lastUpdated).toBe('January 1, 2025');
+    expect(fixture.componentInstance.lastUpdated).toBe(LEGAL_LAST_UPDATED);
   });
 
   it('clearAllData() clears consent data when the user confirms', () => {

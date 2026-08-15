@@ -8,7 +8,7 @@ ion-toolbar {
 }
 
 .ai-content {
-  --background: #050505;
+  --background: var(--brand-dark);
   height: 100%;
 }
 
@@ -23,7 +23,7 @@ ion-toolbar {
   --border-width: 1px;
   --border-style: solid;
   --border-color: rgba(255, 255, 255, 0.1);
-  --color: #818cf8;
+  --color: var(--brand-accent);
   --box-shadow: none;
   --padding-start: 1rem;
   --padding-end: 1rem;
@@ -47,10 +47,10 @@ ion-toolbar {
   --padding-start: 0;
   --padding-end: 0;
   --color: #94a3b8;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 1.7rem;
+  height: 1.7rem;
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 0.9rem;
 }
 
 .icon-only-btn.recording {
@@ -58,7 +58,7 @@ ion-toolbar {
 }
 
 .icon-only-btn.send-btn {
-  --color: #6366f1;
+  --color: var(--brand-primary);
 }
 
 .icon-only-btn.send-btn[disabled] {
@@ -79,7 +79,7 @@ ion-toolbar {
 }
 
 .local-llm-btn.active {
-  --color: #818cf8;
+  --color: var(--brand-accent);
 }
 
 /* Photo attached via the Camera plugin — both the composer preview and the
@@ -95,11 +95,15 @@ ion-toolbar {
 /* "Reading photo…" hint while on-device OCR (TextRecognition) runs. */
 .ocr-status {
   font-size: 0.72rem;
-  color: #818cf8;
+  color: var(--brand-accent);
   font-style: italic;
 }
 
-/* Chat input — was a plain <textarea>, now <ion-textarea autoGrow>. */
+/* Chat input — was a plain <textarea>, now <ion-textarea autoGrow>. Same
+   fix as .huge-input in styles.css: Ionic's md-mode underline defaults
+   --highlight-color-valid to a built-in success green (unset otherwise),
+   which shows the moment any text is typed. This class is scoped to
+   ai-chat only, so it needed the same override applied separately. */
 .chat-textarea {
   --background: transparent;
   --color: #ffffff;
@@ -108,5 +112,8 @@ ion-toolbar {
   --padding-end: 0;
   --padding-top: 0.5rem;
   --padding-bottom: 0.5rem;
+  --highlight-color-focused: var(--brand-accent);
+  --highlight-color-valid: var(--brand-accent);
+  --highlight-color-invalid: #f87171;
   font-size: 0.875rem;
 }

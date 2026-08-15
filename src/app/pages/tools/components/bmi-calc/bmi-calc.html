@@ -11,65 +11,85 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="tool-modal-content">
-  <div class="tool-view animate-fade-in px-5 pb-10">
-    <!-- Input Card -->
-    <div class="premium-card !m-0 !mb-4">
+  <!-- No outer premium-card wrapper — Parameters, Weight, and Height each
+       carry their own lightweight box instead of sharing one big card,
+       matching percentage-calc/discount-calc's redesign. -->
+  <div class="tool-view animate-fade-in flex flex-col gap-4 px-5 py-4">
+    <div class="input-card">
       <span class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold block mb-3">Parameters</span>
-      <ion-segment [value]="unit" (ionChange)="onUnitChange($event)" class="unit-segment mb-6">
+      <ion-segment [value]="unit" (ionChange)="onUnitChange($event)" class="unit-segment">
         <ion-segment-button value="metric">
           <ion-label>METRIC</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="meters">
+          <ion-label>METERS</ion-label>
         </ion-segment-button>
         <ion-segment-button value="imperial">
           <ion-label>IMPERIAL</ion-label>
         </ion-segment-button>
       </ion-segment>
-
-      @if (unit === 'metric') {
-        <div class="input-group">
-          <label>Weight (KG)</label>
-          <ion-input type="number" [(ngModel)]="weightKg" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="70"></ion-input>
-        </div>
-        <div class="input-group !mb-0">
-          <label>Height (CM)</label>
-          <ion-input type="number" [(ngModel)]="heightCm" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="175"></ion-input>
-        </div>
-      } @else {
-        <div class="input-group">
-          <label>Weight (LBS)</label>
-          <ion-input type="number" [(ngModel)]="weightLbs" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="154"></ion-input>
-        </div>
-        <div class="flex gap-4">
-          <div class="input-group flex-1 !mb-0">
-            <label>Feet</label>
-            <ion-input type="number" [(ngModel)]="heightFt" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="5"></ion-input>
-          </div>
-          <div class="input-group flex-1 !mb-0">
-            <label>Inches</label>
-            <ion-input type="number" [(ngModel)]="heightIn" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="9"></ion-input>
-          </div>
-        </div>
-      }
     </div>
 
+    @if (unit === 'metric') {
+      <div class="input-group input-card">
+        <label>Weight (KG)</label>
+        <ion-input type="number" [(ngModel)]="weightKg" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="70"></ion-input>
+      </div>
+      <div class="input-group input-card">
+        <label>Height (CM)</label>
+        <ion-input type="number" [(ngModel)]="heightCm" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="175"></ion-input>
+      </div>
+    } @else if (unit === 'meters') {
+      <div class="input-group input-card">
+        <label>Weight (KG)</label>
+        <ion-input type="number" [(ngModel)]="weightKg" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="70"></ion-input>
+      </div>
+      <div class="input-group input-card">
+        <label>Height (M)</label>
+        <ion-input type="number" [(ngModel)]="heightM" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="1.75"></ion-input>
+      </div>
+    } @else {
+      <div class="input-group input-card">
+        <label>Weight (LBS)</label>
+        <ion-input type="number" [(ngModel)]="weightLbs" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="154"></ion-input>
+      </div>
+      <div class="flex gap-4">
+        <div class="input-group input-card flex-1">
+          <label>Feet</label>
+          <ion-input type="number" [(ngModel)]="heightFt" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="5"></ion-input>
+        </div>
+        <div class="input-group input-card flex-1">
+          <label>Inches</label>
+          <ion-input type="number" [(ngModel)]="heightIn" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="9"></ion-input>
+        </div>
+      </div>
+    }
+
     <!-- Bridge -->
-    <div class="flex justify-center -my-6 relative z-10">
-      <div class="w-12 h-12 rounded-full bg-[#fbbf24] border-4 border-[#050505] flex items-center justify-center shadow-[0_0_20px_rgba(251,191,36,0.4)]">
-        <ion-icon name="body-outline" class="text-black text-xl"></ion-icon>
+    <div class="flex justify-center -my-2 relative z-10">
+      <div class="w-12 h-12 rounded-full bg-[var(--brand-accent)] border-4 border-[var(--brand-dark)] flex items-center justify-center shadow-[0_0_20px_rgba(6,165,218,0.4)]">
+        <ion-icon name="body-outline" class="text-white text-xl"></ion-icon>
       </div>
     </div>
 
     <!-- Result Card -->
     @if (bmiResult(); as r) {
-      <div class="premium-card !m-0 !mt-4 border-[#fbbf24]/20 bg-[#fbbf24]/5 text-center">
-        <span class="text-[10px] uppercase tracking-widest text-[#fbbf24] font-bold block mb-2">Your BMI Score</span>
-        <div class="text-7xl font-black text-white leading-none my-4">
+      <div class="glass-panel result-panel text-center">
+        <span class="text-[10px] uppercase tracking-widest text-[var(--brand-accent)] font-bold block mb-2">Your BMI Score</span>
+        <!-- clamp() instead of a fixed text-7xl: an extreme/unrealistic
+             input (e.g. weight typo'd as 1000kg) can produce a 6+ digit
+             BMI, and a fixed size wraps that mid-number into an ugly
+             2-line break instead of just shrinking to fit. -->
+        <div class="text-[clamp(2rem,12vw,4.5rem)] font-black text-white leading-none my-4 whitespace-nowrap">
           {{ r.bmi | number: '1.1-1' }}
         </div>
-        <div class="text-sm font-black tracking-[0.2em] uppercase text-[#fbbf24] mt-2">
+        <div class="text-sm font-black tracking-[0.2em] uppercase text-[var(--brand-accent)] mt-2">
           {{ r.category }}
         </div>
 
-        <!-- Simple Scale Visual -->
+        <!-- Simple Scale Visual — deliberately its own 4-color scale
+             (under/normal/over/obese), not brand-accent: it's mapping BMI
+             category ranges, not a branding accent. -->
         <div class="flex h-1.5 w-full bg-white/5 rounded-full mt-8 overflow-hidden">
           <div class="h-full bg-blue-400" [style.width.%]="20"></div>
           <div class="h-full bg-green-400" [style.width.%]="30"></div>
@@ -78,7 +98,7 @@
         </div>
       </div>
     } @else {
-      <div class="premium-card !m-0 !mt-4 opacity-20 border-dashed py-12 text-center">
+      <div class="premium-card !m-0 opacity-20 border-dashed py-12 text-center">
         <p class="text-xs uppercase tracking-widest font-bold">Enter details to see BMI</p>
       </div>
     }
@@ -86,5 +106,5 @@
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <ion-toolbar class="bg-black"> </ion-toolbar>
+  <ion-toolbar class="bg-[var(--brand-dark)]"> </ion-toolbar>
 </ion-footer>

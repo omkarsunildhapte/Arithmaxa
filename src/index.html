@@ -6,8 +6,76 @@
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <style>
+      /*
+        Inline and critical on purpose: this paints before styles.css (an
+        external stylesheet) and before the Angular bundle has downloaded,
+        parsed, or bootstrapped, so the very first frame is the dark brand
+        shell instead of a blank/white flash. App.ngOnInit() fades this out
+        and removes it (see @constants/app-shell's APP_SPLASH_ELEMENT_ID)
+        once app-root has real content to show. On native builds this same
+        index.html is what Capacitor loads too, but the native SplashScreen
+        overlay (capacitor.config.ts) already covers the WebView until then,
+        so this is purely a web/PWA cold-start concern.
+      */
+      html,
+      body {
+        margin: 0;
+        background: var(--brand-dark, #000000);
+      }
+      #app-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        background: var(--brand-dark, #000000);
+        transition: opacity 0.25s ease-out;
+      }
+      #app-splash.app-splash--hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .app-splash__logo {
+        width: 96px;
+        height: 96px;
+        border-radius: 22px;
+        animation: app-splash-pulse 1.6s ease-in-out infinite;
+      }
+      .app-splash__spinner {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top-color: var(--brand-primary, #22ecf3);
+        animation: app-splash-spin 0.8s linear infinite;
+      }
+      @keyframes app-splash-pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(0.94);
+          opacity: 0.85;
+        }
+      }
+      @keyframes app-splash-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
   <body>
+    <div id="app-splash" aria-hidden="true">
+      <img src="logo.png" alt="" width="96" height="96" class="app-splash__logo" />
+      <span class="app-splash__spinner"></span>
+    </div>
     <app-root></app-root>
   </body>
 </html>

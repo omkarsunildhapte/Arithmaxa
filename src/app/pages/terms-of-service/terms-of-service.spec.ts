@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { TermsOfService } from './terms-of-service';
+import { LEGAL_LAST_UPDATED } from '@constants/index';
 
 describe('TermsOfService', () => {
   beforeEach(() => {
@@ -13,7 +14,7 @@ describe('TermsOfService', () => {
   it('creates and exposes a fixed effective date', () => {
     const fixture = TestBed.createComponent(TermsOfService);
     expect(fixture.componentInstance).toBeTruthy();
-    expect(fixture.componentInstance.effectiveDate).toBe('January 1, 2025');
+    expect(fixture.componentInstance.effectiveDate).toBe(LEGAL_LAST_UPDATED);
   });
 
   it('exposes the current year for the footer copyright line', () => {

@@ -66,6 +66,25 @@ describe('ToolsService', () => {
       expect(months).toBe(0);
       expect(days).toBe(0);
     });
+
+    it('borrows across days/hours/minutes when the birth time-of-day is later than now', () => {
+      // "Now" is earlier in the day (10:15) than the birth time (14:45), so
+      // both the hours and days columns must borrow — exercises the
+      // cascading borrow logic, not just the years/months/days case above
+      // where time-of-day never comes into play.
+      jest.useFakeTimers().setSystemTime(new Date(2024, 5, 15, 10, 15));
+      const birthDate = new Date(2014, 5, 10, 14, 45);
+
+      const { years, months, days, hours, minutes } = service.calculateAge(birthDate);
+
+      expect(years).toBe(10);
+      expect(months).toBe(0);
+      expect(days).toBe(4);
+      expect(hours).toBe(19);
+      expect(minutes).toBe(30);
+
+      jest.useRealTimers();
+    });
   });
 
   describe('calculateBmi', () => {

@@ -19,13 +19,16 @@ export class BmiCalc {
   private toolsService = inject(ToolsService);
   private modalCtrl = inject(ModalController);
 
-  unit: 'metric' | 'imperial' = 'metric';
+  unit: 'metric' | 'imperial' | 'meters' = 'metric';
 
   weightKg: number | null = null;
   heightCm: number | null = null;
   weightLbs: number | null = null;
   heightFt: number | null = null;
   heightIn: number | null = null;
+  // 'meters' shares weightKg with 'metric' (both are kg) — only the height
+  // unit differs (direct meters, e.g. 1.75, vs centimeters).
+  heightM: number | null = null;
 
   bmiResult = signal<{ bmi: number; category: string } | null>(null);
 
@@ -34,11 +37,11 @@ export class BmiCalc {
   }
 
   onUnitChange(event: Event): void {
-    const custom = event as CustomEvent<{ value: 'metric' | 'imperial' }>;
+    const custom = event as CustomEvent<{ value: 'metric' | 'imperial' | 'meters' }>;
     this.switchUnit(custom.detail.value);
   }
 
-  switchUnit(u: 'metric' | 'imperial') {
+  switchUnit(u: 'metric' | 'imperial' | 'meters') {
     this.unit = u;
     this.bmiResult.set(null);
   }
@@ -48,6 +51,9 @@ export class BmiCalc {
       if (!this.weightKg || !this.heightCm) return;
       const heightM = this.heightCm / 100;
       this.bmiResult.set(this.toolsService.calculateBmi(this.weightKg, heightM));
+    } else if (this.unit === 'meters') {
+      if (!this.weightKg || !this.heightM) return;
+      this.bmiResult.set(this.toolsService.calculateBmi(this.weightKg, this.heightM));
     } else {
       if (!this.weightLbs || !this.heightFt) return;
       const totalInches = this.heightFt * 12 + (this.heightIn ?? 0);

@@ -1,24 +1,10 @@
-<div class="flex flex-col h-full min-h-0 gap-3 p-4 transition-all duration-300 bg-[#050505]" [class.scientific-mode]="calc.isScientific()" [class.normal-mode]="!calc.isScientific()">
-  <!-- ── Sub Toolbar ── -->
-  <div class="shrink-0 flex justify-between items-center px-2 pb-3 border-b border-white/5 mb-2">
-    <div class="flex gap-5">
-      <ion-button class="tool-btn" [class.active]="calc.isScientific()" (click)="calc.toggleScientific()">
-        <ion-icon name="grid-outline"></ion-icon>
-      </ion-button>
-      <ion-button class="tool-btn" (click)="calc.clear()">
-        <ion-icon name="trash-outline"></ion-icon>
-      </ion-button>
-    </div>
-    <ion-button class="tool-btn backspace-btn" (click)="calc.backspace()">
-      <ion-icon name="backspace-outline"></ion-icon>
-    </ion-button>
-  </div>
-
-  <div
-    class="grid grid-cols-4 flex-1 min-h-0 auto-rows-fr"
-    [class.gap-2]="calc.isScientific()"
-    [class.gap-3]="!calc.isScientific()"
-  >
+<div class="flex flex-col h-full min-h-0 gap-2 p-3 transition-all duration-300 bg-[var(--brand-dark)]" [class.scientific-mode]="calc.isScientific()" [class.normal-mode]="!calc.isScientific()">
+  <!-- Sub Toolbar removed: clear (trash-outline) and backspace already
+       moved into the grid below (next to C/AC), and the scientific-mode
+       toggle — the one button left here — moved up to the page header
+       (calculator.html) next to History/Tools/AI, so this whole row no
+       longer had a reason to exist on its own. -->
+  <div class="grid grid-cols-4 flex-1 min-h-0 auto-rows-fr" [class.gap-1]="calc.isScientific()" [class.gap-2]="!calc.isScientific()">
     <!-- ── Scientific Only Rows ── -->
     @if (calc.isScientific()) {
       <!-- Row 1 -->
@@ -59,19 +45,44 @@
     }
 
     <!-- ── Common Keys (Standard Numpad 4-col Flow) ── -->
+    <!-- +/- (toggleSign) removed: negation is already reachable via the −
+         operator, and clearing now has its own dedicated key here (see
+         below), so a separate +/- key was redundant. -->
     @if (!calc.isScientific()) {
-      <ion-button class="btn-sci" (click)="calc.appendBracket()">( )</ion-button>
+      <!-- ( ) removed to make room: normal mode's row 1 was already full
+           (( ), %, C, ÷), so backspace swaps in here, immediately next to
+           C — same single-button size as every other key in this row,
+           instead of the differently-styled toolbar icon it used to be.
+           Basic mode loses its one-tap parentheses key as a result
+           (scientific mode keeps its separate ( and ) keys, unaffected). -->
       <ion-button class="btn-sci" (click)="calc.percentage()">%</ion-button>
-      <ion-button class="btn-sci btn-operator" (click)="calc.toggleSign()">+/-</ion-button>
+      <ion-button class="btn-sci" (click)="calc.backspace()">
+        <ion-icon name="backspace-outline"></ion-icon>
+      </ion-button>
+      <ion-button class="btn-sci" (click)="calc.clear()">C</ion-button>
     } @else {
+      <!-- Scientific mode had a spacer here (freed up by removing +/-) —
+           backspace fills it instead of sitting empty, immediately next to
+           AC, no existing key removed. -->
       <ion-button class="btn-sci" (click)="calc.percentage()">%</ion-button>
-      <ion-button class="btn-sci btn-operator" (click)="calc.toggleSign()">+/-</ion-button>
+      <ion-button class="btn-sci" (click)="calc.backspace()">
+        <ion-icon name="backspace-outline"></ion-icon>
+      </ion-button>
       <ion-button class="btn-sci" (click)="calc.clear()">AC</ion-button>
     }
     @for (key of numpadKeys; track key.label) {
       <ion-button class="btn-sci" [class.btn-operator]="key.type === 'operator'" (click)="pressKey(key)">{{ key.label }}</ion-button>
     }
     <ion-button class="btn-sci" (click)="calc.appendDecimal()">.</ion-button>
-    <ion-button class="btn-equals" (click)="calc.calculate()">=</ion-button>
+    @if (calc.isScientific()) {
+      <ion-button class="btn-equals" (click)="calc.calculate()">=</ion-button>
+    } @else {
+      <!-- Normal mode's last row was only 0/. (2 of 4 columns) — one
+           combined ( ) key (auto-pairing, like row 1 originally had) plus
+           = fill the remaining two columns, both sized as normal single
+           grid keys rather than = getting its own full-width row. -->
+      <ion-button class="btn-sci" (click)="calc.appendBracket()">( )</ion-button>
+      <ion-button class="btn-equals" (click)="calc.calculate()">=</ion-button>
+    }
   </div>
 </div>

@@ -1,14 +1,15 @@
 import { Service, inject, signal } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ChatMessage, OpenRouterErrorResponse, OpenRouterResponse } from '@appTypes/index';
-import { AI_MODELS, OPENROUTER_URL, OPENROUTER_REFERER } from '@constants/index';
+import { ChatErrorResponse, ChatMessage, ChatResponse } from '@appTypes/index';
+import { AI_CHAT_PATH } from '@constants/index';
 import { NetworkService } from '@services/network/network.service';
 import { LocalLLM, type LLMAvailability } from '@capacitor/local-llm';
 
-const HARDCODED_MODEL = 'deepseek/deepseek-r1:free';
-
+// Used only for the on-device path below — arithmaxa-backend's own
+// openrouter.ts prepends its own system prompt server-side for the cloud
+// path, so sending one from here too would just duplicate it.
 const SYSTEM_PROMPT = 'You are a helpful math assistant inside Arithmaxa, a scientific calculator app. ' + 'Answer concisely. Use plain-text math notation (e.g. sqrt(x), x^2).';
 
 // Keeps every ask() call in one on-device conversation, so LocalLLM.prompt()
@@ -24,16 +25,15 @@ export class AiService {
   readonly messages = signal<ChatMessage[]>([]);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
-  readonly apiKey = signal<string>(environment.openRouterApiKey);
-  readonly selectedModel = signal<string>(HARDCODED_MODEL);
 
   /** Populated by checkLocalAvailability() — see LocalLLM.systemAvailability(). */
   readonly localAvailable = signal<LLMAvailability>('unavailable');
-  /** Whether ask() should route to the on-device model instead of OpenRouter.
+  /** Whether ask() should route to the on-device model instead of the
+   *  cloud (arithmaxa-backend, which itself proxies to OpenRouter).
    *  Defaults on — the free/local model is the primary path whenever the
-   *  device actually supports it (see localAvailable()); OpenRouter is the
-   *  fallback for unsupported devices and for photos with no readable text
-   *  (see the imageDataUrl/text check in ask() below), not the default. */
+   *  device actually supports it (see localAvailable()); the cloud path is
+   *  the fallback for unsupported devices and for photos with no readable
+   *  text (see the imageDataUrl/text check in ask() below), not the default. */
   readonly useLocal = signal(true);
 
   clearMessages(): void {
@@ -98,38 +98,28 @@ export class AiService {
   }
 
   private askCloud(): void {
+    // No Authorization header, no API key anywhere in this app — the real
+    // OpenRouter key lives only in arithmaxa-backend's own environment now
+    // (see its src/services/openrouter.ts). This just forwards the
+    // conversation; the backend prepends its own system prompt and picks
+    // the model server-side.
     this.http
-      .post<OpenRouterResponse>(
-        OPENROUTER_URL,
-        {
-          model: this.selectedModel(),
-          messages: [
-            { role: 'system', content: SYSTEM_PROMPT },
-            ...this.messages().map((m) => ({
-              role: m.role,
-              content: m.imageUrl
-                ? [
-                    { type: 'text', text: m.content },
-                    { type: 'image_url', image_url: { url: m.imageUrl } },
-                  ]
-                : m.content,
-            })),
-          ],
-        },
-        {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${this.apiKey()}`,
-            'HTTP-Referer': OPENROUTER_REFERER,
-            'X-Title': 'Arithmaxa Calculator',
-          }),
-        },
-      )
+      .post<ChatResponse>(`${environment.backendUrl}${AI_CHAT_PATH}`, {
+        messages: this.messages().map((m) => ({
+          role: m.role,
+          content: m.imageUrl
+            ? [
+                { type: 'text', text: m.content },
+                { type: 'image_url', image_url: { url: m.imageUrl } },
+              ]
+            : m.content,
+        })),
+      })
       .pipe(
-        map((res) => res.choices[0].message.content),
+        map((res) => res.content),
         catchError((err: HttpErrorResponse) => {
-          const body = err.error as OpenRouterErrorResponse | null;
-          const msg = body?.error?.message ?? err.message ?? 'Request failed check your API key.';
+          const body = err.error as ChatErrorResponse | null;
+          const msg = body?.error ?? err.message ?? 'Request failed. Please try again.';
           return of(`\0${msg}`);
         }),
       )

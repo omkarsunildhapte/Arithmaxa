@@ -59,12 +59,22 @@ export class ToolsService {
   }
 
   // ── Age Calculator ──
-  calculateAge(birthDate: Date): { years: number; months: number; days: number } {
+  calculateAge(birthDate: Date): { years: number; months: number; days: number; hours: number; minutes: number } {
     const today = new Date();
     let years = today.getFullYear() - birthDate.getFullYear();
     let months = today.getMonth() - birthDate.getMonth();
     let days = today.getDate() - birthDate.getDate();
+    let hours = today.getHours() - birthDate.getHours();
+    let minutes = today.getMinutes() - birthDate.getMinutes();
 
+    if (minutes < 0) {
+      hours--;
+      minutes += 60;
+    }
+    if (hours < 0) {
+      days--;
+      hours += 24;
+    }
     if (days < 0) {
       months--;
       days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
@@ -73,7 +83,7 @@ export class ToolsService {
       years--;
       months += 12;
     }
-    return { years, months, days };
+    return { years, months, days, hours, minutes };
   }
 
   // ── BMI Calculator ──

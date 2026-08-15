@@ -5,6 +5,7 @@ import { StatusBar, Style } from '@capacitor/status-bar';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { PrivacyScreen } from '@capacitor/privacy-screen';
 import { SystemBars, SystemBarsStyle, SystemBarType } from '@capacitor/core';
+import { APP_SPLASH_ELEMENT_ID, APP_SPLASH_FADE_MS, APP_SPLASH_HIDE_CLASS } from '@constants/index';
 import { NavigationService } from '@services/navigation/navigation.service';
 import { NetworkService } from '@services/network/network.service';
 import { CookieConsent } from './shared/cookie-consent/cookie-consent';
@@ -20,6 +21,10 @@ export class App implements OnInit, OnDestroy {
   private platform = inject(Platform);
   private network = inject(NetworkService);
   async ngOnInit() {
+    // First and synchronous: app-root now has real content to show, so the
+    // static pre-bootstrap splash from index.html can fade out. Done before
+    // the async native-only calls below so it's not held up by them.
+    this.dismissWebSplash();
     this.navService.init();
     void this.network.init();
     try {
@@ -70,5 +75,12 @@ export class App implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.network.destroy();
+  }
+
+  private dismissWebSplash(): void {
+    const splash = document.getElementById(APP_SPLASH_ELEMENT_ID);
+    if (!splash) return;
+    splash.classList.add(APP_SPLASH_HIDE_CLASS);
+    setTimeout(() => splash.remove(), APP_SPLASH_FADE_MS);
   }
 }

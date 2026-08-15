@@ -1,27 +1,3 @@
-.tool-btn {
-  --color: #94a3b8;
-  --padding-start: 0;
-  --padding-end: 0;
-  font-size: 1.4rem;
-  margin: 0;
-  height: 32px;
-  --background: transparent;
-  --box-shadow: none;
-  transition: all 0.2s ease;
-}
-
-.tool-btn.active {
-  --color: #6366f1;
-  filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.4));
-}
-
-.backspace-btn {
-  --color: #6366f1;
-  font-size: 1.6rem;
-  --background: transparent;
-  --box-shadow: none;
-}
-
 .scientific-mode ion-button {
   --border-radius: 12px;
   /* No min-height here on purpose — .auto-rows-fr on the grid (added only
@@ -32,22 +8,27 @@
      though scientific mode can run to ~10 rows — the tradeoff is rows (and
      tap targets) get proportionally shorter on smaller screens instead of
      ever overflowing. */
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .scientific-mode .btn-sci.btn-operator {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
 }
 
 /* ── Normal Mode Adjustments ── */
+/* width: 82% (rather than the grid's default stretch-to-fill-cell) is what
+   actually shrinks the visible buttons — the grid cells themselves (and
+   so the overall keypad layout/row count) stay the same size; only the
+   circle drawn inside each cell gets smaller, centered via justify-self/
+   align-self since a definite width opts the item out of grid's default
+   stretch alignment. */
 .normal-mode ion-button {
   --border-radius: 50%;
   aspect-ratio: 1;
-  font-size: 1.15rem;
-}
-
-.normal-mode .btn-equals {
-  --border-radius: 24px;
+  font-size: 0.95rem;
+  width: 82%;
+  justify-self: center;
+  align-self: center;
 }
 
 /* ── Tactile Glass Style ── */
@@ -62,10 +43,10 @@
 }
 
 .btn-sci.active {
-  --background: rgba(99, 102, 241, 0.15);
-  --color: #6366f1;
+  --background: rgba(34, 236, 243, 0.15);
+  --color: var(--brand-primary);
   font-weight: 700;
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 10px rgba(34, 236, 243, 0.2);
 }
 
 .btn-sci:active {
@@ -75,13 +56,21 @@
 
 .btn-sci.btn-operator {
   --background: rgba(255, 255, 255, 0.1);
-  --color: #818cf8;
+  --color: var(--brand-accent);
+}
+
+/* Only the backspace key carries an icon instead of text — size it
+   relative to the button's own font-size (0.95rem normal / 0.8rem
+   scientific) so it stays proportional to its neighbors in both modes
+   rather than needing its own fixed size per mode. */
+.btn-sci ion-icon {
+  font-size: 1.2em;
 }
 
 .btn-equals {
   grid-row: span 1;
-  --background: #6366f1;
-  --background-activated: #4f46e5;
+  --background: var(--brand-gradient);
+  --background-activated: var(--brand-secondary);
   --color: #ffffff;
   font-weight: 700;
   font-size: 2rem;
@@ -97,11 +86,10 @@
   --border-radius: 12px;
 }
 
-.normal-mode .btn-equals {
-  grid-column: span 2;
-  aspect-ratio: auto;
-  --border-radius: 32px;
-}
+/* Normal mode's = is back inside the grid as a plain single key (see
+   keypad.html) — no mode-specific override needed here anymore, it just
+   picks up .normal-mode ion-button's circular sizing like every other key
+   in that mode. */
 
 /* Dead code removed: an unscoped `.keypad ion-button` rule (no element in
    this template ever carries a `.keypad` class — <app-keypad> in

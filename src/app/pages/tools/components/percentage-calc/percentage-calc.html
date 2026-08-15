@@ -6,32 +6,38 @@
       </ion-button>
     </ion-buttons>
     <div class="header-container">
-      <span class="header-title">Percentage Calc</span>
+      <span class="header-title">Percent</span>
     </div>
   </ion-toolbar>
 </ion-header>
 <ion-content class="tool-modal-content">
-  <div class="tool-view animate-fade-in">
-    <div class="premium-card">
-      <div class="unit-selector mb-6">
-        <ion-select [(ngModel)]="percType" (ionChange)="calculate()" toggle-icon="chevron-down-outline" interface="popover" label="Calculation Type" label-placement="stacked">
-          @for (type of percentageTypes; track type.value) {
-            <ion-select-option [value]="type.value">{{ type.label }}</ion-select-option>
-          }
-        </ion-select>
-      </div>
-      <div class="input-group">
-        <label>{{ percType === 'change' ? 'Initial Value' : 'Value X' }}</label>
-        <ion-input type="number" [(ngModel)]="percVal1" (ionInput)="calculate()" class="huge-input" placeholder="0"></ion-input>
-      </div>
-      <div class="input-group">
-        <label>{{ percType === 'change' ? 'New Value' : 'Value Y' }}</label>
-        <ion-input type="number" [(ngModel)]="percVal2" (ionInput)="calculate()" class="huge-input" placeholder="0"></ion-input>
-      </div>
-      <div class="glass-panel text-center">
-        <label>Final Result</label>
-        <div class="text-4xl font-black text-white mt-2">{{ percResult() | number: '1.0-2' }}{{ percType === 'of' ? '' : '%' }}</div>
-      </div>
+  <!-- No outer premium-card wrapper — each section below (dropdown, the two
+       inputs, the result) carries its own lightweight box instead of
+       sharing one big card, and flex gap (not individual margins) spaces
+       them apart. -->
+  <div class="tool-view animate-fade-in flex flex-col gap-4 px-5 py-4">
+    <div class="unit-selector">
+      <ion-select [(ngModel)]="percType" (ionChange)="calculate()" toggle-icon="chevron-down-outline" interface="popover" label="Calculation Type" label-placement="stacked">
+        @for (type of percentageTypes; track type.value) {
+          <ion-select-option [value]="type.value">{{ type.label }}</ion-select-option>
+        }
+      </ion-select>
+    </div>
+    <div class="input-group input-card">
+      <label>{{ percType === 'change' ? 'Initial Value' : 'Value X' }}</label>
+      <ion-input type="number" [(ngModel)]="percVal1" (ionInput)="calculate()" class="huge-input compact-input-field" placeholder="0"></ion-input>
+    </div>
+    <div class="input-group input-card">
+      <label>{{ percType === 'change' ? 'New Value' : 'Value Y' }}</label>
+      <ion-input type="number" [(ngModel)]="percVal2" (ionInput)="calculate()" class="huge-input compact-input-field" placeholder="0"></ion-input>
+    </div>
+    <div class="glass-panel result-panel text-center">
+      <label>Final Result</label>
+      <div class="text-4xl font-black mt-2 result-value">{{ percResult() | number: '1.0-2' }}{{ percType === 'of' ? '' : '%' }}</div>
     </div>
   </div>
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="bg-[var(--brand-dark)]"> </ion-toolbar>
+</ion-footer>

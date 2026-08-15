@@ -29,17 +29,17 @@
 
     <!-- Swap Icon -->
     <div class="flex justify-center -my-6 relative z-10">
-      <div class="w-12 h-12 rounded-full bg-[#6366f1] border-4 border-[#050505] flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.4)]">
+      <div class="w-12 h-12 rounded-full bg-[var(--brand-accent)] border-4 border-[var(--brand-dark)] flex items-center justify-center shadow-[0_0_20px_rgba(6,165,218,0.4)]">
         <ion-icon name="swap-vertical-outline" class="text-white text-xl"></ion-icon>
       </div>
     </div>
 
     <!-- Result Card -->
-    <div class="premium-card !m-0 !mt-4 border-[#6366f1]/20 bg-[#6366f1]/5">
+    <div class="result-card premium-card !m-0 !mt-4 border-[var(--brand-accent)]/20 bg-[var(--brand-accent)]/5">
       <div class="flex justify-between items-center mb-4">
-        <span class="text-[10px] uppercase tracking-widest text-[#6366f1] font-bold">To</span>
-        <div class="bg-[#6366f1]/10 rounded-lg px-2">
-          <ion-select [(ngModel)]="convTo" (ionChange)="calculate()" interface="popover" toggle-icon="chevron-down-outline" class="text-xs font-bold text-[#818cf8] min-h-0 h-8">
+        <span class="text-[10px] uppercase tracking-widest text-[var(--brand-accent)] font-bold">To</span>
+        <div class="bg-[var(--brand-accent)]/10 rounded-lg px-2">
+          <ion-select [(ngModel)]="convTo" (ionChange)="calculate()" interface="popover" toggle-icon="chevron-down-outline" class="text-xs font-bold text-[var(--brand-accent)] min-h-0 h-8">
             @for (unit of units(); track unit.value) {
               <ion-select-option [value]="unit.value">{{ unit.label }}</ion-select-option>
             }
@@ -52,5 +52,5 @@
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <ion-toolbar class="bg-black"> </ion-toolbar>
+  <ion-toolbar class="bg-[var(--brand-dark)]"> </ion-toolbar>
 </ion-footer>

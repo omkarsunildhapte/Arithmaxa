@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { History } from './history';
 import { CalculatorService } from '@services/calculator/calculator.service';
 import { ModalController } from '@ionic/angular/standalone';
-import { DatePipe } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, WritableSignal, signal } from '@angular/core';
 import { HistoryItem } from '@appTypes/index';
 
@@ -23,7 +22,7 @@ describe('History', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [History, DatePipe],
+      imports: [History],
       providers: [
         { provide: CalculatorService, useValue: mockCalc },
         { provide: ModalController, useValue: modalSpy },
