@@ -7,10 +7,11 @@
       <div class="flex items-center gap-1">
         <!-- Scientific-mode toggle, moved up from the keypad's own sub-toolbar
              (it was the only button left there once clear/backspace moved into
-             the grid) — flask-outline instead of grid-outline so it doesn't look
-             like a second, identical Tools button next to it. -->
+             the grid) — calculator-outline reads immediately as "more
+             calculator functions", and doesn't look like a second, identical
+             Tools button next to grid-outline. -->
         <ion-button class="header-icon-btn" [class.active]="calc.isScientific()" fill="clear" (click)="calc.toggleScientific()">
-          <ion-icon name="flask-outline" slot="icon-only"></ion-icon>
+          <ion-icon name="calculator-outline" slot="icon-only"></ion-icon>
         </ion-button>
         <ion-button class="header-icon-btn" fill="clear" (click)="toggleHistory(true)">
           <ion-icon name="time-outline" slot="icon-only"></ion-icon>

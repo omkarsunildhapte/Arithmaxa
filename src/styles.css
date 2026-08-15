@@ -205,6 +205,17 @@ body {
   font-weight: 700;
 }
 
+/* Same fix as .huge-input above, but for every <ion-select> app-wide (unit/
+   currency converter "From"/"To" pickers, etc.) instead of one class — a
+   select is "valid" as soon as it has a bound value, which is immediately
+   on load for most of these, so the unthemed green showed up even more
+   readily than on number inputs. */
+ion-select {
+  --highlight-color-focused: var(--brand-accent);
+  --highlight-color-valid: var(--brand-accent);
+  --highlight-color-invalid: #f87171;
+}
+
 .glass-panel {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);

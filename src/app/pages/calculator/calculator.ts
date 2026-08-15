@@ -1,13 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { IonContent, IonHeader, IonToolbar, IonButton, IonIcon, NavController, ModalController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { sparklesOutline, gridOutline, timeOutline, closeOutline, trashOutline, flash, flaskOutline } from 'ionicons/icons';
+import { sparklesOutline, gridOutline, timeOutline, closeOutline, trashOutline, flash, calculatorOutline } from 'ionicons/icons';
 import { Display } from '../../shared/display/display';
 import { Keypad } from '../../shared/keypad/keypad';
 import { History } from '../../shared/history/history';
 import { CalculatorService } from '@services/calculator/calculator.service';
 
-addIcons({ sparklesOutline, gridOutline, timeOutline, closeOutline, trashOutline, flash, flaskOutline });
+addIcons({ sparklesOutline, gridOutline, timeOutline, closeOutline, trashOutline, flash, calculatorOutline });
 
 @Component({
   selector: 'app-calculator',

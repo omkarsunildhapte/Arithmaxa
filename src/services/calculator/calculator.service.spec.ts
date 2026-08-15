@@ -43,7 +43,62 @@ describe('CalculatorService', () => {
       service.appendBracket('(');
       service.appendNumber('3');
       service.appendBracket();
-      expect(service.display()).toBe('2(3)');
+      // '*' between "2" and "(" is the implicit-multiplication fix below —
+      // without it, "2(3)" has no operator between the two operands and
+      // calculate() would throw a syntax error on it.
+      expect(service.display()).toBe('2*(3)');
+    });
+
+    // The parser (src/utils/expression-parser.ts) has no implicit-
+    // multiplication grammar, so building a display string like "(2+3)5"
+    // from the keypad would look plausible but always fail at calculate()
+    // time. These insert an explicit '*' at each place that gap could
+    // otherwise be built.
+    describe('implicit multiplication around brackets', () => {
+      it('appendNumber inserts * after a closing bracket, but not between two digits', () => {
+        service.display.set('(2+3)');
+        service.appendNumber('5');
+        expect(service.display()).toBe('(2+3)*5');
+
+        service.display.set('12');
+        service.appendNumber('3');
+        expect(service.display()).toBe('123');
+      });
+
+      it('appendDecimal inserts * and a leading 0 after a closing bracket', () => {
+        service.display.set('(2+3)');
+        service.appendDecimal();
+        expect(service.display()).toBe('(2+3)*0.');
+      });
+
+      it('appendOpenParen inserts * after a number or a closing bracket', () => {
+        service.appendNumber('5');
+        service.appendBracket('(');
+        expect(service.display()).toBe('5*(');
+
+        service.display.set('(2+3)');
+        service.appendBracket('(');
+        expect(service.display()).toBe('(2+3)*(');
+      });
+
+      it('the smart toggle button also inserts * when it decides to open a new bracket', () => {
+        service.display.set('(2+3)');
+        service.appendBracket();
+        expect(service.display()).toBe('(2+3)*(');
+      });
+
+      it('pi()/tau()/eSquared() insert * after a number or a closing bracket', () => {
+        service.display.set('(2+3)');
+        service.pi();
+        expect(service.display()).toBe(`(2+3)*${Math.PI}`);
+      });
+
+      it('a bracket-adjacent expression actually calculates correctly once fixed', () => {
+        service.display.set('(2+3)');
+        service.appendNumber('5');
+        service.calculate();
+        expect(service.display()).toBe('25');
+      });
     });
 
     it('toggleSign negates a positive number', () => {

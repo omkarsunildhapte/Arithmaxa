@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular/standalone';
 import { AiChatPage } from './ai-chat';
 import { AiService } from '@services/ai/ai.service';
 import { CalculatorService } from '@services/calculator/calculator.service';
@@ -46,8 +47,18 @@ describe('AiChatPage', () => {
   let fixture: ComponentFixture<AiChatPage>;
   let aiService: AiService;
   let router: Router;
+  let backButtonHandler: (() => void | Promise<void>) | undefined;
+  let subscribeWithPriority: jest.Mock;
+  let backButtonUnsubscribe: jest.Mock;
 
   beforeEach(async () => {
+    backButtonHandler = undefined;
+    backButtonUnsubscribe = jest.fn();
+    subscribeWithPriority = jest.fn((_priority: number, handler: () => void | Promise<void>) => {
+      backButtonHandler = handler;
+      return { unsubscribe: backButtonUnsubscribe };
+    });
+
     jest.mocked(SpeechRecognition.available).mockResolvedValue({ available: true });
     jest.mocked(SpeechRecognition.checkPermissions).mockResolvedValue({ speechRecognition: 'granted' });
     jest.mocked(SpeechRecognition.requestPermissions).mockResolvedValue({ speechRecognition: 'granted' });
@@ -81,6 +92,7 @@ describe('AiChatPage', () => {
         { provide: Router, useValue: routerSpy },
         { provide: CalculatorService, useValue: calcSpy },
         { provide: NavigationService, useValue: navSpy },
+        { provide: Platform, useValue: { backButton: { subscribeWithPriority } } },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
@@ -109,10 +121,51 @@ describe('AiChatPage', () => {
     expect(component['prompt']).toBe('');
   });
 
-  it('should navigate back using NavigationService', () => {
+  it('should navigate back using NavigationService', async () => {
     const nav = TestBed.inject(NavigationService);
-    component['goBack']();
+    await component['goBack']();
     expect(nav.goBack).toHaveBeenCalled();
+  });
+
+  it('goBack() stops an in-progress recording instead of navigating away', async () => {
+    const nav = TestBed.inject(NavigationService);
+    component['isRecording'].set(true);
+
+    await component['goBack']();
+
+    expect(SpeechRecognition.stop).toHaveBeenCalled();
+    expect(component['isRecording']()).toBe(false);
+    expect(nav.goBack).not.toHaveBeenCalled();
+  });
+
+  it('goBack() clears an attached photo instead of navigating away', async () => {
+    const nav = TestBed.inject(NavigationService);
+    await component['attachPhoto']();
+    expect(component['attachedPhoto']()).not.toBeNull();
+
+    await component['goBack']();
+
+    expect(component['attachedPhoto']()).toBeNull();
+    expect(nav.goBack).not.toHaveBeenCalled();
+  });
+
+  it('ngOnInit() registers a hardware back-button handler above NavigationService\'s own priority', () => {
+    expect(subscribeWithPriority).toHaveBeenCalledWith(15, expect.any(Function));
+  });
+
+  it('the hardware back button runs the same guarded goBack() logic', async () => {
+    const nav = TestBed.inject(NavigationService);
+    component['isRecording'].set(true);
+
+    await backButtonHandler!();
+
+    expect(SpeechRecognition.stop).toHaveBeenCalled();
+    expect(nav.goBack).not.toHaveBeenCalled();
+  });
+
+  it('ngOnDestroy() unsubscribes the back-button handler', () => {
+    component.ngOnDestroy();
+    expect(backButtonUnsubscribe).toHaveBeenCalled();
   });
 
   it('should use expression from calculator service', () => {

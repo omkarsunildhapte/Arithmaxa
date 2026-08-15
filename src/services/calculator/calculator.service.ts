@@ -59,7 +59,12 @@ export class CalculatorService {
       this.justCalculated = false;
       return;
     }
-    this.display.update((v: string) => v + num);
+    // A closing bracket directly followed by a digit (e.g. "(2+3)5") has no
+    // operator between them — the parser has no implicit-multiplication
+    // grammar, so it would otherwise fail to parse the whole expression the
+    // moment calculate() runs. Insert the '*' now so it's never possible to
+    // build that broken state from the keypad.
+    this.display.update((v: string) => (v.endsWith(')') ? v + '*' : v) + num);
   }
 
   appendDecimal(): void {
@@ -74,6 +79,13 @@ export class CalculatorService {
     const lastSegment = val.split(/[+\-*/%^()]/).pop() ?? '';
     if (lastSegment.includes('.')) return;
     const lastChar = val.slice(-1);
+    // Same implicit-multiplication gap as appendNumber() above — "(2+3)."
+    // needs to become "(2+3)*0." (a fresh decimal number), not "(2+3)."
+    // (an unparseable trailing dot with nothing after the close-paren).
+    if (lastChar === ')') {
+      this.display.update((v: string) => v + '*0.');
+      return;
+    }
     const afterOp = !lastChar || ['+', '-', '*', '/', '('].includes(lastChar);
     this.display.update((v: string) => v + (afterOp ? '0.' : '.'));
   }
@@ -83,8 +95,12 @@ export class CalculatorService {
     if (val === 'Error') return;
     this.justCalculated = false;
 
-    if (bracket) {
-      this.display.update((v) => v + bracket);
+    if (bracket === ')') {
+      this.display.update((v) => v + ')');
+      return;
+    }
+    if (bracket === '(') {
+      this.appendOpenParen();
       return;
     }
 
@@ -97,8 +113,17 @@ export class CalculatorService {
       this.display.update((v) => v + ')');
     } else {
       // Otherwise, add '('
-      this.display.update((v) => v + '(');
+      this.appendOpenParen();
     }
+  }
+
+  /** Appends '(' — inserting an implicit '*' first if it directly follows a
+   *  number or a closing bracket (e.g. "5(" or "(2+3)("). Same reasoning as
+   *  appendNumber()/appendDecimal() above: the parser has no implicit-
+   *  multiplication grammar, so without this the expression would just
+   *  fail to parse at calculate() time. */
+  private appendOpenParen(): void {
+    this.display.update((v) => (/[\d)]/.test(v.slice(-1)) ? v + '*' : v) + '(');
   }
 
   modulo(): void {
@@ -362,7 +387,9 @@ export class CalculatorService {
       this.justCalculated = false;
       return;
     }
-    this.display.update((v) => v + str);
+    // Same implicit-multiplication gap as appendNumber()/appendOpenParen()
+    // — "(2+3)π" needs a '*' between the close-paren and the constant.
+    this.display.update((v) => (/[\d)]/.test(v.slice(-1)) ? v + '*' : v) + str);
   }
 
   floor(): void {

@@ -1,6 +1,7 @@
 import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonBackButton, IonButton, IonButtons, IonContent, IonFooter, IonHeader, IonIcon, IonSpinner, IonTextarea, IonTitle, IonToolbar, NavController } from '@ionic/angular/standalone';
+import { IonButton, IonButtons, IonContent, IonFooter, IonHeader, IonIcon, IonSpinner, IonTextarea, IonTitle, IonToolbar, Platform } from '@ionic/angular/standalone';
+import type { Subscription } from 'rxjs';
 import { addIcons } from 'ionicons';
 import {
   cameraOutline,
@@ -17,6 +18,7 @@ import {
 } from 'ionicons/icons';
 import { AiService } from '@services/ai/ai.service';
 import { CalculatorService } from '@services/calculator/calculator.service';
+import { NavigationService } from '@services/navigation/navigation.service';
 import { SpeechRecognition } from '@capgo/capacitor-speech-recognition';
 import { Camera, CameraDirection, EncodingType } from '@capacitor/camera';
 import { Keyboard } from '@capacitor/keyboard';
@@ -29,14 +31,15 @@ addIcons({ closeOutline, sendOutline, sparklesOutline, trashOutline, chevronBack
 @Component({
   selector: 'app-ai-chat-page',
   standalone: true,
-  imports: [FormsModule, IonContent, IonHeader, IonToolbar, IonTitle, IonFooter, IonButtons, IonButton, IonBackButton, IonIcon, IonSpinner, IonTextarea],
+  imports: [FormsModule, IonContent, IonHeader, IonToolbar, IonTitle, IonFooter, IonButtons, IonButton, IonIcon, IonSpinner, IonTextarea],
   templateUrl: './ai-chat.html',
   styleUrls: ['./ai-chat.css'],
 })
 export class AiChatPage implements OnInit, OnDestroy, AfterViewChecked {
   protected readonly ai = inject(AiService);
   protected readonly calc = inject(CalculatorService);
-  private readonly navCtrl = inject(NavController);
+  private readonly navigationService = inject(NavigationService);
+  private readonly platform = inject(Platform);
   protected prompt: string = '';
   protected isRecording = signal(false);
   /** Set from `SpeechRecognition.available()` in ngOnInit — lets the mic
@@ -52,6 +55,7 @@ export class AiChatPage implements OnInit, OnDestroy, AfterViewChecked {
   private readonly messagesEl = viewChild<ElementRef<HTMLDivElement>>('messagesEl');
   private lastCount: number = 0;
   private keyboardListeners: PluginListenerHandle[] = [];
+  private backButtonSub?: Subscription;
 
   async ngOnInit(): Promise<void> {
     try {
@@ -60,6 +64,14 @@ export class AiChatPage implements OnInit, OnDestroy, AfterViewChecked {
     } catch {
       this.micAvailable.set(false);
     }
+
+    // Higher priority than NavigationService's app-wide handler (10) — while
+    // this page is open, the Android hardware/gesture back button should
+    // cancel an in-progress recording or drop an attached photo first,
+    // rather than immediately leaving the page and losing that state
+    // silently. Falls through to goBack() (and so to the global handler's
+    // own logic) once there's nothing page-local left to unwind.
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(15, () => this.goBack());
 
     void this.ai.checkLocalAvailability();
 
@@ -80,6 +92,7 @@ export class AiChatPage implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnDestroy(): void {
     this.keyboardListeners.forEach((l) => void l.remove());
+    this.backButtonSub?.unsubscribe();
   }
 
   /** Snaps a photo (e.g. of a math problem) to attach to the next message.
@@ -196,8 +209,22 @@ export class AiChatPage implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  protected goBack(): void {
-    this.navCtrl.navigateBack(['/calculator']);
+  /** Shared by the on-screen back button and the Android hardware/gesture
+   *  back button (see ngOnInit's platform.backButton subscription) so both
+   *  behave identically: unwind page-local composer state first — stop an
+   *  in-progress recording, or drop an attached photo — before actually
+   *  navigating away. */
+  protected async goBack(): Promise<void> {
+    if (this.isRecording()) {
+      await SpeechRecognition.stop();
+      this.isRecording.set(false);
+      return;
+    }
+    if (this.attachedPhoto()) {
+      this.attachedPhoto.set(null);
+      return;
+    }
+    await this.navigationService.goBack();
   }
 
   protected useExpression(): void {
