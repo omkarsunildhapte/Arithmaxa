@@ -10,7 +10,20 @@
     </div>
 
     <div class="onboarding-container">
-      <swiper-container #swiperEl init="false" slides-per-view="1" loop="true" autoplay-delay="3000" pagination="true" pagination-clickable="true">
+      <!-- loop is off (and autoplay stops on the last slide) so the carousel
+           has a real end for the footer's "Next" → "Explore Now" switch to
+           key off; with looping there is no last slide to detect. -->
+      <swiper-container
+        #swiperEl
+        init="false"
+        slides-per-view="1"
+        loop="false"
+        autoplay-delay="3000"
+        autoplay-stop-on-last-slide="true"
+        pagination="true"
+        pagination-clickable="true"
+        (swiperslidechange)="onSlideChange()"
+      >
         @for (slide of slides; track slide.title) {
           <swiper-slide>
             <div class="slide-content animate-fade-in">
@@ -28,8 +41,8 @@
 
 <ion-footer class="ion-no-border">
   <div class="footer-section">
-    <ion-button fill="clear" class="explore-btn" (click)="goToCalculator()">
-      <span>Explore Now</span>
+    <ion-button fill="clear" class="explore-btn" (click)="primaryAction()">
+      <span>{{ isLastSlide() ? 'Explore Now' : 'Next' }}</span>
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </ion-button>
     <div class="legal-links">

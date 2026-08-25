@@ -4,7 +4,7 @@
        toggle — the one button left here — moved up to the page header
        (calculator.html) next to History/Tools/AI, so this whole row no
        longer had a reason to exist on its own. -->
-  <div class="grid grid-cols-4 flex-1 min-h-0 auto-rows-fr" [class.gap-1]="calc.isScientific()" [class.gap-2]="!calc.isScientific()">
+  <div class="grid grid-cols-4 flex-1 min-h-0 auto-rows-fr gap-0">
     <!-- ── Scientific Only Rows ── -->
     @if (calc.isScientific()) {
       <!-- Row 1 -->
@@ -37,11 +37,18 @@
       <ion-button class="btn-sci" (click)="calc.isInverse() ? calc.cbrt() : calc.reciprocal()">{{ calc.isInverse() ? '∛x' : '1/x' }}</ion-button>
       <ion-button class="btn-sci" (click)="calc.isInverse() ? calc.floor() : calc.modulo()">{{ calc.isInverse() ? 'floor' : 'mod' }}</ion-button>
 
-      <!-- Row 5 -->
-      <ion-button class="btn-sci" (click)="calc.appendBracket('(')">(</ion-button>
-      <ion-button class="btn-sci" (click)="calc.appendBracket(')')">)</ion-button>
+      <!-- Row 5 — ( ) moved down next to =, see the final row below, so it
+           sits next to the key it's actually used alongside, matching
+           normal mode's "( )" / "=" adjacency. -->
       <ion-button class="btn-sci" (click)="calc.random()">Rand</ion-button>
       <ion-button class="btn-sci" (click)="calc.isInverse() ? calc.clearHistory() : calc.appendNumber('ans')">Ans</ion-button>
+      <!-- ceil() was fully implemented in CalculatorService but had no
+           button anywhere in the UI — this row had two open slots after
+           Rand/Ans, so it fills one of them. round() (added alongside)
+           fills the last slot, completing the floor/ceil/round trio —
+           floor is reachable via mod's Inv toggle in Row 4 above. -->
+      <ion-button class="btn-sci" (click)="calc.ceil()">Ceil</ion-button>
+      <ion-button class="btn-sci" (click)="calc.round()">Round</ion-button>
     }
 
     <!-- ── Common Keys (Standard Numpad 4-col Flow) ── -->
@@ -53,8 +60,8 @@
            (( ), %, C, ÷), so backspace swaps in here, immediately next to
            C — same single-button size as every other key in this row,
            instead of the differently-styled toolbar icon it used to be.
-           Basic mode loses its one-tap parentheses key as a result
-           (scientific mode keeps its separate ( and ) keys, unaffected). -->
+           Basic mode loses its one-tap parentheses key as a result (it's
+           still reachable via the combined "( )" key in the last row). -->
       <ion-button class="btn-sci" (click)="calc.percentage()">%</ion-button>
       <ion-button class="btn-sci" (click)="calc.backspace()">
         <ion-icon name="backspace-outline"></ion-icon>
@@ -63,18 +70,33 @@
     } @else {
       <!-- Scientific mode had a spacer here (freed up by removing +/-) —
            backspace fills it instead of sitting empty, immediately next to
-           AC, no existing key removed. -->
-      <ion-button class="btn-sci" (click)="calc.percentage()">%</ion-button>
+           AC, no existing key removed. row-break on "%" forces this onto
+           its own row (same technique as isRowBreakKey() below) so
+           %/⌫/AC/÷ land together as one full row, mirroring normal mode's
+           %/⌫/C/÷ row exactly — regardless of how many scientific rows are
+           showing above it. -->
+      <ion-button class="btn-sci row-break" (click)="calc.percentage()">%</ion-button>
       <ion-button class="btn-sci" (click)="calc.backspace()">
         <ion-icon name="backspace-outline"></ion-icon>
       </ion-button>
       <ion-button class="btn-sci" (click)="calc.clear()">AC</ion-button>
     }
     @for (key of numpadKeys; track key.label) {
-      <ion-button class="btn-sci" [class.btn-operator]="key.type === 'operator'" (click)="pressKey(key)">{{ key.label }}</ion-button>
+      <!-- isRowBreakKey(): see keypad.ts — keeps 7/8/9/×, 4/5/6/−, and
+           1/2/3/+ each in their own row in scientific mode, matching
+           normal mode's layout exactly (0/./( )/= is handled the same way,
+           just below this loop). -->
+      <ion-button
+        class="btn-sci"
+        [class.btn-operator]="key.type === 'operator'"
+        [class.row-break]="calc.isScientific() && isRowBreakKey(key)"
+        (click)="pressKey(key)"
+        >{{ key.label }}</ion-button
+      >
     }
     <ion-button class="btn-sci" (click)="calc.appendDecimal()">.</ion-button>
     @if (calc.isScientific()) {
+      <ion-button class="btn-sci" (click)="calc.appendBracket()">( )</ion-button>
       <ion-button class="btn-equals" (click)="calc.calculate()">=</ion-button>
     } @else {
       <!-- Normal mode's last row was only 0/. (2 of 4 columns) — one

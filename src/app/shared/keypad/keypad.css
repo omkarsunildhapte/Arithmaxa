@@ -1,34 +1,53 @@
+/* Both modes share the same rounded-rectangle button look (centered via
+   justify-self/align-self since a definite size opts the item out of
+   grid's default stretch alignment), but how they fill their cell differs
+   per mode: normal mode's cells are roughly square (5 rows), so a single
+   width % + aspect-ratio: 1 gives a rounded square that also fills the
+   cell nicely. Scientific mode's cells are short and wide (~10 rows
+   sharing .auto-rows-fr's fluid height, see keypad.html) — a square sized
+   to fit that short row height would be far narrower than the cell,
+   leaving big dead gaps on either side. Sizing off explicit width *and*
+   height instead (no aspect-ratio) fills the cell in both directions like
+   normal mode does, as a wider rounded rectangle instead. */
+.scientific-mode ion-button,
+.normal-mode ion-button {
+  --border-radius: 14px;
+  justify-self: center;
+  align-self: center;
+  /* Without this, a multi-character label ("( )", "sinh⁻¹") that doesn't
+     fit on one line wraps instead of widening the button — on "( )" that
+     reads as an illegible squiggle rather than two visible characters. */
+  white-space: nowrap;
+}
+
+.normal-mode ion-button {
+  aspect-ratio: 1;
+  width: 72%;
+  font-size: 0.95rem;
+}
+
 .scientific-mode ion-button {
-  --border-radius: 12px;
-  /* No min-height here on purpose — .auto-rows-fr on the grid (added only
-     in scientific mode, see keypad.html) divides the flex-1 grid's actual
-     available height evenly across however many rows the mode needs, and
-     grid's default align-items: stretch fills each button to its row. That
-     keeps the keypad always fitting the viewport with no scrollbar, even
-     though scientific mode can run to ~10 rows — the tradeoff is rows (and
-     tap targets) get proportionally shorter on smaller screens instead of
-     ever overflowing. */
+  width: 90%;
+  height: 88%;
   font-size: 0.8rem;
 }
 
 .scientific-mode .btn-sci.btn-operator {
-  font-size: 0.95rem;
+  font-size: 1.15rem;
 }
 
-/* ── Normal Mode Adjustments ── */
-/* width: 82% (rather than the grid's default stretch-to-fill-cell) is what
-   actually shrinks the visible buttons — the grid cells themselves (and
-   so the overall keypad layout/row count) stay the same size; only the
-   circle drawn inside each cell gets smaller, centered via justify-self/
-   align-self since a definite width opts the item out of grid's default
-   stretch alignment. */
-.normal-mode ion-button {
-  --border-radius: 50%;
-  aspect-ratio: 1;
-  font-size: 0.95rem;
-  width: 82%;
-  justify-self: center;
-  align-self: center;
+.normal-mode .btn-sci.btn-operator {
+  font-size: 1.4rem;
+}
+
+/* Forces the numpad's "0" key (see keypad.html's @for) to the start of a
+   new grid row regardless of how many items came before it, so 0/./( )/=
+   always land together as the last row — grid-auto-flow won't place an
+   explicit grid-column: 1 item anywhere but the start of the next
+   available row, since column 1 in the current row is already behind
+   the auto-placement cursor. */
+.row-break {
+  grid-column: 1;
 }
 
 /* ── Tactile Glass Style ── */
@@ -77,19 +96,8 @@
   box-shadow: none;
 }
 
-.scientific-mode .btn-equals {
-  grid-column: span 2;
-  /* No fixed height here either, same reason as .scientific-mode
-     ion-button above — a fixed px height would either overflow a shorter
-     fluid row or leave a gap in a taller one. */
-  aspect-ratio: auto;
-  --border-radius: 12px;
-}
-
-/* Normal mode's = is back inside the grid as a plain single key (see
-   keypad.html) — no mode-specific override needed here anymore, it just
-   picks up .normal-mode ion-button's circular sizing like every other key
-   in that mode. */
+/* = has no mode-specific override in either mode anymore — it just picks
+   up the shared rounded-rectangle sizing above like every other key. */
 
 /* Dead code removed: an unscoped `.keypad ion-button` rule (no element in
    this template ever carries a `.keypad` class — <app-keypad> in

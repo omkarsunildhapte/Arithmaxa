@@ -53,6 +53,21 @@ export class Keypad {
     }
   }
 
+  /** The four keys that start each of numpadKeys' natural 4-per-row
+   *  groupings (7/8/9/× · 4/5/6/− · 1/2/3/+, plus "0" starting the final
+   *  0/./( )/= row). In scientific mode, everything above the numpad
+   *  shifts this array's starting position around depending on which
+   *  scientific rows are showing — so instead of relying on the item
+   *  count landing on a row boundary on its own, these four force a grid
+   *  row break (see .row-break in keypad.css) to keep the same 4-per-row
+   *  grouping normal mode gets for free. Normal mode doesn't need this —
+   *  its fixed row above the numpad already keeps the count aligned. */
+  private readonly ROW_START_LABELS = new Set(['7', '4', '1', '0']);
+
+  isRowBreakKey(key: KeypadKey): boolean {
+    return this.ROW_START_LABELS.has(key.label);
+  }
+
   goToTools() {
     this.router.navigate(['/tools']);
   }

@@ -398,6 +398,9 @@ export class CalculatorService {
   ceil(): void {
     this.applyUnary(Math.ceil);
   }
+  round(): void {
+    this.applyUnary(Math.round);
+  }
 
   factorial(): void {
     this.applyUnary((n) => {

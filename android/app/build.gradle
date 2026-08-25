@@ -42,7 +42,11 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            // Was false — see proguard-rules.pro's comment for the keep
+            // rules added alongside this, and the real-device testing this
+            // still needs before shipping.
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             if (hasSigningConfig) {
                 signingConfig signingConfigs.release

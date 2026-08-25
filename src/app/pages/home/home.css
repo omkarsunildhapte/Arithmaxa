@@ -31,7 +31,10 @@
   position: absolute;
   top: calc(env(safe-area-inset-top, 0px) + 14px);
   right: 8px;
-  z-index: 10;
+  /* Above .header-section's z-index: 10 — that block sits later in the DOM
+     with the same stacking level, so at 10 it painted over this button's
+     tap target and swallowed every Skip tap. */
+  z-index: 20;
   --color: rgba(148, 163, 184, 0.5);
   color: rgba(148, 163, 184, 0.5);
   --background: transparent;

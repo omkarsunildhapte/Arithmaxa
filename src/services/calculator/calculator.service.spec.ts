@@ -537,6 +537,12 @@ describe('CalculatorService', () => {
       expect(service.display()).toBe(expectedFormat(Math.ceil(x)));
     });
 
+    it.each([1.1, 1.5, 1.9, -1.1, -1.5, -1.9, 5, 0, 100.5])('round(%p)', (x) => {
+      service.display.set(`${x}`);
+      service.round();
+      expect(service.display()).toBe(expectedFormat(Math.round(x)));
+    });
+
     it.each([50, 100, 25, 0, 10, 7, -20, 200])('percentage(%p)', (x) => {
       service.display.set(`${x}`);
       service.percentage();
