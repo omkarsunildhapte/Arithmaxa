@@ -48,5 +48,11 @@ Thumbs.db
 android/**/*.jks
 android/**/*.keystore
 android/keystore.properties
+
+# Firebase config — contains a live API key for the "arithmaxa" project.
+# Not a traditional secret (restricted server-side by package name + SHA
+# fingerprint, not by staying hidden), but this repo is public and the
+# convention above is to keep credential-adjacent files out anyway.
+android/app/google-services.json
 *.p12
 *.mobileprovision

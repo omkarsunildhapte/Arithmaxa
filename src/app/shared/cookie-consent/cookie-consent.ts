@@ -20,6 +20,7 @@ export class CookieConsent {
   readonly showCustomize = signal(false);
   readonly functional = signal(true);
   readonly aiProcessing = signal(true);
+  readonly analytics = signal(true);
 
   constructor() {
     addIcons({ shieldCheckmarkOutline });
@@ -37,6 +38,10 @@ export class CookieConsent {
     this.aiProcessing.set(checked);
   }
 
+  setAnalytics(checked: boolean): void {
+    this.analytics.set(checked);
+  }
+
   onFunctionalChange(event: Event): void {
     const custom = event as CustomEvent<{ checked: boolean }>;
     this.setFunctional(custom.detail.checked);
@@ -45,6 +50,11 @@ export class CookieConsent {
   onAiProcessingChange(event: Event): void {
     const custom = event as CustomEvent<{ checked: boolean }>;
     this.setAiProcessing(custom.detail.checked);
+  }
+
+  onAnalyticsChange(event: Event): void {
+    const custom = event as CustomEvent<{ checked: boolean }>;
+    this.setAnalytics(custom.detail.checked);
   }
 
   acceptAll(): void {
@@ -60,6 +70,7 @@ export class CookieConsent {
       essential: true,
       functional: this.functional(),
       aiProcessing: this.aiProcessing(),
+      analytics: this.analytics(),
     };
     this.consent.save(choices);
   }

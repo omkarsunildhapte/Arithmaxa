@@ -12,8 +12,10 @@ export class ConsentService {
     essential: true,
     functional: false,
     aiProcessing: false,
+    analytics: false,
   });
   readonly canUseAI = computed(() => this.choices().aiProcessing);
+  readonly canUseAnalytics = computed(() => this.choices().analytics);
 
   constructor() {
     this.load();
@@ -23,8 +25,17 @@ export class ConsentService {
     try {
       const raw = localStorage.getItem(this.KEY);
       if (raw) {
-        const parsed = JSON.parse(raw) as ConsentChoices;
-        this.choices.set({ ...parsed, essential: true });
+        const parsed = JSON.parse(raw) as Partial<ConsentChoices>;
+        // Older stored consent (from before the `analytics` category
+        // existed) won't have that field — default it to false rather
+        // than leaving it `undefined`, so an existing user isn't silently
+        // opted into a data-sharing category they never saw or agreed to.
+        this.choices.set({
+          essential: true,
+          functional: parsed.functional ?? false,
+          aiProcessing: parsed.aiProcessing ?? false,
+          analytics: parsed.analytics ?? false,
+        });
         this.hasConsented.set(true);
       }
     } catch {
@@ -33,11 +44,11 @@ export class ConsentService {
   }
 
   acceptAll(): void {
-    this.save({ essential: true, functional: true, aiProcessing: true });
+    this.save({ essential: true, functional: true, aiProcessing: true, analytics: true });
   }
 
   acceptEssentialOnly(): void {
-    this.save({ essential: true, functional: false, aiProcessing: false });
+    this.save({ essential: true, functional: false, aiProcessing: false, analytics: false });
   }
 
   save(choices: ConsentChoices): void {
@@ -51,7 +62,7 @@ export class ConsentService {
   withdraw(): void {
     localStorage.removeItem(this.KEY);
     this.hasConsented.set(false);
-    this.choices.set({ essential: true, functional: false, aiProcessing: false });
+    this.choices.set({ essential: true, functional: false, aiProcessing: false, analytics: false });
     void this.deleteConsentCookie();
   }
 

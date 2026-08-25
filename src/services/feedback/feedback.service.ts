@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, firstValueFrom, of } from 'rxjs';
 import { FeedbackCategory } from '@appTypes/index';
 import { FEEDBACK_URL } from '@constants/index';
+import { AnalyticsService } from '@services/analytics/analytics.service';
 
 interface FeedbackResponse {
   ok: boolean;
@@ -12,6 +13,7 @@ interface FeedbackResponse {
 @Service()
 export class FeedbackService {
   private readonly http = inject(HttpClient);
+  private readonly analytics = inject(AnalyticsService);
 
   /**
    * Emails the feedback to the Arithmaxa team via arithmaxa-website's
@@ -25,6 +27,7 @@ export class FeedbackService {
     const res = await firstValueFrom(
       this.http.post<FeedbackResponse>(FEEDBACK_URL, { rating, category, message: trimmed }).pipe(catchError(() => of<FeedbackResponse>({ ok: false, error: 'Network error' }))),
     );
+    if (res.ok) this.analytics.logEvent('feedback_submitted', { category, rating });
     return res.ok;
   }
 }

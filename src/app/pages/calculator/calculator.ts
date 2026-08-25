@@ -7,6 +7,7 @@ import { Keypad } from '../../shared/keypad/keypad';
 import { History } from '../../shared/history/history';
 import { CalculatorService } from '@services/calculator/calculator.service';
 import { RatingService } from '@services/rating/rating.service';
+import { AnalyticsService } from '@services/analytics/analytics.service';
 
 addIcons({ sparklesOutline, gridOutline, timeOutline, closeOutline, trashOutline, flash, calculatorOutline });
 
@@ -22,6 +23,7 @@ export class Calculator {
   private readonly navCtrl = inject(NavController);
   private readonly modalCtrl = inject(ModalController);
   private readonly rating = inject(RatingService);
+  private readonly analytics = inject(AnalyticsService);
   protected isHistoryOpen = signal(false);
   private lastHistoryLength = 0;
 
@@ -35,6 +37,7 @@ export class Calculator {
       if (length > this.lastHistoryLength) {
         this.lastHistoryLength = length;
         void this.rating.recordCalculation();
+        this.analytics.logEvent('calculation_performed');
       }
     });
   }

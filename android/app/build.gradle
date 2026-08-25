@@ -1,17 +1,20 @@
 apply plugin: 'com.android.application'
 
 // Release signing — reads from android/keystore.properties, which is
-// git-ignored and never committed (see keystore.properties.example for the
-// expected format). Falls through to an unsigned release build with a
-// warning if that file doesn't exist yet, so `./gradlew assembleDebug` and
-// day-to-day development keep working before signing is set up.
+// git-ignored and never committed. Expected format: storeFile,
+// storePassword, keyAlias, keyPassword (storeFile pointing at a release
+// .jks/.keystore generated via `keytool -genkeypair` or Android Studio's
+// Build > Generate Signed Bundle / APK wizard). Falls through to an
+// unsigned release build with a warning if that file doesn't exist yet, so
+// `./gradlew assembleDebug` and day-to-day development keep working before
+// signing is set up.
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 def hasSigningConfig = keystorePropertiesFile.exists()
 if (hasSigningConfig) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 } else {
-    logger.warn("keystore.properties not found — release build will be unsigned. See android/keystore.properties.example.")
+    logger.warn("keystore.properties not found — release build will be unsigned.")
 }
 
 android {
@@ -75,11 +78,14 @@ dependencies {
 
 apply from: 'capacitor.build.gradle'
 
+// google-services.json is git-ignored (contains a live API key — see
+// .gitignore's comment) and never committed. Download it from Firebase
+// Console > Project Settings > your Android app and place it here.
 try {
     def servicesJSON = file('google-services.json')
     if (servicesJSON.text) {
         apply plugin: 'com.google.gms.google-services'
     }
 } catch(Exception e) {
-    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications and Analytics won't work.")
 }

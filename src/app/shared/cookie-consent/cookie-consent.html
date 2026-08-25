@@ -12,8 +12,8 @@
       </div>
 
       <p class="consent-text">
-        Your calculation history and settings are stored <strong>only on your device</strong>. The AI Chat feature sends your queries to <strong>OpenRouter</strong> for processing. No personal data is
-        collected by us or sent to our servers.
+        Your calculation history and settings are stored <strong>only on your device</strong>. The AI Chat feature sends your queries to <strong>OpenRouter</strong> for processing. With your consent, we
+        use <strong>Firebase Analytics</strong> to understand anonymous, aggregate usage. No personal data is collected by us or sent to our servers.
         <a routerLink="/privacy" class="consent-link">Read Privacy Policy</a>
       </p>
 
@@ -41,6 +41,14 @@
               <span class="toggle-desc">Math queries sent to OpenRouter's API</span>
             </div>
             <ion-toggle [checked]="aiProcessing()" (ionChange)="onAiProcessingChange($event)" class="consent-toggle" aria-label="AI Chat Processing"></ion-toggle>
+          </div>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <span class="toggle-name">Analytics</span>
+              <span class="toggle-desc">Anonymous usage statistics via Firebase Analytics</span>
+            </div>
+            <ion-toggle [checked]="analytics()" (ionChange)="onAnalyticsChange($event)" class="consent-toggle" aria-label="Analytics"></ion-toggle>
           </div>
         </div>
       }

@@ -29,7 +29,7 @@ describe('CookieConsent', () => {
     expect(fixture.componentInstance.showCustomize()).toBe(true);
   });
 
-  it('onFunctionalChange()/onAiProcessingChange() update the corresponding signals from an ion-toggle ionChange CustomEvent', () => {
+  it('onFunctionalChange()/onAiProcessingChange()/onAnalyticsChange() update the corresponding signals from an ion-toggle ionChange CustomEvent', () => {
     const fixture = TestBed.createComponent(CookieConsent);
 
     fixture.componentInstance.onFunctionalChange(new CustomEvent('ionChange', { detail: { checked: false } }));
@@ -37,17 +37,21 @@ describe('CookieConsent', () => {
 
     fixture.componentInstance.onAiProcessingChange(new CustomEvent('ionChange', { detail: { checked: true } }));
     expect(fixture.componentInstance.aiProcessing()).toBe(true);
+
+    fixture.componentInstance.onAnalyticsChange(new CustomEvent('ionChange', { detail: { checked: false } }));
+    expect(fixture.componentInstance.analytics()).toBe(false);
   });
 
-  it('saveCustom() saves the current functional/aiProcessing toggle state with essential always true', () => {
+  it('saveCustom() saves the current functional/aiProcessing/analytics toggle state with essential always true', () => {
     const fixture = TestBed.createComponent(CookieConsent);
     fixture.componentInstance.setFunctional(true);
     fixture.componentInstance.setAiProcessing(false);
+    fixture.componentInstance.setAnalytics(false);
 
     fixture.componentInstance.saveCustom();
 
     const stored = JSON.parse(localStorage.getItem('arithmaxa_consent_v1')!);
-    expect(stored).toEqual({ essential: true, functional: true, aiProcessing: false });
+    expect(stored).toEqual({ essential: true, functional: true, aiProcessing: false, analytics: false });
   });
 
   it('acceptEssentialOnly() records consent with only essential enabled', () => {
@@ -55,6 +59,6 @@ describe('CookieConsent', () => {
     fixture.componentInstance.acceptEssentialOnly();
 
     const stored = JSON.parse(localStorage.getItem('arithmaxa_consent_v1')!);
-    expect(stored).toEqual({ essential: true, functional: false, aiProcessing: false });
+    expect(stored).toEqual({ essential: true, functional: false, aiProcessing: false, analytics: false });
   });
 });
