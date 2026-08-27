@@ -4,5 +4,7 @@ export const environment = {
   // PORT value). Only takes effect for `ng serve`/`npm start` now that
   // angular.json's "development" configuration has a fileReplacements
   // entry pointing at this file — it was dead code before that existed.
-  backendUrl: 'http://localhost:3000',
+  // `npx wrangler dev` in arithmaxa-website, not the retired Express
+  // server on :3000.
+  backendUrl: 'http://localhost:8787',
 };

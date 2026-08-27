@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- Firebase Analytics injects the advertising-ID permissions below, plus
+         the Privacy Sandbox ad-services pair, even though this app shows no
+         ads and links no ad account. Stripping them keeps the Play Console's
+         "Advertising ID" declaration a clean "no" and avoids requesting
+         identifiers the app has no use for. Analytics itself is unaffected:
+         events, screens, funnels and retention all still work — only
+         Demographics/Interests reporting and Google Ads attribution are lost,
+         neither of which this app uses. Verify after a build with:
+           grep AD_ID android/app/build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml -->
+    <uses-permission
+        android:name="com.google.android.gms.permission.AD_ID"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.ACCESS_ADSERVICES_AD_ID"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION"
+        tools:node="remove" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -7,6 +27,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!-- Second line of defence: disables AAID collection in the Analytics
+             SDK itself, independent of the manifest permission above. -->
+        <meta-data
+            android:name="google_analytics_adid_collection_enabled"
+            android:value="false" />
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
             android:name=".MainActivity"
