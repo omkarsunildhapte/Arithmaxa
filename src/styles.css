@@ -485,3 +485,19 @@ ion-select {
   font-size: 0.72rem;
   color: #334155;
 }
+
+/* Safe-area insets for the status bar and gesture bar.
+
+   Ionic derives --ion-safe-area-top from env(safe-area-inset-top), which only
+   reports real values once index.html's viewport meta carries viewport-fit=cover.
+   These rules make the dependency explicit rather than relying on Ionic's
+   defaults lining up with SystemBars' insetsHandling: 'css' mode, and they cover
+   the two places content was reported clipped on an Oppo A55 (Android 13): the
+   header under the status bar, and the footer under the gesture bar. */
+ion-header ion-toolbar:first-of-type {
+  padding-top: var(--ion-safe-area-top, env(safe-area-inset-top, 0px));
+}
+
+ion-footer ion-toolbar:last-of-type {
+  padding-bottom: var(--ion-safe-area-bottom, env(safe-area-inset-bottom, 0px));
+}
