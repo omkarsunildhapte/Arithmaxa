@@ -20,8 +20,8 @@ describe('BmiCalc', () => {
 
   it('computes BMI directly from meters when unit is "meters"', () => {
     component.switchUnit('meters');
-    component.weightKg = 70;
-    component.heightM = 1.75;
+    component.weightKg.set(70);
+    component.heightM.set(1.75);
 
     component.calculate();
 
@@ -32,8 +32,8 @@ describe('BmiCalc', () => {
 
   it('does not compute a result for "meters" until both fields are filled', () => {
     component.switchUnit('meters');
-    component.weightKg = 70;
-    component.heightM = null;
+    component.weightKg.set(70);
+    component.heightM.set(null);
 
     component.calculate();
 
@@ -41,8 +41,8 @@ describe('BmiCalc', () => {
   });
 
   it('computes BMI for the default "metric" unit (kg/cm)', () => {
-    component.weightKg = 70;
-    component.heightCm = 175;
+    component.weightKg.set(70);
+    component.heightCm.set(175);
 
     component.calculate();
 
@@ -52,8 +52,8 @@ describe('BmiCalc', () => {
   });
 
   it('does not compute a result for "metric" until both fields are filled', () => {
-    component.weightKg = 70;
-    component.heightCm = null;
+    component.weightKg.set(70);
+    component.heightCm.set(null);
 
     component.calculate();
 
@@ -62,9 +62,9 @@ describe('BmiCalc', () => {
 
   it('computes BMI for "imperial" (lbs/ft+in), converting to metric first', () => {
     component.switchUnit('imperial');
-    component.weightLbs = 154;
-    component.heightFt = 5;
-    component.heightIn = 9;
+    component.weightLbs.set(154);
+    component.heightFt.set(5);
+    component.heightIn.set(9);
 
     component.calculate();
 
@@ -75,9 +75,9 @@ describe('BmiCalc', () => {
 
   it('treats a missing inches value as 0 for "imperial"', () => {
     component.switchUnit('imperial');
-    component.weightLbs = 154;
-    component.heightFt = 6;
-    component.heightIn = null;
+    component.weightLbs.set(154);
+    component.heightFt.set(6);
+    component.heightIn.set(null);
 
     component.calculate();
 
@@ -87,8 +87,8 @@ describe('BmiCalc', () => {
 
   it('does not compute a result for "imperial" until weight and feet are filled', () => {
     component.switchUnit('imperial');
-    component.weightLbs = 154;
-    component.heightFt = null;
+    component.weightLbs.set(154);
+    component.heightFt.set(null);
 
     component.calculate();
 
@@ -99,20 +99,20 @@ describe('BmiCalc', () => {
     // calculateBmi's own boundaries are covered in tools.service.spec.ts;
     // this just confirms the component wires weightKg/heightCm through to
     // it unmodified rather than duplicating the boundary math here.
-    component.weightKg = 45;
-    component.heightCm = 180; // bmi ≈ 13.9 -> Underweight
+    component.weightKg.set(45);
+    component.heightCm.set(180); // bmi ≈ 13.9 -> Underweight
     component.calculate();
     expect(component.bmiResult()?.category).toBe('Underweight');
 
-    component.weightKg = 100;
-    component.heightCm = 180; // bmi ≈ 30.9 -> Obese
+    component.weightKg.set(100);
+    component.heightCm.set(180); // bmi ≈ 30.9 -> Obese
     component.calculate();
     expect(component.bmiResult()?.category).toBe('Obese');
   });
 
   it('clears the previous result when switching units', () => {
-    component.weightKg = 70;
-    component.heightCm = 175;
+    component.weightKg.set(70);
+    component.heightCm.set(175);
     component.calculate();
     expect(component.bmiResult()).not.toBeNull();
 

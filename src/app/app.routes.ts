@@ -8,7 +8,8 @@ export const routes: Routes = [
   { path: 'arithmaxa', loadComponent: () => import('./pages/calculator/calculator').then((m) => m.Calculator) },
   { path: 'tools', loadComponent: () => import('./pages/tools/tools').then((m) => m.Tools) },
   { path: 'ai', loadComponent: () => import('./pages/ai-chat/ai-chat').then((m) => m.AiChatPage) },
-  { path: 'privacy', loadComponent: () => import('./pages/privacy-policy/privacy-policy').then((m) => m.PrivacyPolicy) },
-  { path: 'terms', loadComponent: () => import('./pages/terms-of-service/terms-of-service').then((m) => m.TermsOfService) },
+  // No /privacy or /terms routes: both documents are hosted on
+  // arithmaxa-website and opened in the system browser instead (see
+  // `PRIVACY_POLICY_URL`/`TERMS_OF_SERVICE_URL` in @constants/legal).
   { path: '**', redirectTo: '' },
 ];

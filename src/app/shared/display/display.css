@@ -1,0 +1,19 @@
+/* The calculator readout. Layout, sizing and the error/normal colour swap
+   stay as utilities in display.html — they read better next to the markup.
+   What lives here is the pair of values that shouldn't be inline:
+
+   Both class names are also the hooks display.spec.ts queries
+   (`.main-display`, `.history-display`), so they exist regardless of whether
+   they carry styles — don't remove them as "unstyled leftovers". */
+
+/* The expression line above the result. Uses the shared muted token rather
+   than repeating its hex, which is what the template did. */
+.history-display {
+  color: var(--text-muted);
+}
+
+/* Negative tracking tightens the big result so long numbers fit more of the
+   clamp()'d width before it has to shrink. */
+.main-display {
+  letter-spacing: -1.5px;
+}

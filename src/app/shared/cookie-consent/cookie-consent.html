@@ -1,60 +1,73 @@
 @if (isVisible()) {
-  <div class="consent-overlay" role="dialog" aria-modal="true" aria-label="Privacy Consent">
-    <div class="consent-card animate-fade-in">
-      <div class="consent-header">
-        <div class="consent-icon">
-          <ion-icon name="shield-checkmark-outline"></ion-icon>
+  <div class="consent-overlay fixed right-0 bottom-0 left-0 z-[9999] p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]" role="dialog" aria-modal="true" aria-label="Privacy Consent">
+    <div class="consent-card animate-fade-in mx-auto max-w-[640px] rounded-3xl border border-white/10 bg-[rgba(8,10,24,0.97)] p-5 backdrop-blur-[24px] backdrop-saturate-[180%]">
+      <div class="mb-3 flex items-start gap-3">
+        <div class="consent-icon flex h-[38px] w-[38px] min-w-[38px] items-center justify-center rounded-[11px]">
+          <ion-icon name="shield-checkmark-outline" class="text-[1.15rem] text-white"></ion-icon>
         </div>
-        <div class="consent-headline">
-          <h3 class="consent-title">Your Privacy, Your Choice</h3>
-          <p class="consent-sub">Arithmaxa respects your data. Here's how we use storage.</p>
+        <div>
+          <h3 class="m-0 mb-[0.2rem] text-[0.95rem] font-bold text-[#f8fafc]">{{ isSettingsMode() ? 'Privacy & Data' : 'Your Privacy, Your Choice' }}</h3>
+          <p class="m-0 text-xs text-[#64748b]">
+            {{ isSettingsMode() ? 'Review your choices or delete everything stored on this device.' : "Arithmaxa respects your data. Here's how we use storage." }}
+          </p>
         </div>
       </div>
 
-      <p class="consent-text">
-        Your calculation history and settings are stored <strong>only on your device</strong>. The AI Chat feature sends your queries to <strong>OpenRouter</strong> for processing. With your consent, we
-        use <strong>Firebase Analytics</strong> to understand anonymous, aggregate usage. No personal data is collected by us or sent to our servers.
-        <a routerLink="/privacy" class="consent-link">Read Privacy Policy</a>
+      <p class="m-0 mb-[0.85rem] text-[0.78rem] leading-[1.65] text-[#94a3b8]">
+        Your calculation history and settings are stored <strong class="text-[#cbd5e1]">only on your device</strong>. The AI Chat feature sends your queries to
+        <strong class="text-[#cbd5e1]">OpenRouter</strong> for processing. With your consent, we use <strong class="text-[#cbd5e1]">Firebase Analytics</strong> to understand anonymous, aggregate
+        usage. No personal data is collected by us or sent to our servers.
       </p>
 
-      @if (showCustomize()) {
-        <div class="consent-toggles">
-          <div class="toggle-row">
-            <div class="toggle-info">
-              <span class="toggle-name">Essential Storage</span>
-              <span class="toggle-desc">History, settings & consent — always active</span>
+      <!-- Outbound links to arithmaxa-website, on their own footer row. -->
+      <p class="m-0 mb-[0.85rem] flex items-center gap-[0.4rem] text-[0.76rem]">
+        <a [href]="privacyPolicyUrl" target="_blank" rel="noopener noreferrer" class="text-[#818cf8] underline">Privacy Policy</a>
+        <span class="text-[#334155]">·</span>
+        <a [href]="termsOfServiceUrl" target="_blank" rel="noopener noreferrer" class="text-[#818cf8] underline">Terms of Service</a>
+      </p>
+
+      @if (showToggles()) {
+        <div class="mb-[0.85rem] flex flex-col rounded-2xl border border-white/[0.07] bg-white/[0.03] px-3 py-1">
+          <div class="flex items-center justify-between gap-4 border-b border-white/[0.05] py-[0.65rem] last:border-b-0">
+            <div>
+              <span class="block text-[0.8rem] font-semibold text-[#e2e8f0]">Essential Storage</span>
+              <span class="mt-[0.1rem] block text-[0.7rem] text-[#475569]">History, settings & consent — always active</span>
             </div>
             <ion-toggle checked disabled class="consent-toggle" title="Always required" aria-label="Essential Storage (always required)"></ion-toggle>
           </div>
 
-          <div class="toggle-row">
-            <div class="toggle-info">
-              <span class="toggle-name">Functional Storage</span>
-              <span class="toggle-desc">Feedback and additional app preferences</span>
+          <div class="flex items-center justify-between gap-4 border-b border-white/[0.05] py-[0.65rem] last:border-b-0">
+            <div>
+              <span class="block text-[0.8rem] font-semibold text-[#e2e8f0]">Functional Storage</span>
+              <span class="mt-[0.1rem] block text-[0.7rem] text-[#475569]">Feedback and additional app preferences</span>
             </div>
             <ion-toggle [checked]="functional()" (ionChange)="onFunctionalChange($event)" class="consent-toggle" aria-label="Functional Storage"></ion-toggle>
           </div>
 
-          <div class="toggle-row">
-            <div class="toggle-info">
-              <span class="toggle-name">AI Chat Processing</span>
-              <span class="toggle-desc">Math queries sent to OpenRouter's API</span>
+          <div class="flex items-center justify-between gap-4 border-b border-white/[0.05] py-[0.65rem] last:border-b-0">
+            <div>
+              <span class="block text-[0.8rem] font-semibold text-[#e2e8f0]">AI Chat Processing</span>
+              <span class="mt-[0.1rem] block text-[0.7rem] text-[#475569]">Math queries sent to OpenRouter's API</span>
             </div>
             <ion-toggle [checked]="aiProcessing()" (ionChange)="onAiProcessingChange($event)" class="consent-toggle" aria-label="AI Chat Processing"></ion-toggle>
           </div>
 
-          <div class="toggle-row">
-            <div class="toggle-info">
-              <span class="toggle-name">Analytics</span>
-              <span class="toggle-desc">Anonymous usage statistics via Firebase Analytics</span>
+          <div class="flex items-center justify-between gap-4 border-b border-white/[0.05] py-[0.65rem] last:border-b-0">
+            <div>
+              <span class="block text-[0.8rem] font-semibold text-[#e2e8f0]">Analytics</span>
+              <span class="mt-[0.1rem] block text-[0.7rem] text-[#475569]">Anonymous usage statistics via Firebase Analytics</span>
             </div>
             <ion-toggle [checked]="analytics()" (ionChange)="onAnalyticsChange($event)" class="consent-toggle" aria-label="Analytics"></ion-toggle>
           </div>
         </div>
       }
 
-      <div class="consent-actions">
-        @if (showCustomize()) {
+      <div class="flex flex-wrap items-center gap-2">
+        @if (isSettingsMode()) {
+          <ion-button fill="clear" class="btn-primary" (click)="saveCustom()">Save Preferences</ion-button>
+          <ion-button fill="clear" class="btn-danger" (click)="clearAllData()"><ion-icon name="trash-outline" class="mr-[0.35rem] text-base"></ion-icon><span>Delete My Data</span></ion-button>
+          <ion-button fill="clear" class="btn-ghost" (click)="close()">Close</ion-button>
+        } @else if (showCustomize()) {
           <ion-button fill="clear" class="btn-primary" (click)="saveCustom()">Save Preferences</ion-button>
           <ion-button fill="clear" class="btn-ghost" (click)="toggleCustomize()">Cancel</ion-button>
         } @else {

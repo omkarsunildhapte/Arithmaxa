@@ -10,3 +10,8 @@ export * from './tool-card';
 export * from './tool-component';
 export * from './category-option';
 export * from './keypad-key';
+export * from './age-result';
+export * from './age-total';
+export * from './bmi-scale-band';
+export * from './bmi-unit';
+export * from './percentage-type';

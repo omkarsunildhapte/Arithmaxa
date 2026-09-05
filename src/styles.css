@@ -129,12 +129,16 @@ body {
   border-radius: 10px;
 }
 
-/* Modal/page backgrounds shared by .premium-modal, .tool-modal-content, and
-   .policy-content further below — kept as one declaration instead of
-   repeating the same --background across all three. */
+/* Every full-bleed surface in the app sits on the same brand background:
+   the modals, and each page's ion-content shell. They each repeated this
+   declaration in their own stylesheet; one list is easier to keep honest if
+   the brand colour ever moves. */
 .premium-modal,
 .tool-modal-content,
-.policy-content {
+.ai-content,
+.calc-content,
+.home-content,
+.history-container {
   --background: var(--brand-dark);
 }
 
@@ -224,11 +228,8 @@ ion-select {
   margin-top: 1.5rem;
 }
 
-/* Shared full-bleed centering, also used by .page-title-center further
-   below — only the per-element extras (z-index here, text styling there)
-   differ. */
-.header-container,
-.page-title-center {
+/* Full-bleed centering for the header's centered title block. */
+.header-container {
   position: absolute;
   left: 0;
   right: 0;
@@ -258,234 +259,6 @@ ion-select {
   border-radius: 32px 32px 0 0;
 }
 
-/* Legal page shell — shared verbatim by privacy-policy.ts and
-   terms-of-service.ts (the only two components that use these classes).
-   Lives here instead of each component's own styleUrls so it's defined
-   once instead of duplicated across both ~250-line stylesheets. Anything
-   that differs between the two pages (e.g. terms-of-service's .warning-box,
-   privacy-policy's .summary-row/.third-party-card/.rights-list/.action-btn)
-   stays in that page's own CSS file. */
-.page-title-center {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #f8fafc;
-  letter-spacing: 0.04em;
-}
-
-.policy-container {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 1.5rem 1.25rem 3rem;
-}
-
-.policy-hero {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-/* Circular icon badge — same treatment as home.css's .logo-wrapper (glass
-   background, subtle border/glow) so the legal pages' hero icon reads as
-   part of the same design system instead of a bare emoji-sized glyph. */
-.hero-icon {
-  width: 64px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 50%;
-  font-size: 1.7rem;
-  color: var(--brand-primary);
-  box-shadow: inset 0 0 20px rgba(34, 236, 243, 0.08);
-}
-
-.policy-h1 {
-  font-size: 2rem;
-  font-weight: 900;
-  margin: 0 0 0.3rem;
-  background: linear-gradient(135deg, #fff 40%, var(--brand-primary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.policy-meta-date {
-  font-size: 0.72rem;
-  color: var(--text-faint);
-  margin: 0 0 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.policy-intro {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  line-height: 1.65;
-  margin: 0 auto;
-  max-width: 520px;
-}
-
-.policy-section {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 1.25rem;
-  padding: 1.25rem;
-  margin-bottom: 0.875rem;
-}
-
-.policy-section h2 {
-  font-size: 1rem;
-  font-weight: 800;
-  color: #f8fafc;
-  margin: 0 0 0.875rem;
-  padding-bottom: 0.6rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.policy-section h3 {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--brand-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  margin: 1rem 0 0.5rem;
-}
-
-.policy-section p,
-.policy-section li {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.7;
-}
-
-.policy-section p {
-  margin: 0 0 0.75rem;
-}
-
-.policy-section p:last-child {
-  margin-bottom: 0;
-}
-
-.policy-section ul {
-  padding-left: 1.2rem;
-  margin: 0 0 0.75rem;
-}
-
-.policy-section li {
-  margin-bottom: 0.4rem;
-}
-
-.policy-section li strong {
-  color: #e2e8f0;
-}
-
-.policy-link {
-  color: var(--brand-accent);
-  text-decoration: underline;
-}
-
-.contact-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0.875rem;
-  padding: 0.875rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.contact-line {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  font-size: 0.85rem;
-}
-
-/* Small circular badge, same design language as .hero-icon further below
-   (and .logo-wrapper in home.css) just scaled down — gives these icons a
-   tinted "chip" instead of sitting as bare gray glyphs next to the text. */
-.contact-icon {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: rgba(6, 165, 218, 0.12);
-  color: var(--brand-accent);
-  font-size: 0.95rem;
-}
-
-.contact-text {
-  color: var(--text-muted);
-}
-
-.related-links {
-  margin-bottom: 0.875rem;
-}
-
-.related-link {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 1rem;
-  padding: 0.875rem 1rem;
-  text-decoration: none;
-  transition: background 0.15s;
-}
-
-.related-link:hover {
-  background: rgba(255, 255, 255, 0.04);
-}
-
-/* Same circular-badge treatment as .contact-icon above, scaled up slightly
-   since this is a more prominent tappable row rather than an inline
-   detail. */
-.related-icon {
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: rgba(6, 165, 218, 0.12);
-  color: var(--brand-accent);
-  font-size: 1.15rem;
-}
-
-.related-link strong {
-  display: block;
-  font-size: 0.85rem;
-  color: #e2e8f0;
-}
-
-.related-link div span {
-  display: block;
-  font-size: 0.72rem;
-  color: var(--text-subtle);
-}
-
-.related-arrow {
-  margin-left: auto;
-  font-size: 1.2rem;
-  color: var(--text-faint);
-}
-
-.policy-footer {
-  text-align: center;
-  padding-top: 1rem;
-  font-size: 0.72rem;
-  color: #334155;
-}
-
 /* Safe-area insets for the status bar and gesture bar.
 
    Ionic derives --ion-safe-area-top from env(safe-area-inset-top), which only
@@ -500,4 +273,50 @@ ion-header ion-toolbar:first-of-type {
 
 ion-footer ion-toolbar:last-of-type {
   padding-bottom: var(--ion-safe-area-bottom, env(safe-area-inset-bottom, 0px));
+}
+
+/* ── Shared component surfaces ──
+   These blocks were byte-identical in two or three component stylesheets
+   each. Component styles are scoped, so every copy shipped separately; the
+   duplication was also the kind that drifts — one card gets a new radius and
+   the others quietly don't. Defined once here instead.
+
+   .app-toolbar is opt-in via a class rather than styling bare `ion-toolbar`
+   globally: the tool modals use their own shorter toolbar, and a blanket
+   rule would have silently made every one of those headers 70px tall. */
+ion-toolbar.app-toolbar {
+  --background: var(--brand-dark);
+  --color: #ffffff;
+  --border-width: 0;
+  --min-height: 70px;
+  padding: 0 16px;
+}
+
+/* Input surface shared by the BMI, discount and percentage tools. */
+.input-card {
+  margin-bottom: 0;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.25rem;
+  padding: 1rem 1.25rem;
+}
+
+/* Result surface shared by the discount and percentage tools. */
+.result-panel {
+  margin-top: 0;
+  border-color: rgba(34, 236, 243, 0.2);
+  background: rgba(34, 236, 243, 0.06);
+}
+
+/* The "Press back again to exit" toast (NavigationService.showExitToast()).
+   Ionic renders toasts at the app root, outside any component's encapsulated
+   CSS, so this has to be global — the class name was referenced from the
+   service for a long time without ever being defined anywhere, leaving the
+   toast on Ionic's stock light styling against the dark app. */
+.exit-toast {
+  --background: rgba(8, 10, 24, 0.97);
+  --color: #e2e8f0;
+  --border-radius: 0.75rem;
+  --box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  font-size: 0.82rem;
 }

@@ -1,38 +1,11 @@
 import { Service, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, of } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '@environments/environment';
 import { ChatErrorResponse, ChatMessage, ChatResponse } from '@appTypes/index';
-import { AI_CHAT_PATH } from '@constants/index';
+import { AI_CHAT_PATH, AI_ERROR_SENTINEL, AI_LOCAL_FAILED_ERROR, AI_LOCAL_SESSION_ID, AI_OFFLINE_ERROR, AI_REQUEST_FAILED_ERROR, AI_SYSTEM_PROMPT } from '@constants/index';
 import { NetworkService } from '@services/network/network.service';
 import { LocalLLM, type LLMAvailability } from '@capacitor/local-llm';
-
-// Used only for the on-device path below — arithmaxa-backend's own
-// openrouter.ts prepends its own system prompt server-side for the cloud
-// path, so sending one from here too would just duplicate it.
-/**
- * Scope guard for the on-device model. Must stay in sync with the copy in
- * arithmaxa-website's worker/routes/ai-chat.ts — this path handles most
- * requests (local is preferred whenever the device supports it), so guarding
- * only the cloud relay would leave the common case wide open.
- *
- * The old prompt merely called the assistant a math helper, which is not an
- * instruction to refuse anything: asked for code, it wrote code.
- */
-const SYSTEM_PROMPT = `You are Arithmaxa's assistant, built into a scientific calculator app. You answer ONLY mathematics and science questions.
-
-In scope: arithmetic, algebra, geometry, trigonometry, calculus, statistics and probability, unit and currency conversion, physics, chemistry, biology, and earth or space science — including the formulas and reasoning behind them.
-
-Out of scope: everything else. That includes programming and code of any kind, general knowledge, history, current events, medical, legal or financial advice, opinions, creative writing, translation, and questions about yourself or how you work.
-
-If a request is out of scope, do not answer it even partially and do not write code. Reply with exactly this one sentence and nothing else: "I can only help with maths and science questions." If a request mixes topics, answer only the maths or science part and ignore the rest.
-
-Answer concisely, show the working when it aids understanding, and use plain-text maths notation (e.g. sqrt(x), x^2).`;
-
-// Keeps every ask() call in one on-device conversation, so LocalLLM.prompt()
-// retains context the same way the cloud path does via the full messages
-// array. Ended/restarted whenever the on-device path is torn down.
-const LOCAL_SESSION_ID = 'arithmaxa-ai-chat';
 
 @Service()
 export class AiService {
@@ -106,7 +79,7 @@ export class AiService {
       // and time out — NetworkService.connected() is kept live by App's
       // networkStatusChange listener.
       this.loading.set(false);
-      this.error.set("You're offline. Check your connection and try again.");
+      this.error.set(AI_OFFLINE_ERROR);
       this.messages.update((m) => m.slice(0, -1));
       return;
     }
@@ -136,14 +109,14 @@ export class AiService {
         map((res) => res.content),
         catchError((err: HttpErrorResponse) => {
           const body = err.error as ChatErrorResponse | null;
-          const msg = body?.error ?? err.message ?? 'Request failed. Please try again.';
-          return of(`\0${msg}`);
+          const msg = body?.error ?? err.message ?? AI_REQUEST_FAILED_ERROR;
+          return of(`${AI_ERROR_SENTINEL}${msg}`);
         }),
       )
       .subscribe((content) => {
         this.loading.set(false);
-        if (content.startsWith('\0')) {
-          this.error.set(content.slice(1));
+        if (content.startsWith(AI_ERROR_SENTINEL)) {
+          this.error.set(content.slice(AI_ERROR_SENTINEL.length));
           this.messages.update((m) => m.slice(0, -1));
         } else {
           this.messages.update((m) => [...m, { role: 'assistant', content }]);
@@ -154,15 +127,15 @@ export class AiService {
   private async askLocal(text: string): Promise<void> {
     try {
       const { text: reply } = await LocalLLM.prompt({
-        sessionId: LOCAL_SESSION_ID,
-        instructions: SYSTEM_PROMPT,
+        sessionId: AI_LOCAL_SESSION_ID,
+        instructions: AI_SYSTEM_PROMPT,
         prompt: text,
       });
       this.loading.set(false);
       this.messages.update((m) => [...m, { role: 'assistant', content: reply }]);
     } catch (err) {
       this.loading.set(false);
-      const msg = err instanceof Error ? err.message : 'The on-device model failed to respond.';
+      const msg = err instanceof Error ? err.message : AI_LOCAL_FAILED_ERROR;
       this.error.set(msg);
       this.messages.update((m) => m.slice(0, -1));
     }

@@ -17,52 +17,52 @@
   <div class="tool-view animate-fade-in flex flex-col gap-4 px-5 py-4">
     <div class="input-card">
       <span class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold block mb-3">Parameters</span>
-      <ion-segment [value]="unit" (ionChange)="onUnitChange($event)" class="unit-segment">
-        <ion-segment-button value="metric">
-          <ion-label>METRIC</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="meters">
-          <ion-label>METERS</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="imperial">
-          <ion-label>IMPERIAL</ion-label>
-        </ion-segment-button>
+      <ion-segment [value]="unit()" (ionChange)="onUnitChange($event)" class="rounded-xl border border-white/10 p-1 [--background:rgba(255,255,255,0.05)]">
+        @for (u of units; track u.value) {
+          <ion-segment-button [value]="u.value" class="unit-segment-btn">
+            <ion-label>{{ u.label }}</ion-label>
+          </ion-segment-button>
+        }
       </ion-segment>
     </div>
 
-    @if (unit === 'metric') {
-      <div class="input-group input-card">
-        <label>Weight (KG)</label>
-        <ion-input type="number" [(ngModel)]="weightKg" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="70"></ion-input>
-      </div>
-      <div class="input-group input-card">
-        <label>Height (CM)</label>
-        <ion-input type="number" [(ngModel)]="heightCm" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="175"></ion-input>
-      </div>
-    } @else if (unit === 'meters') {
-      <div class="input-group input-card">
-        <label>Weight (KG)</label>
-        <ion-input type="number" [(ngModel)]="weightKg" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="70"></ion-input>
-      </div>
-      <div class="input-group input-card">
-        <label>Height (M)</label>
-        <ion-input type="number" [(ngModel)]="heightM" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="1.75"></ion-input>
-      </div>
-    } @else {
-      <div class="input-group input-card">
-        <label>Weight (LBS)</label>
-        <ion-input type="number" [(ngModel)]="weightLbs" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="154"></ion-input>
-      </div>
-      <div class="flex gap-4">
-        <div class="input-group input-card flex-1">
-          <label>Feet</label>
-          <ion-input type="number" [(ngModel)]="heightFt" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="5"></ion-input>
+    @switch (unit()) {
+      @case ('metric') {
+        <div class="input-group input-card">
+          <label>Weight (KG)</label>
+          <ion-input type="number" [ngModel]="weightKg()" (ngModelChange)="weightKg.set($event)" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="70"></ion-input>
         </div>
-        <div class="input-group input-card flex-1">
-          <label>Inches</label>
-          <ion-input type="number" [(ngModel)]="heightIn" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="9"></ion-input>
+        <div class="input-group input-card">
+          <label>Height (CM)</label>
+          <ion-input type="number" [ngModel]="heightCm()" (ngModelChange)="heightCm.set($event)" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="175"></ion-input>
         </div>
-      </div>
+      }
+      @case ('meters') {
+        <div class="input-group input-card">
+          <label>Weight (KG)</label>
+          <ion-input type="number" [ngModel]="weightKg()" (ngModelChange)="weightKg.set($event)" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="70"></ion-input>
+        </div>
+        <div class="input-group input-card">
+          <label>Height (M)</label>
+          <ion-input type="number" [ngModel]="heightM()" (ngModelChange)="heightM.set($event)" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="1.75"></ion-input>
+        </div>
+      }
+      @default {
+        <div class="input-group input-card">
+          <label>Weight (LBS)</label>
+          <ion-input type="number" [ngModel]="weightLbs()" (ngModelChange)="weightLbs.set($event)" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="154"></ion-input>
+        </div>
+        <div class="flex gap-4">
+          <div class="input-group input-card flex-1">
+            <label>Feet</label>
+            <ion-input type="number" [ngModel]="heightFt()" (ngModelChange)="heightFt.set($event)" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="5"></ion-input>
+          </div>
+          <div class="input-group input-card flex-1">
+            <label>Inches</label>
+            <ion-input type="number" [ngModel]="heightIn()" (ngModelChange)="heightIn.set($event)" (ionInput)="calculate()" class="huge-input text-4xl" placeholder="9"></ion-input>
+          </div>
+        </div>
+      }
     }
 
     <!-- Bridge -->
@@ -74,7 +74,11 @@
 
     <!-- Result Card -->
     @if (bmiResult(); as r) {
-      <div class="glass-panel result-panel text-center">
+      <!-- The accent tint overrides the shared .result-panel cyan in styles.css.
+           The ! is required, not stylistic: Tailwind v4 emits utilities inside a
+           cascade layer, and unlayered project CSS beats a layered utility no
+           matter the specificity or order. -->
+      <div class="glass-panel result-panel text-center border-[rgba(6,165,218,0.2)]! bg-[rgba(6,165,218,0.06)]!">
         <span class="text-[10px] uppercase tracking-widest text-[var(--brand-accent)] font-bold block mb-2">Your BMI Score</span>
         <!-- clamp() instead of a fixed text-7xl: an extreme/unrealistic
              input (e.g. weight typo'd as 1000kg) can produce a 6+ digit
@@ -87,14 +91,12 @@
           {{ r.category }}
         </div>
 
-        <!-- Simple Scale Visual — deliberately its own 4-color scale
-             (under/normal/over/obese), not brand-accent: it's mapping BMI
-             category ranges, not a branding accent. -->
+        <!-- Scale visual; bands and colours come from bmiScale in the
+             component (see the comment there for why it isn't brand-accent). -->
         <div class="flex h-1.5 w-full bg-white/5 rounded-full mt-8 overflow-hidden">
-          <div class="h-full bg-blue-400" [style.width.%]="20"></div>
-          <div class="h-full bg-green-400" [style.width.%]="30"></div>
-          <div class="h-full bg-yellow-400" [style.width.%]="20"></div>
-          <div class="h-full bg-red-400" [style.width.%]="30"></div>
+          @for (seg of bmiScale; track seg.band) {
+            <div class="h-full" [class]="seg.class" [style.width.%]="seg.width"></div>
+          }
         </div>
       </div>
     } @else {

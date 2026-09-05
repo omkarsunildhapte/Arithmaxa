@@ -1,4 +1,6 @@
 import { Service } from '@angular/core';
+import { AgeResult } from '@appTypes/index';
+import { HOURS_PER_DAY, MINUTES_PER_HOUR, MONTHS_PER_YEAR, MS_PER_DAY, MS_PER_HOUR, MS_PER_MINUTE, MS_PER_SECOND } from '@constants/index';
 
 @Service()
 export class ToolsService {
@@ -59,7 +61,7 @@ export class ToolsService {
   }
 
   // ── Age Calculator ──
-  calculateAge(birthDate: Date): { years: number; months: number; days: number; hours: number; minutes: number } {
+  calculateAge(birthDate: Date): AgeResult {
     const today = new Date();
     let years = today.getFullYear() - birthDate.getFullYear();
     let months = today.getMonth() - birthDate.getMonth();
@@ -69,11 +71,11 @@ export class ToolsService {
 
     if (minutes < 0) {
       hours--;
-      minutes += 60;
+      minutes += MINUTES_PER_HOUR;
     }
     if (hours < 0) {
       days--;
-      hours += 24;
+      hours += HOURS_PER_DAY;
     }
     if (days < 0) {
       months--;
@@ -81,9 +83,29 @@ export class ToolsService {
     }
     if (months < 0) {
       years--;
-      months += 12;
+      months += MONTHS_PER_YEAR;
     }
-    return { years, months, days, hours, minutes };
+
+    // Totals come off the raw elapsed milliseconds rather than by multiplying
+    // the breakdown out, so leap days and DST-shortened days are counted as
+    // they actually happened instead of assuming every year is 365 days.
+    // totalMonths is the exception: months have no fixed length, so it is
+    // derived from the calendar breakdown above, which already walked real
+    // month boundaries.
+    const elapsedMs = today.getTime() - birthDate.getTime();
+
+    return {
+      years,
+      months,
+      days,
+      hours,
+      minutes,
+      totalMonths: years * MONTHS_PER_YEAR + months,
+      totalDays: Math.floor(elapsedMs / MS_PER_DAY),
+      totalHours: Math.floor(elapsedMs / MS_PER_HOUR),
+      totalMinutes: Math.floor(elapsedMs / MS_PER_MINUTE),
+      totalSeconds: Math.floor(elapsedMs / MS_PER_SECOND),
+    };
   }
 
   // ── BMI Calculator ──

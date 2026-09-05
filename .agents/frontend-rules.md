@@ -133,8 +133,8 @@ functional from the start.
 ## 16. Ionic Components
 This app uses `@ionic/angular/standalone` (`IonHeader`, `IonToolbar`, `IonContent`,
 `IonBackButton`, etc.) — import only the specific Ionic components used per file, matching the
-existing pattern in `privacy-policy.ts`/`terms-of-service.ts`. Register icons via `addIcons()` in
-the component constructor as already done, rather than importing the full `ionicons` set.
+existing pattern in `tools.ts`/`cookie-consent.ts`. Register icons via `addIcons()` in the
+component constructor as already done, rather than importing the full `ionicons` set.
 
 **Prefer the Ionic component over the raw HTML element wherever one exists**, rather than reaching
 for plain `<button>`/`<input>`/`<textarea>`/a hand-rolled checkbox-as-toggle:
@@ -158,7 +158,7 @@ content as a column instead of a row), use `::part(native)` — see `.cat-btn` i
 `feedback-modal.css` or `.tool-tile` in `tools.css` for worked examples. When the same class is
 shared between a real `<a>`/anchor and an `<ion-button>` styled to match it (a common pattern for
 link-styled action rows), define both the plain CSS property and its `--` var equivalent on the
-same rule — see `.legal-link` in `home.css` or `.action-btn` in `privacy-policy.css`. Events also
+same rule — see `.legal-link` in `home.css` or `.legal-footer-link` in `tools.css`. Events also
 change name: native `(input)`/`(change)` become `(ionInput)`/`(ionChange)`, and the payload is
 `event.detail` (e.g. `.value` or `.checked`), not `event.target` — type the handler as
 `CustomEvent<{ value?: string | null }>` (or the relevant detail shape), not `any`.

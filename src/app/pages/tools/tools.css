@@ -1,11 +1,3 @@
-ion-toolbar {
-  --background: var(--brand-dark);
-  --color: #ffffff;
-  --border-width: 0;
-  --min-height: 70px;
-  padding: 0 16px;
-}
-
 /* .animate-fade-in / @keyframes fadeIn used on the grid wrapper below are
    the global ones from src/styles.css — a second, differently-timed
    same-named definition here would silently race the global one instead
@@ -25,7 +17,6 @@ ion-toolbar {
   --border-width: 1px;
   --border-style: solid;
   --border-color: rgba(255, 255, 255, 0.1);
-  --box-shadow: none;
   --padding-start: 0.875rem;
   --padding-end: 0.875rem;
   --padding-top: 1.1rem;
@@ -44,21 +35,45 @@ ion-toolbar {
     border-color 0.5s;
 }
 
-/* This, not ::part(native) above, is what actually arranges the icon/text
-   into a centered column. Ionic's shadow-DOM button-inner — the real flex
-   container slotted content lands in — has no exposed ::part(), so it's
-   stuck at its own default flex-direction: row with no way to override it
-   from out here. Wrapping our content in this one light-DOM div (see
-   tools.html) sidesteps that entirely: button-inner only ever sees a
-   single slotted element, and plain CSS on that element is fully ours to
-   control. */
-.tool-tile-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
+/* The tile's icon/text column is arranged by utilities on a light-DOM
+   wrapper div in tools.html, not from here and not via ::part(native).
+   Ionic's shadow-DOM button-inner — the real flex container slotted content
+   lands in — exposes no ::part(), so its flex-direction: row can't be
+   reached from outside. The wrapper sidesteps that: button-inner only ever
+   sees one slotted element, and that element's own layout is ours. */
 
 .tool-tile:hover {
   --border-color: rgba(255, 255, 255, 0.2);
+}
+/* Legal footer links. The same class lands on real <a> elements and on an
+   <ion-button>, so every paintable property is declared twice — once as
+   plain CSS for the anchors, once as the Ionic CSS custom property that
+   reaches the button's shadow-DOM surface (frontend-rules.md §16).
+   Inherited properties (color, font-size, font-weight) cross the shadow
+   boundary on their own and need no --var counterpart. That dual nature is
+   why this stays a class instead of becoming utilities like the row around
+   it. */
+.legal-footer-link {
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: 0;
+  text-transform: none;
+  /* ion-button equivalents */
+  --color: #64748b;
+  /* Only --background-hover deviates from fill="clear"'s defaults: Ionic
+     tints hover with the primary colour at 4% opacity. */
+  --background-hover: transparent;
+  --padding-start: 0;
+  --padding-end: 0;
+  --ripple-color: transparent;
+  margin: 0;
+  height: auto;
+  min-height: 0;
+}
+
+.legal-footer-link:active {
+  color: var(--brand-accent);
+  --color: var(--brand-accent);
 }

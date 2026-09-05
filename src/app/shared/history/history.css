@@ -1,4 +1,1 @@
 /* Redundant styles removed - now using Tailwind CSS utilities */
-.history-container {
-  --background: var(--brand-dark);
-}

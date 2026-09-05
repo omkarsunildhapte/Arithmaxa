@@ -9,18 +9,23 @@ metadata, etc.) unless the user explicitly asks; `capacitor add ios` support exi
 does not mean iOS release work is in scope.
 
 ## 1. Permissions Must Match the Privacy Policy
-Every native permission requested (currently: microphone, for AI Chat voice input) must have a
-corresponding, accurate entry in `src/app/pages/privacy-policy/privacy-policy.html` — and in the
-mirrored copy on `arithmaxa-website` (see `AGENTS.md`). Adding a new permission (camera, storage,
-location, etc.) without updating both privacy policy copies first is a Play Store policy
-violation risk, not just an oversight — do the policy-copy update in the same change.
+Every native permission requested (currently: microphone for AI Chat voice input, and camera
+for AI Chat's attach-photo) must have a corresponding, accurate entry in the privacy policy on
+`arithmaxa-website` (`src/app/pages/privacy-policy/privacy-policy.html` in that repo). That
+hosted page is the only copy — the app has no in-app policy page any more, it links out to this
+one (see `AGENTS.md`). Adding a new permission (storage, location, etc.) without updating it
+first is a Play Store policy violation risk, not just an oversight — do the policy update in the
+same change.
 
 ## 2. Local-First Data Handling
 The app's stated privacy posture is "calculations and history never leave your device" except
 for two explicit, disclosed exceptions: AI Chat messages (sent to OpenRouter) and currency
 exchange-rate lookups (sent to a financial data API). Any new feature that transmits
 user-entered data to a third party must either avoid doing so, or be added as a new disclosed
-exception in both privacy policy copies before merging.
+exception in the hosted privacy policy before merging. As of the current build the disclosed
+exceptions are: AI Chat messages and unreadable attached photos (to our own backend, forwarded to
+OpenRouter), feedback submissions (emailed to the team), currency exchange-rate lookups, and
+opt-in Firebase Analytics.
 
 ## 3. Icon & Splash Asset Pipeline
 Run `npm run assets` (`capacitor-assets generate --assetPath public`) after changing
@@ -52,8 +57,10 @@ Before considering a build release-ready:
 - [ ] `npm run build && npm run assets && npx cap sync android` completes without errors.
 - [ ] App launches and the calculator performs a basic calculation correctly on-device/emulator.
 - [ ] AI Chat and currency converter both handle the "no network" case without crashing.
-- [ ] Privacy Policy and Terms of Service open correctly from within the app and match the
-      hosted copies on `arithmaxa-website`.
+- [ ] The Privacy Policy and Terms of Service links (Home's footer during onboarding, the
+      consent sheet, and Tools' footer) each open the hosted page in the system browser.
+- [ ] Tools › Privacy Settings reopens the consent sheet, and its "Delete My Data" button
+      actually clears local storage.
 - [ ] No new permission was added without a matching privacy policy update (Rule 1).
 - [ ] `versionCode` was bumped (Rule 6).
 

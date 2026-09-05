@@ -1,4 +1,4 @@
-import { Component, effect, inject, input } from '@angular/core';
+import { Component, effect, inject, input, signal } from '@angular/core';
 import { TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonSelect, IonSelectOption, ModalController, IonFooter, IonInput } from '@ionic/angular/standalone';
@@ -23,10 +23,10 @@ export class UnitConverter {
   readonly type = input('length');
   readonly units = input<SelectOption[]>([]);
 
-  convValue: number = 1;
-  convResult: number = 0;
-  convFrom: string = '';
-  convTo: string = '';
+  readonly convValue = signal<number>(1);
+  readonly convResult = signal<number>(0);
+  readonly convFrom = signal<string>('');
+  readonly convTo = signal<string>('');
 
   constructor() {
     // Replaces the old ngOnInit + ngOnChanges(['units']) pair — this re-runs
@@ -41,8 +41,8 @@ export class UnitConverter {
   private initializeUnits() {
     const units = this.units();
     if (units.length > 0) {
-      if (!this.convFrom) this.convFrom = units[0].value;
-      if (!this.convTo) this.convTo = units[1]?.value || units[0].value;
+      if (!this.convFrom()) this.convFrom.set(units[0].value);
+      if (!this.convTo()) this.convTo.set(units[1]?.value || units[0].value);
       this.calculate();
     }
   }
@@ -52,10 +52,10 @@ export class UnitConverter {
   }
 
   calculate() {
-    this.convResult = this.toolsService.convert(this.convValue, this.convFrom, this.convTo, this.type());
+    this.convResult.set(this.toolsService.convert(this.convValue(), this.convFrom(), this.convTo(), this.type()));
   }
 
   calculateReverse() {
-    this.convValue = this.toolsService.convert(this.convResult, this.convTo, this.convFrom, this.type());
+    this.convValue.set(this.toolsService.convert(this.convResult(), this.convTo(), this.convFrom(), this.type()));
   }
 }

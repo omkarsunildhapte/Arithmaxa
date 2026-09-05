@@ -1,10 +1,6 @@
 import { Service, inject } from '@angular/core';
 import { AlertController } from '@ionic/angular/standalone';
-import { PLAY_STORE_URL, RATING_PROMPT_CALC_THRESHOLD } from '@constants/index';
-
-const STORAGE_KEY_COUNT = 'arithmaxa_rating_calc_count';
-const STORAGE_KEY_NEXT_THRESHOLD = 'arithmaxa_rating_next_threshold';
-const STORAGE_KEY_DISMISSED = 'arithmaxa_rating_dismissed';
+import { PLAY_STORE_URL, RATING_COUNT_KEY, RATING_DISMISSED_KEY, RATING_NEXT_THRESHOLD_KEY, RATING_PROMPT_CALC_THRESHOLD } from '@constants/index';
 
 /**
  * Prompts for a Play Store rating after the user has done enough
@@ -24,7 +20,7 @@ export class RatingService {
     if (this.isDismissedForever()) return;
 
     const count = this.getCount() + 1;
-    localStorage.setItem(STORAGE_KEY_COUNT, String(count));
+    localStorage.setItem(RATING_COUNT_KEY, String(count));
 
     if (count >= this.getNextThreshold()) {
       await this.presentPrompt();
@@ -32,15 +28,15 @@ export class RatingService {
   }
 
   private isDismissedForever(): boolean {
-    return localStorage.getItem(STORAGE_KEY_DISMISSED) === 'true';
+    return localStorage.getItem(RATING_DISMISSED_KEY) === 'true';
   }
 
   private getCount(): number {
-    return Number(localStorage.getItem(STORAGE_KEY_COUNT) ?? '0');
+    return Number(localStorage.getItem(RATING_COUNT_KEY) ?? '0');
   }
 
   private getNextThreshold(): number {
-    return Number(localStorage.getItem(STORAGE_KEY_NEXT_THRESHOLD) ?? String(RATING_PROMPT_CALC_THRESHOLD));
+    return Number(localStorage.getItem(RATING_NEXT_THRESHOLD_KEY) ?? String(RATING_PROMPT_CALC_THRESHOLD));
   }
 
   private async presentPrompt(): Promise<void> {
@@ -61,11 +57,11 @@ export class RatingService {
   }
 
   private dismissForever(): void {
-    localStorage.setItem(STORAGE_KEY_DISMISSED, 'true');
+    localStorage.setItem(RATING_DISMISSED_KEY, 'true');
   }
 
   private remindLater(): void {
-    localStorage.setItem(STORAGE_KEY_NEXT_THRESHOLD, String(this.getCount() + RATING_PROMPT_CALC_THRESHOLD));
+    localStorage.setItem(RATING_NEXT_THRESHOLD_KEY, String(this.getCount() + RATING_PROMPT_CALC_THRESHOLD));
   }
 
   private openStoreListing(): void {

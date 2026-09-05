@@ -6,6 +6,7 @@ import { CalculatorService } from '@services/calculator/calculator.service';
   standalone: true,
   imports: [],
   templateUrl: './display.html',
+  styleUrls: ['./display.css'],
 })
 export class Display {
   readonly calc = inject(CalculatorService);

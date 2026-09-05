@@ -2,8 +2,9 @@ import { Component, inject, signal } from '@angular/core';
 import { IonHeader, IonToolbar, IonContent, IonIcon, IonButton, IonTextarea, ModalController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { star, starOutline, closeOutline, paperPlaneOutline, checkmarkCircleOutline } from 'ionicons/icons';
+import { FEEDBACK_CATEGORIES, FEEDBACK_STARS } from '@constants/index';
 import { FeedbackService } from '@services/feedback/feedback.service';
-import { CategoryOption, FeedbackCategory } from '@appTypes/index';
+import { FeedbackCategory } from '@appTypes/index';
 addIcons({ star, starOutline, closeOutline, paperPlaneOutline, checkmarkCircleOutline });
 
 @Component({
@@ -23,14 +24,8 @@ export class FeedbackModal {
   readonly submitted = signal(false);
   readonly isSubmitting = signal(false);
   readonly submitError = signal(false);
-  readonly categories: CategoryOption[] = [
-    { value: 'general', label: 'General', emoji: '💬' },
-    { value: 'bug', label: 'Bug Report', emoji: '🐛' },
-    { value: 'feature', label: 'Feature Request', emoji: '✨' },
-    { value: 'design', label: 'Design', emoji: '🎨' },
-    { value: 'performance', label: 'Performance', emoji: '⚡' },
-  ];
-  readonly stars: number[] = [1, 2, 3, 4, 5];
+  readonly categories = FEEDBACK_CATEGORIES;
+  readonly stars = FEEDBACK_STARS;
 
   setRating(r: number): void {
     this.rating.set(r);

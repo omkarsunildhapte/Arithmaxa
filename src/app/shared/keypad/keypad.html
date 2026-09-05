@@ -86,13 +86,7 @@
            1/2/3/+ each in their own row in scientific mode, matching
            normal mode's layout exactly (0/./( )/= is handled the same way,
            just below this loop). -->
-      <ion-button
-        class="btn-sci"
-        [class.btn-operator]="key.type === 'operator'"
-        [class.row-break]="calc.isScientific() && isRowBreakKey(key)"
-        (click)="pressKey(key)"
-        >{{ key.label }}</ion-button
-      >
+      <ion-button class="btn-sci" [class.btn-operator]="key.type === 'operator'" [class.row-break]="calc.isScientific() && isRowBreakKey(key)" (click)="pressKey(key)">{{ key.label }}</ion-button>
     }
     <ion-button class="btn-sci" (click)="calc.appendDecimal()">.</ion-button>
     @if (calc.isScientific()) {

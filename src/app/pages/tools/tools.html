@@ -1,5 +1,5 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar class="bg-[var(--brand-dark)]">
+  <ion-toolbar class="app-toolbar bg-[var(--brand-dark)]">
     <ion-buttons slot="start">
       <ion-button fill="clear" (click)="goToCalculator()" class="text-white">
         <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
@@ -14,14 +14,14 @@
 <ion-content [fullscreen]="true" class="ion-padding bg-[var(--brand-dark)]">
   <div class="animate-fade-in max-w-lg mx-auto pt-4">
     <div class="grid grid-cols-2 gap-3 px-4">
-      @for (tool of tools; track tool.id) {
+      @for (tool of tools(); track tool.id) {
         <ion-button fill="clear" (click)="selectTool(tool.id)" class="tool-tile relative group overflow-hidden active:scale-95">
           <!-- Single wrapper so Ionic's shadow-DOM button-inner (a row-direction
                flex container with no exposed ::part(), so unstylable from out
-               here) receives just one slotted element instead of two — letting
-               plain CSS on tool-tile-content itself control the column layout
-               that button-inner otherwise can't be told to use. -->
-          <div class="tool-tile-content">
+               here) receives just one slotted element instead of two — the
+               column layout below is then ours to set, which button-inner
+               itself can't be told to do. -->
+          <div class="flex w-full flex-col items-center">
             <div [style.background-color]="tool.color + '15'" class="w-11 h-11 rounded-xl flex items-center justify-center text-lg mb-2.5 transition-transform duration-500 group-hover:scale-110">
               <ion-icon [name]="tool.icon" [style.color]="tool.color"></ion-icon>
             </div>
@@ -32,6 +32,17 @@
           </div>
         </ion-button>
       }
+    </div>
+
+    <!-- The app's persistent legal footer. Home carries the same links but
+         is onboarding-only (see onboardingGuard), so this is the one that
+         is still reachable on day two. -->
+    <div class="mt-8 mb-2 flex flex-wrap items-center justify-center gap-[0.35rem] px-4">
+      <a [href]="privacyPolicyUrl" target="_blank" rel="noopener noreferrer" class="legal-footer-link">Privacy Policy</a>
+      <span class="text-[0.72rem] text-[#334155]">&middot;</span>
+      <a [href]="termsOfServiceUrl" target="_blank" rel="noopener noreferrer" class="legal-footer-link">Terms of Service</a>
+      <span class="text-[0.72rem] text-[#334155]">&middot;</span>
+      <ion-button fill="clear" class="legal-footer-link" (click)="openPrivacySettings()">Privacy Settings</ion-button>
     </div>
   </div>
 </ion-content>

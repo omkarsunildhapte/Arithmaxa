@@ -17,14 +17,21 @@
       <div class="flex justify-between items-center mb-4">
         <span class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold">From</span>
         <div class="bg-white/5 rounded-lg px-2">
-          <ion-select [(ngModel)]="convFrom" (ionChange)="calculate()" interface="popover" toggle-icon="chevron-down-outline" class="text-xs font-bold text-white min-h-0 h-8">
+          <ion-select
+            [ngModel]="convFrom()"
+            (ngModelChange)="convFrom.set($event)"
+            (ionChange)="calculate()"
+            interface="popover"
+            toggle-icon="chevron-down-outline"
+            class="text-xs font-bold text-white min-h-0 h-8"
+          >
             @for (unit of units(); track unit.value) {
               <ion-select-option [value]="unit.value">{{ unit.label }}</ion-select-option>
             }
           </ion-select>
         </div>
       </div>
-      <ion-input type="number" [(ngModel)]="convValue" (ionInput)="calculate()" class="huge-input text-5xl" placeholder="0"></ion-input>
+      <ion-input type="number" [ngModel]="convValue()" (ngModelChange)="convValue.set($event)" (ionInput)="calculate()" class="huge-input text-5xl" placeholder="0"></ion-input>
     </div>
 
     <!-- Swap Icon -->
@@ -39,14 +46,21 @@
       <div class="flex justify-between items-center mb-4">
         <span class="text-[10px] uppercase tracking-widest text-[var(--brand-accent)] font-bold">To</span>
         <div class="bg-[var(--brand-accent)]/10 rounded-lg px-2">
-          <ion-select [(ngModel)]="convTo" (ionChange)="calculate()" interface="popover" toggle-icon="chevron-down-outline" class="text-xs font-bold text-[var(--brand-accent)] min-h-0 h-8">
+          <ion-select
+            [ngModel]="convTo()"
+            (ngModelChange)="convTo.set($event)"
+            (ionChange)="calculate()"
+            interface="popover"
+            toggle-icon="chevron-down-outline"
+            class="text-xs font-bold text-[var(--brand-accent)] min-h-0 h-8"
+          >
             @for (unit of units(); track unit.value) {
               <ion-select-option [value]="unit.value">{{ unit.label }}</ion-select-option>
             }
           </ion-select>
         </div>
       </div>
-      <ion-input type="number" [(ngModel)]="convResult" (ionInput)="calculateReverse()" class="huge-input text-5xl text-white" placeholder="0"></ion-input>
+      <ion-input type="number" [ngModel]="convResult()" (ngModelChange)="convResult.set($event)" (ionInput)="calculateReverse()" class="huge-input text-5xl text-white" placeholder="0"></ion-input>
     </div>
   </div>
 </ion-content>

@@ -77,6 +77,26 @@ describe('ConsentService', () => {
     expect(localStorage.getItem('arithmaxa_consent_v1')).toBeNull();
   });
 
+  it('openSettings()/closeSettings() drive the reopen flag the consent sheet reads', () => {
+    expect(service.settingsOpen()).toBe(false);
+
+    service.openSettings();
+    expect(service.settingsOpen()).toBe(true);
+
+    service.closeSettings();
+    expect(service.settingsOpen()).toBe(false);
+  });
+
+  it('withdraw() also closes settings mode so the sheet reverts to the first-run consent gate', () => {
+    service.acceptAll();
+    service.openSettings();
+
+    service.withdraw();
+
+    expect(service.settingsOpen()).toBe(false);
+    expect(service.hasConsented()).toBe(false);
+  });
+
   it('clearAllData() removes every arithmaxa-prefixed localStorage key and withdraws consent', () => {
     service.acceptAll();
     localStorage.setItem('arithmaxa_feedback_v1', '[]');

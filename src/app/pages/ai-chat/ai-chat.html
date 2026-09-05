@@ -1,5 +1,5 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar>
+  <ion-toolbar class="app-toolbar">
     <ion-buttons slot="start">
       <ion-button fill="clear" (click)="goBack()">
         <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
@@ -15,9 +15,8 @@
       @if (ai.localAvailable() !== 'unavailable') {
         <ion-button
           fill="clear"
-          class="local-llm-btn"
-          [class.active]="ai.useLocal()"
           (click)="toggleLocalLlm()"
+          [style.--color]="ai.useLocal() ? 'var(--brand-accent)' : 'var(--text-muted)'"
           [title]="ai.localAvailable() === 'downloadable' ? 'Download on-device model' : ai.useLocal() ? 'Using on-device model' : 'Use on-device model'"
         >
           <ion-icon name="hardware-chip-outline" slot="icon-only"></ion-icon>
@@ -46,12 +45,12 @@
           [class]="msg.role === 'user' ? 'bg-[var(--brand-primary)]/20 text-white' : 'bg-white/5 text-slate-200'"
         >
           @if (msg.imageUrl) {
-            <img [src]="msg.imageUrl" alt="Attached photo" class="chat-image mb-2" />
+            <img [src]="msg.imageUrl" alt="Attached photo" class="block max-h-32 max-w-32 rounded-xl object-cover mb-2" />
           }
           {{ msg.content }}
         </div>
         @if (msg.content) {
-          <ion-button fill="clear" class="icon-only-btn copy-msg-btn" (click)="copyMessage($index, msg.content)">
+          <ion-button fill="clear" class="icon-only-btn mt-[0.15rem]! h-7! w-7!" (click)="copyMessage($index, msg.content)">
             <ion-icon slot="icon-only" [name]="copiedIndex() === $index ? 'checkmark-outline' : 'copy-outline'"></ion-icon>
           </ion-button>
         }
@@ -86,9 +85,9 @@
 
     @if (attachedPhoto()) {
       <div class="attached-photo-preview flex items-center gap-2 mb-2">
-        <img [src]="attachedPhoto()" alt="Photo to send" class="chat-image" />
+        <img [src]="attachedPhoto()" alt="Photo to send" class="block max-h-32 max-w-32 rounded-xl object-cover" />
         @if (recognizingText()) {
-          <span class="ocr-status">Reading photo…</span>
+          <span class="text-[0.72rem] text-[var(--brand-accent)] italic">Reading photo…</span>
         }
         <ion-button fill="clear" class="icon-only-btn" (click)="clearAttachedPhoto()">
           <ion-icon name="close-outline" slot="icon-only"></ion-icon>

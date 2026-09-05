@@ -1,123 +1,24 @@
-.consent-overlay {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  padding: 0.75rem;
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+/* Only what Tailwind utilities can't express lives here. Everything else —
+   layout, spacing, type, colors, borders — is on the elements in
+   cookie-consent.html, matching how the rest of the app is styled.
+   What's left is the Ionic components: they paint inside shadow DOM, so a
+   plain class can't reach their surface and they have to be themed through
+   their documented `--` custom properties (frontend-rules.md § 16). */
+
+/* Gradient stays in CSS: `bg-[var(--brand-gradient)]` can't tell a
+   background-image token from a background-color one. */
+.consent-icon {
+  background: var(--brand-gradient);
 }
 
+/* Two stacked shadows read far better here than as one arbitrary value. */
 .consent-card {
-  background: rgba(8, 10, 24, 0.97);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1.5rem;
-  padding: 1.25rem;
-  backdrop-filter: saturate(180%) blur(24px);
-  -webkit-backdrop-filter: saturate(180%) blur(24px);
-  max-width: 640px;
-  margin: 0 auto;
   box-shadow:
     0 -4px 40px rgba(0, 0, 0, 0.6),
     0 0 0 1px rgba(99, 102, 241, 0.12);
 }
 
-.consent-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
-.consent-icon {
-  width: 38px;
-  height: 38px;
-  min-width: 38px;
-  background: var(--brand-gradient);
-  border-radius: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.consent-icon ion-icon {
-  color: white;
-  font-size: 1.15rem;
-}
-
-.consent-title {
-  margin: 0 0 0.2rem;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #f8fafc;
-}
-
-.consent-sub {
-  margin: 0;
-  font-size: 0.75rem;
-  color: #64748b;
-}
-
-.consent-text {
-  font-size: 0.78rem;
-  color: #94a3b8;
-  line-height: 1.65;
-  margin: 0 0 0.85rem;
-}
-
-.consent-text strong {
-  color: #cbd5e1;
-}
-
-.consent-link {
-  color: #818cf8;
-  text-decoration: underline;
-  margin-left: 0.2rem;
-}
-
-/* Custom toggles */
-.consent-toggles {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 1rem;
-  padding: 0.25rem 0.75rem;
-  margin-bottom: 0.85rem;
-}
-
-.toggle-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.65rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.toggle-row:last-child {
-  border-bottom: none;
-}
-
-.toggle-name {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #e2e8f0;
-}
-
-.toggle-desc {
-  display: block;
-  font-size: 0.7rem;
-  color: #475569;
-  margin-top: 0.1rem;
-}
-
-/* Was a hand-rolled <label><input type="checkbox" class="sr-only"><div
-   class="toggle-knob"></div></label> hack — now a real <ion-toggle>, themed
-   to match the original size/colors via its documented CSS custom
-   properties instead of faking the knob with an absolutely-positioned div. */
+/* Themed to the original hand-rolled knob's size and colors. */
 .consent-toggle {
   --track-background: rgba(255, 255, 255, 0.1);
   --track-background-checked: #6366f1;
@@ -134,86 +35,92 @@
   opacity: 0.5;
 }
 
-/* Action buttons */
-.consent-actions {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.btn-primary {
-  --background: var(--brand-gradient);
-  --background-activated: var(--brand-gradient);
+/* ── Action buttons ──
+   Shared base + per-variant overrides. font-family is restated because
+   Ionic resets it to --ion-font-family inside the component. */
+.btn-primary,
+.btn-secondary,
+.btn-ghost,
+.btn-danger {
   --box-shadow: none;
   --border-radius: 0.75rem;
-  --color: #fff;
   --padding-top: 0.65rem;
   --padding-bottom: 0.65rem;
-  flex: 1;
-  min-width: 100px;
-  margin: 0;
-  height: auto;
-  font-size: 0.82rem;
-  font-weight: 700;
-  text-transform: none;
-  font-family: 'Outfit', system-ui, sans-serif;
-  transition:
-    opacity 0.15s,
-    transform 0.15s;
-}
-
-.btn-primary:active {
-  opacity: 0.88;
-  transform: scale(0.97);
-}
-
-.btn-secondary {
-  --background: rgba(255, 255, 255, 0.06);
-  --background-activated: rgba(255, 255, 255, 0.1);
-  --box-shadow: none;
-  --border-radius: 0.75rem;
-  --border-width: 1px;
-  --border-style: solid;
-  --border-color: rgba(255, 255, 255, 0.1);
-  --color: #e2e8f0;
-  --padding-top: 0.65rem;
-  --padding-bottom: 0.65rem;
-  flex: 1;
-  min-width: 90px;
   margin: 0;
   height: auto;
   font-size: 0.82rem;
   font-weight: 600;
   text-transform: none;
   font-family: 'Outfit', system-ui, sans-serif;
-  transition: transform 0.15s;
+  transition:
+    opacity 0.15s,
+    color 0.15s,
+    transform 0.15s;
 }
 
-.btn-secondary:active {
+/* Ghost is the only one that opts out of filling the row. */
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+  flex: 1;
+}
+
+.btn-primary:active,
+.btn-secondary:active,
+.btn-danger:active {
   transform: scale(0.97);
+}
+
+/* The two outlined variants; only --border-color differs. */
+.btn-secondary,
+.btn-danger {
+  --border-width: 1px;
+  --border-style: solid;
+}
+
+.btn-primary {
+  --background: var(--brand-gradient);
+  --background-activated: var(--brand-gradient);
+  --color: #fff;
+  min-width: 100px;
+  font-weight: 700;
+}
+
+.btn-primary:active {
+  opacity: 0.88;
+}
+
+.btn-secondary {
+  --background: rgba(255, 255, 255, 0.06);
+  --background-activated: rgba(255, 255, 255, 0.1);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --color: #e2e8f0;
+  min-width: 90px;
 }
 
 .btn-ghost {
   --background: transparent;
   --background-activated: transparent;
   --background-hover: transparent;
-  --box-shadow: none;
-  --border-radius: 0.75rem;
   --color: #475569;
   --padding-start: 0.6rem;
   --padding-end: 0.6rem;
-  --padding-top: 0.65rem;
-  --padding-bottom: 0.65rem;
-  margin: 0;
-  height: auto;
   font-size: 0.76rem;
   font-weight: 500;
-  text-transform: none;
-  font-family: 'Outfit', system-ui, sans-serif;
-  transition: color 0.15s;
 }
 
 .btn-ghost:hover {
   --color: #64748b;
+}
+
+/* Destructive; settings view only. min-height holds the ~44dp tap target. */
+.btn-danger {
+  --background: rgba(239, 68, 68, 0.1);
+  --background-activated: rgba(239, 68, 68, 0.18);
+  --background-hover: rgba(239, 68, 68, 0.14);
+  --border-color: rgba(239, 68, 68, 0.28);
+  --color: #f87171;
+  min-width: 140px;
+  min-height: 44px;
+  letter-spacing: 0;
 }

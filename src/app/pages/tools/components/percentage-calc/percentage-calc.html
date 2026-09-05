@@ -17,23 +17,31 @@
        them apart. -->
   <div class="tool-view animate-fade-in flex flex-col gap-4 px-5 py-4">
     <div class="unit-selector">
-      <ion-select [(ngModel)]="percType" (ionChange)="calculate()" toggle-icon="chevron-down-outline" interface="popover" label="Calculation Type" label-placement="stacked">
+      <ion-select
+        [ngModel]="percType()"
+        (ngModelChange)="percType.set($event)"
+        (ionChange)="calculate()"
+        toggle-icon="chevron-down-outline"
+        interface="popover"
+        label="Calculation Type"
+        label-placement="stacked"
+      >
         @for (type of percentageTypes; track type.value) {
           <ion-select-option [value]="type.value">{{ type.label }}</ion-select-option>
         }
       </ion-select>
     </div>
     <div class="input-group input-card">
-      <label>{{ percType === 'change' ? 'Initial Value' : 'Value X' }}</label>
-      <ion-input type="number" [(ngModel)]="percVal1" (ionInput)="calculate()" class="huge-input compact-input-field" placeholder="0"></ion-input>
+      <label>{{ percType() === 'change' ? 'Initial Value' : 'Value X' }}</label>
+      <ion-input type="number" [ngModel]="percVal1()" (ngModelChange)="percVal1.set($event)" (ionInput)="calculate()" class="huge-input compact-input-field" placeholder="0"></ion-input>
     </div>
     <div class="input-group input-card">
-      <label>{{ percType === 'change' ? 'New Value' : 'Value Y' }}</label>
-      <ion-input type="number" [(ngModel)]="percVal2" (ionInput)="calculate()" class="huge-input compact-input-field" placeholder="0"></ion-input>
+      <label>{{ percType() === 'change' ? 'New Value' : 'Value Y' }}</label>
+      <ion-input type="number" [ngModel]="percVal2()" (ngModelChange)="percVal2.set($event)" (ionInput)="calculate()" class="huge-input compact-input-field" placeholder="0"></ion-input>
     </div>
     <div class="glass-panel result-panel text-center">
       <label>Final Result</label>
-      <div class="text-4xl font-black mt-2 result-value">{{ percResult() | number: '1.0-2' }}{{ percType === 'of' ? '' : '%' }}</div>
+      <div class="text-4xl font-black mt-2 result-value">{{ percResult() | number: '1.0-2' }}{{ percType() === 'of' ? '' : '%' }}</div>
     </div>
   </div>
 </ion-content>

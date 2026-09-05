@@ -1,8 +1,7 @@
 import { Service, signal } from '@angular/core';
 import { HistoryItem } from '@appTypes/index';
 import { evaluate } from '@utils/expression-parser';
-
-// ── Service ───────────────────────────────────────────────────────────────────
+import { CALC } from '@constants/index';
 
 @Service()
 export class CalculatorService {
@@ -17,43 +16,24 @@ export class CalculatorService {
 
   private justCalculated = false;
 
-  toggleScientific(): void {
-    this.isScientific.update((v) => !v);
-  }
-
-  toggleUnit(): void {
-    this.isRadians.update((v) => !v);
-  }
-
-  toggleInverse(): void {
-    this.isInverse.update((v) => !v);
-  }
-
-  toggleHyperbolic(): void {
-    this.isHyperbolic.update((v) => !v);
-  }
-
-  abs(): void {
-    this.applyUnary(Math.abs);
-  }
-
-  reciprocal(): void {
-    this.applyUnary((x) => 1 / x);
-  }
+  readonly toggleScientific = (): void => this.isScientific.update((v) => !v);
+  readonly toggleUnit = (): void => this.isRadians.update((v) => !v);
+  readonly toggleInverse = (): void => this.isInverse.update((v) => !v);
+  readonly toggleHyperbolic = (): void => this.isHyperbolic.update((v) => !v);
+  readonly abs = (): void => this.applyUnary(Math.abs);
+  readonly reciprocal = (): void => this.applyUnary((x) => 1 / x);
 
   e(): void {
     this.justCalculated = true;
     this.display.set(Math.E.toString());
   }
 
-  exp(): void {
-    this.applyUnary(Math.exp);
-  }
+  readonly exp = (): void => this.applyUnary(Math.exp);
 
   // ── Number / decimal ───────────────────────────────────────────────────────
 
   appendNumber(num: string): void {
-    if (this.display() === 'Error' || this.justCalculated) {
+    if (this.display() === CALC.ERROR || this.justCalculated) {
       this.expression.set('');
       this.display.set(num);
       this.justCalculated = false;
@@ -69,14 +49,14 @@ export class CalculatorService {
 
   appendDecimal(): void {
     const val = this.display();
-    if (val === 'Error') return;
+    if (val === CALC.ERROR) return;
     if (this.justCalculated) {
       this.expression.set('');
       this.display.set('0.');
       this.justCalculated = false;
       return;
     }
-    const lastSegment = val.split(/[+\-*/%^()]/).pop() ?? '';
+    const lastSegment = val.split(CALC.OPERAND_SPLIT).pop() ?? '';
     if (lastSegment.includes('.')) return;
     const lastChar = val.slice(-1);
     // Same implicit-multiplication gap as appendNumber() above — "(2+3)."
@@ -86,13 +66,13 @@ export class CalculatorService {
       this.display.update((v: string) => v + '*0.');
       return;
     }
-    const afterOp = !lastChar || ['+', '-', '*', '/', '('].includes(lastChar);
+    const afterOp = !lastChar || CALC.OPERATORS_AND_OPEN_PAREN.includes(lastChar);
     this.display.update((v: string) => v + (afterOp ? '0.' : '.'));
   }
 
   appendBracket(bracket?: '(' | ')'): void {
     const val = this.display();
-    if (val === 'Error') return;
+    if (val === CALC.ERROR) return;
     this.justCalculated = false;
 
     if (bracket === ')') {
@@ -104,15 +84,11 @@ export class CalculatorService {
       return;
     }
 
-    const openCount = (val.match(/\(/g) || []).length;
-    const closeCount = (val.match(/\)/g) || []).length;
-    const lastChar = val.slice(-1);
-
-    // If last char is a number or a closing bracket, and we have open brackets to close, add ')'
-    if (/[\d)]/.test(lastChar) && openCount > closeCount) {
+    // A digit or ')' with something still open closes it; anything else opens.
+    const unclosed = this.countOf(val, '(') > this.countOf(val, ')');
+    if (CALC.IMPLICIT_MULTIPLY.test(val) && unclosed) {
       this.display.update((v) => v + ')');
     } else {
-      // Otherwise, add '('
       this.appendOpenParen();
     }
   }
@@ -123,21 +99,25 @@ export class CalculatorService {
    *  multiplication grammar, so without this the expression would just
    *  fail to parse at calculate() time. */
   private appendOpenParen(): void {
-    this.display.update((v) => (/[\d)]/.test(v.slice(-1)) ? v + '*' : v) + '(');
+    this.display.update((v) => this.withImplicitMultiply(v) + '(');
+  }
+
+  private countOf(val: string, char: string): number {
+    return val.split(char).length - 1;
   }
 
   modulo(): void {
     const val = this.display();
-    if (!val || ['+', '-', '*', '/', '('].includes(val.slice(-1))) return;
+    if (!val || CALC.OPERATORS_AND_OPEN_PAREN.includes(val.slice(-1))) return;
     this.display.update((v) => v + '%');
   }
 
   toggleSign(): void {
     const current = this.display();
-    if (current === '0' || !current || current === 'Error') return;
+    if (current === '0' || !current || current === CALC.ERROR) return;
 
     // Split into segments to find the last number
-    const segments = current.split(/([+\-*/%^()])/);
+    const segments = current.split(CALC.SEGMENT_SPLIT);
     let lastNum = segments.pop() || '';
 
     if (lastNum.startsWith('-')) {
@@ -153,7 +133,7 @@ export class CalculatorService {
 
   setOperator(op: string): void {
     const val = this.display();
-    if (val === 'Error') return;
+    if (val === CALC.ERROR) return;
 
     if (this.justCalculated) {
       this.expression.set('');
@@ -165,15 +145,13 @@ export class CalculatorService {
       return;
     }
 
-    const endsWithOp = /(\*\*|[+\-*/])$/.test(val);
-    if (endsWithOp) {
-      if (op === '-' && !val.endsWith('-')) {
-        this.display.update((v: string) => v + op);
-      } else {
-        this.display.update((v: string) => v.replace(/(\*\*|[+\-*/])$/, op));
-      }
-    } else {
+    if (!CALC.TRAILING_OPERATOR.test(val)) {
       this.display.update((v: string) => v + op);
+    } else if (op === '-' && !val.endsWith('-')) {
+      // "5*" + "-" is a negative operand, not a replacement.
+      this.display.update((v: string) => v + op);
+    } else {
+      this.display.update((v: string) => v.replace(CALC.TRAILING_OPERATOR, op));
     }
   }
 
@@ -181,37 +159,25 @@ export class CalculatorService {
 
   calculate(): void {
     const val = this.display();
-    if (!val || val === 'Error') return;
+    if (!val || val === CALC.ERROR) return;
 
-    let cleaned = val.replace(/(\*\*|[+\-*/])$/, '');
-    if (!cleaned) return;
+    const stripped = val.replace(CALC.TRAILING_OPERATOR, '');
+    if (!stripped) return;
 
-    // Handle Ans replacement
-    const lastRes = this.lastResult();
-    if (lastRes) {
-      // Replace case-insensitive 'ans' with last result
-      cleaned = cleaned.replace(/ans/gi, lastRes);
-    } else {
-      // If no last result, replace 'ans' with 0 or handle error
-      cleaned = cleaned.replace(/ans/gi, '0');
-    }
+    // "Ans" stands for the previous result, or 0 on the first calculation.
+    const cleaned = stripped.replace(CALC.ANS, this.lastResult() ?? CALC.ANS_FALLBACK);
 
     try {
       const result = evaluate(cleaned);
       if (!isFinite(result)) {
-        this.pushHistory(cleaned, 'Error');
+        this.pushHistory(cleaned, CALC.ERROR);
         this.expression.set(cleaned + ' =');
-        this.display.set('Error');
+        this.display.set(CALC.ERROR);
       } else {
-        const resultStr = this.format(result);
-        this.lastResult.set(resultStr);
-        this.pushHistory(cleaned, resultStr);
-        this.expression.set(cleaned + ' =');
-        this.display.set(resultStr);
-        this.justCalculated = true;
+        this.lastResult.set(this.commit(cleaned, result));
       }
     } catch {
-      this.display.set('Error');
+      this.display.set(CALC.ERROR);
     }
   }
 
@@ -223,13 +189,11 @@ export class CalculatorService {
     this.justCalculated = false;
   }
 
-  clearHistory(): void {
-    this.history.set([]);
-  }
+  readonly clearHistory = (): void => this.history.set([]);
 
   backspace(): void {
     const val = this.display();
-    if (val === 'Error' || this.justCalculated) {
+    if (val === CALC.ERROR || this.justCalculated) {
       this.display.set('');
       this.expression.set('');
       this.justCalculated = false;
@@ -242,129 +206,79 @@ export class CalculatorService {
     }
   }
 
-  percentage(): void {
-    this.applyUnary((x) => x / 100);
-  }
+  readonly percentage = (): void => this.applyUnary((x) => x / CALC.PERCENT_DIVISOR);
 
   // ── Scientific ─────────────────────────────────────────────────────────────
 
-  sqrt(): void {
-    this.applyUnary((x) => (x < 0 ? NaN : Math.sqrt(x)));
-  }
-  square(): void {
-    this.applyUnary((x) => Math.pow(x, 2));
-  }
-  power(): void {
-    this.setOperator('**');
-  }
-  rootY(): void {
-    this.setOperator('**(1/');
-  }
-  pow10(): void {
-    this.applyUnary((x) => Math.pow(10, x));
-  }
-  cube(): void {
-    this.applyUnary((x) => Math.pow(x, 3));
-  }
-  cbrt(): void {
-    this.applyUnary((x) => Math.cbrt(x));
-  }
-  log10(): void {
-    this.applyUnary((x) => (x <= 0 ? NaN : Math.log10(x)));
-  }
-  naturalLog(): void {
-    this.applyUnary((x) => (x <= 0 ? NaN : Math.log(x)));
-  }
-
-  sinh(): void {
-    this.applyUnary(Math.sinh);
-  }
-  cosh(): void {
-    this.applyUnary(Math.cosh);
-  }
-  tanh(): void {
-    this.applyUnary(Math.tanh);
-  }
-  sin(): void {
-    this.trig(Math.sin);
-  }
-  cos(): void {
-    this.trig(Math.cos);
-  }
-  tan(): void {
-    this.trig(Math.tan, (r) => (Math.abs(r) > 1e10 ? NaN : r));
-  }
-
-  asin(): void {
-    this.invTrig(Math.asin, (x) => x >= -1 && x <= 1);
-  }
-  acos(): void {
-    this.invTrig(Math.acos, (x) => x >= -1 && x <= 1);
-  }
-  atan(): void {
-    this.invTrig(Math.atan);
-  }
-
-  asinh(): void {
-    this.applyUnary(Math.asinh);
-  }
-
-  acosh(): void {
-    this.applyUnary((x) => (x < 1 ? NaN : Math.acosh(x)));
-  }
-
-  atanh(): void {
-    this.applyUnary((x) => (x <= -1 || x >= 1 ? NaN : Math.atanh(x)));
-  }
-  pi(): void {
-    this.insertConstant(Math.PI);
-  }
-  tau(): void {
-    this.insertConstant(2 * Math.PI);
-  }
-  eSquared(): void {
-    this.insertConstant(Math.E * Math.E);
-  }
+  readonly sqrt = (): void => this.applyUnary((x) => (x < 0 ? NaN : Math.sqrt(x)));
+  readonly square = (): void => this.applyUnary((x) => Math.pow(x, 2));
+  readonly power = (): void => this.setOperator('**');
+  readonly rootY = (): void => this.setOperator('**(1/');
+  readonly pow10 = (): void => this.applyUnary((x) => Math.pow(10, x));
+  readonly cube = (): void => this.applyUnary((x) => Math.pow(x, 3));
+  readonly cbrt = (): void => this.applyUnary((x) => Math.cbrt(x));
+  readonly log10 = (): void => this.applyUnary((x) => (x <= 0 ? NaN : Math.log10(x)));
+  readonly naturalLog = (): void => this.applyUnary((x) => (x <= 0 ? NaN : Math.log(x)));
+  readonly sinh = (): void => this.applyUnary(Math.sinh);
+  readonly cosh = (): void => this.applyUnary(Math.cosh);
+  readonly tanh = (): void => this.applyUnary(Math.tanh);
+  readonly sin = (): void => this.trig(Math.sin);
+  readonly cos = (): void => this.trig(Math.cos);
+  readonly tan = (): void => this.trig(Math.tan, (r) => (Math.abs(r) > CALC.TAN_ASYMPTOTE_LIMIT ? NaN : r));
+  readonly asin = (): void => this.invTrig(Math.asin, (x) => x >= -1 && x <= 1);
+  readonly acos = (): void => this.invTrig(Math.acos, (x) => x >= -1 && x <= 1);
+  readonly atan = (): void => this.invTrig(Math.atan);
+  readonly asinh = (): void => this.applyUnary(Math.asinh);
+  readonly acosh = (): void => this.applyUnary((x) => (x < 1 ? NaN : Math.acosh(x)));
+  readonly atanh = (): void => this.applyUnary((x) => (x <= -1 || x >= 1 ? NaN : Math.atanh(x)));
+  readonly pi = (): void => this.insertConstant(Math.PI);
+  readonly tau = (): void => this.insertConstant(2 * Math.PI);
+  readonly eSquared = (): void => this.insertConstant(Math.E * Math.E);
 
   // ── Helpers ────────────────────────────────────────────────────────────────
 
   private applyUnary(fn: (x: number) => number): void {
     const val = this.display();
-    if (!val || val === 'Error') return;
+    if (!val || val === CALC.ERROR) return;
 
     let num: number;
     try {
       num = evaluate(val);
     } catch {
-      this.display.set('Error');
+      this.display.set(CALC.ERROR);
       return;
     }
 
-    if (!isFinite(num)) {
-      this.display.set('Error');
-      return;
-    }
-
-    const result = fn(num);
+    const result = isFinite(num) ? fn(num) : NaN;
     if (!isFinite(result) || isNaN(result)) {
-      this.display.set('Error');
+      this.display.set(CALC.ERROR);
     } else {
-      const resultStr = this.format(result);
-      this.pushHistory(val, resultStr);
-      this.expression.set(val + ' =');
-      this.display.set(resultStr);
-      this.justCalculated = true;
+      this.commit(val, result);
     }
   }
 
+  /** Records a successful evaluation: history entry, "<source> =" caption,
+   *  formatted display, and the flag that makes the next keypress start over.
+   *  Shared by calculate() and applyUnary(), which had this five-line tail
+   *  duplicated; returns the formatted string so calculate() can also store
+   *  it as Ans. applyUnary deliberately does not — Ans tracks '=' only. */
+  private commit(source: string, result: number): string {
+    const resultStr = this.format(result);
+    this.pushHistory(source, resultStr);
+    this.expression.set(source + ' =');
+    this.display.set(resultStr);
+    this.justCalculated = true;
+    return resultStr;
+  }
+
   private format(n: number): string {
-    return parseFloat(parseFloat(n.toString()).toPrecision(10)).toString();
+    return parseFloat(parseFloat(n.toString()).toPrecision(CALC.PRECISION)).toString();
   }
 
   /** Applies a Math.* trig fn, converting the operand from degrees when isRadians() is off. */
   private trig(fn: (x: number) => number, postProcess?: (r: number) => number): void {
     this.applyUnary((x) => {
-      const angle = this.isRadians() ? x : (x * Math.PI) / 180;
+      const angle = this.isRadians() ? x : (x * Math.PI) / CALC.DEGREES_PER_HALF_TURN;
       const r = fn(angle);
       return postProcess ? postProcess(r) : r;
     });
@@ -375,36 +289,37 @@ export class CalculatorService {
     this.applyUnary((x) => {
       if (domainCheck && !domainCheck(x)) return NaN;
       const r = fn(x);
-      return this.isRadians() ? r : (r * 180) / Math.PI;
+      return this.isRadians() ? r : (r * CALC.DEGREES_PER_HALF_TURN) / Math.PI;
     });
   }
 
   /** Inserts a constant (π, τ, e², …): replaces the display fresh after an error/calculation, else appends. */
   private insertConstant(value: number): void {
     const str = value.toString();
-    if (this.display() === 'Error' || this.justCalculated) {
+    if (this.display() === CALC.ERROR || this.justCalculated) {
       this.display.set(str);
       this.justCalculated = false;
       return;
     }
-    // Same implicit-multiplication gap as appendNumber()/appendOpenParen()
-    // — "(2+3)π" needs a '*' between the close-paren and the constant.
-    this.display.update((v) => (/[\d)]/.test(v.slice(-1)) ? v + '*' : v) + str);
+    this.display.update((v) => this.withImplicitMultiply(v) + str);
   }
 
-  floor(): void {
-    this.applyUnary(Math.floor);
+  /** The parser has no implicit-multiplication grammar, so a '(' or a constant
+   *  landing straight after a digit or ')' ("5(", "(2+3)π") would fail to parse
+   *  at calculate() time. Inserting the '*' at keypress makes that state
+   *  unreachable from the keypad. appendNumber() has its own narrower check:
+   *  a digit after a digit is just a longer number, not a product. */
+  private withImplicitMultiply(val: string): string {
+    return CALC.IMPLICIT_MULTIPLY.test(val) ? val + '*' : val;
   }
-  ceil(): void {
-    this.applyUnary(Math.ceil);
-  }
-  round(): void {
-    this.applyUnary(Math.round);
-  }
+
+  readonly floor = (): void => this.applyUnary(Math.floor);
+  readonly ceil = (): void => this.applyUnary(Math.ceil);
+  readonly round = (): void => this.applyUnary(Math.round);
 
   factorial(): void {
     this.applyUnary((n) => {
-      if (n < 0 || n > 170) return NaN;
+      if (n < 0 || n > CALC.FACTORIAL_MAX) return NaN;
       if (n === 0) return 1;
       let res = 1;
       for (let i = 2; i <= Math.floor(n); i++) res *= i;
@@ -421,6 +336,6 @@ export class CalculatorService {
 
   private pushHistory(expression: string, result: string): void {
     const timestamp = Date.now();
-    this.history.update((h) => [{ expression, result, timestamp }, ...h].slice(0, 20));
+    this.history.update((h) => [{ expression, result, timestamp }, ...h].slice(0, CALC.HISTORY_LIMIT));
   }
 }

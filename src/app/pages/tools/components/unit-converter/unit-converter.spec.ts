@@ -22,8 +22,8 @@ describe('UnitConverter', () => {
     ]);
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.convFrom).toBe('m');
-    expect(fixture.componentInstance.convTo).toBe('km');
+    expect(fixture.componentInstance.convFrom()).toBe('m');
+    expect(fixture.componentInstance.convTo()).toBe('km');
   });
 
   it('calculates a result once units are available', () => {
@@ -36,7 +36,7 @@ describe('UnitConverter', () => {
     fixture.detectChanges();
 
     // convValue defaults to 1 -> 1m in km
-    expect(fixture.componentInstance.convResult).toBeCloseTo(0.001);
+    expect(fixture.componentInstance.convResult()).toBeCloseTo(0.001);
   });
 
   it('recalculates when the from/to units are changed and calculate() is invoked', () => {
@@ -48,10 +48,10 @@ describe('UnitConverter', () => {
     ]);
     fixture.detectChanges();
 
-    fixture.componentInstance.convValue = 2;
+    fixture.componentInstance.convValue.set(2);
     fixture.componentInstance.calculate();
 
-    expect(fixture.componentInstance.convResult).toBeCloseTo(2000);
+    expect(fixture.componentInstance.convResult()).toBeCloseTo(2000);
   });
 
   it('dismiss() closes the modal', () => {

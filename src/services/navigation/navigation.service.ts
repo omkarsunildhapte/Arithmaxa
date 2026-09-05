@@ -2,14 +2,8 @@ import { Service, inject } from '@angular/core';
 import { Platform, ModalController, AlertController, ActionSheetController, PopoverController, ToastController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-
-// Legacy Cordova/Capacitor "app" plugin surface (`navigator.app.exitApp()`),
-// not part of TS's DOM lib. Declared minimally rather than casting to `any`.
-declare global {
-  interface Navigator {
-    app?: { exitApp?: () => void };
-  }
-}
+import { App } from '@capacitor/app';
+import { EXIT_CONFIRM_WINDOW_MS, EXIT_TOAST_CSS_CLASS, EXIT_TOAST_DURATION_MS, EXIT_TOAST_MESSAGE, ROOT_ROUTES } from '@constants/index';
 
 @Service()
 export class NavigationService {
@@ -23,10 +17,14 @@ export class NavigationService {
   private location = inject(Location);
 
   private lastBackPress = 0;
-  private readonly EXIT_TIME_THRESHOLD = 2000; // 2 seconds
 
   /**
-   * Initializes the back button handler.
+   * Registers the hardware back-button handler.
+   *
+   * Requires `@capacitor/app`: Ionic feeds `Platform.backButton` from the
+   * Cordova-style `backbutton` document event, which on Capacitor is only
+   * dispatched when that plugin is installed. Without it this handler never
+   * fires and Android closes the app on the first press.
    */
   init(): void {
     this.platform.backButton.subscribeWithPriority(10, async () => {
@@ -43,16 +41,17 @@ export class NavigationService {
       // 2. Handle Routing
       const url = this.router.url;
 
-      if (url === '/' || url === '/home' || url === '/arithmaxa') {
+      if (ROOT_ROUTES.includes(url)) {
         const currentTime = Date.now();
 
-        if (currentTime - this.lastBackPress < this.EXIT_TIME_THRESHOLD) {
-          // Double tap detected -> Exit app
-          navigator.app?.exitApp?.();
+        if (currentTime - this.lastBackPress < EXIT_CONFIRM_WINDOW_MS) {
+          // Second press inside the window — leave the app. App.exitApp() is
+          // the Capacitor API; the old navigator.app.exitApp() was Cordova's
+          // and does not exist here, so this step silently did nothing.
+          void App.exitApp();
         } else {
-          // First tap -> Show toast
           this.lastBackPress = currentTime;
-          this.showExitToast();
+          void this.showExitToast();
         }
       } else {
         this.location.back();
@@ -60,12 +59,12 @@ export class NavigationService {
     });
   }
 
-  private async showExitToast() {
+  private async showExitToast(): Promise<void> {
     const toast = await this.toastCtrl.create({
-      message: 'Press back again to exit',
-      duration: 2000,
+      message: EXIT_TOAST_MESSAGE,
+      duration: EXIT_TOAST_DURATION_MS,
       position: 'bottom',
-      cssClass: 'exit-toast',
+      cssClass: EXIT_TOAST_CSS_CLASS,
     });
     await toast.present();
   }

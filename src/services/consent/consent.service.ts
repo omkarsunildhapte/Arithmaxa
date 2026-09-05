@@ -17,6 +17,24 @@ export class ConsentService {
   readonly canUseAI = computed(() => this.choices().aiProcessing);
   readonly canUseAnalytics = computed(() => this.choices().analytics);
 
+  /** Lets the consent sheet be reopened after the first-run decision.
+   *  CookieConsent otherwise renders only while `hasConsented()` is false,
+   *  so once the user taps Accept All the privacy toggles and the
+   *  "Delete My Data" control inside it would be unreachable for the rest
+   *  of the install's life. The Tools page's "Privacy Settings" link flips
+   *  this instead of routing anywhere — the two legal documents themselves
+   *  now live on arithmaxa-website, not in the app. */
+  private readonly _settingsOpen = signal(false);
+  readonly settingsOpen = this._settingsOpen.asReadonly();
+
+  openSettings(): void {
+    this._settingsOpen.set(true);
+  }
+
+  closeSettings(): void {
+    this._settingsOpen.set(false);
+  }
+
   constructor() {
     this.load();
   }
@@ -62,6 +80,10 @@ export class ConsentService {
   withdraw(): void {
     localStorage.removeItem(this.KEY);
     this.hasConsented.set(false);
+    // Back to a clean slate: the sheet must reappear as the first-run
+    // consent gate, not as the reopened settings view it may have been
+    // shown as a moment ago.
+    this._settingsOpen.set(false);
     this.choices.set({ essential: true, functional: false, aiProcessing: false, analytics: false });
     void this.deleteConsentCookie();
   }

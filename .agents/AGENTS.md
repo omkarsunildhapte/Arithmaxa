@@ -20,13 +20,18 @@ submission, etc.) do not apply here and must not be copied in.
 driving Google Play installs of *this* app. Two things must stay in sync across both repos —
 treat this as a hard rule, not a suggestion:
 
-1. **Privacy Policy / Terms of Service content.** This app's in-app pages
-   (`src/app/pages/privacy-policy/`, `src/app/pages/terms-of-service/`) are the source of truth.
-   The website's `/privacy-policy` and `/terms-of-service` pages are adapted copies. If you
-   change what data this app collects, what permissions it requests, or what third-party
-   services it calls (OpenRouter, exchange-rate APIs, etc.), update both the in-app page **and**
-   flag the website repo for the same change in the same PR/session — a stale public privacy
-   policy is a Play Store compliance risk, not just a docs nit.
+1. **Privacy Policy / Terms of Service content.** The website's `/privacy-policy` and
+   `/terms-of-service` pages are now the **only** copy of each document — the app's own
+   `src/app/pages/privacy-policy/` and `src/app/pages/terms-of-service/` components were
+   removed, and every in-app legal link opens the hosted page in the system browser via
+   `PRIVACY_POLICY_URL`/`TERMS_OF_SERVICE_URL` (`src/constants/legal.ts`). There is deliberately
+   no second copy to keep in sync, but the flip side is that the website repo is now load-bearing
+   for this app's compliance: if you change what data this app collects, what permissions it
+   requests, or what third-party services it calls (its own backend, OpenRouter, Firebase
+   Analytics, exchange-rate APIs, etc.), you must update `arithmaxa-website`'s policy in the same
+   PR/session — a stale public privacy policy is a Play Store compliance risk, not just a docs
+   nit. Keep `WEBSITE_URL` in `src/constants/legal.ts` matching the website's `SITE_URL`, and the
+   two paths matching that repo's `app.routes.ts`; a typo there is a dead legal link.
 2. **Play Store package id.** `com.arithmaxa.app` (from `capacitor.config.ts`) is referenced by
    the website's Play Store download button. If this ever changes, the website's
    `src/app/shared/constants.ts` (`PLAY_STORE_URL`) must be updated in the same change.

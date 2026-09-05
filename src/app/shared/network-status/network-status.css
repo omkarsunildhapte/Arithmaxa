@@ -1,12 +1,9 @@
+/* Layout and type sit on the element as utilities in network-status.html.
+   Only the colour pair stays here: it's deliberately outside the brand's
+   cyan family — a warning shouldn't look like chrome — and the two values
+   are meaningless apart, so keeping them together beats splitting them
+   across two arbitrary-value classes in the markup. */
 .offline-banner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
   background: #7c2d12;
   color: #fed7aa;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-align: center;
 }

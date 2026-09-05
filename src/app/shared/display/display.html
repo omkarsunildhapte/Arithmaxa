@@ -1,14 +1,14 @@
 <div class="relative flex flex-col items-end justify-end p-6 h-[26vh] min-h-[140px] overflow-y-auto text-right break-all bg-transparent">
   <!-- Expression line (shown after = is pressed) -->
   @if (calc.expression()) {
-    <div class="history-display text-[#94a3b8] text-sm font-light mb-1 opacity-80 transition-all duration-300">
+    <div class="history-display text-sm font-light mb-1 opacity-80 transition-all duration-300">
       {{ calc.expression() }}
     </div>
   }
 
   <!-- Main value -->
   <div
-    class="main-display text-[clamp(2rem,10vw,4rem)] font-bold transition-all duration-300 leading-none tracking-[-1.5px]"
+    class="main-display text-[clamp(2rem,10vw,4rem)] font-bold transition-all duration-300 leading-none"
     [class.text-red-500]="calc.display() === 'Error'"
     [class.text-white]="calc.display() !== 'Error'"
   >

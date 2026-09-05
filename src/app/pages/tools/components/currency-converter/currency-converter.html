@@ -17,14 +17,21 @@
       <div class="flex justify-between items-center mb-4">
         <span class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold">From</span>
         <div class="bg-white/5 rounded-lg px-2">
-          <ion-select [(ngModel)]="fromCurrency" (ionChange)="calculate()" interface="popover" toggle-icon="chevron-down-outline" class="text-xs font-bold text-white min-h-0 h-8">
+          <ion-select
+            [ngModel]="fromCurrency()"
+            (ngModelChange)="fromCurrency.set($event)"
+            (ionChange)="calculate()"
+            interface="popover"
+            toggle-icon="chevron-down-outline"
+            class="text-xs font-bold text-white min-h-0 h-8"
+          >
             @for (curr of currencies; track curr.value) {
               <ion-select-option [value]="curr.value">{{ curr.value }}</ion-select-option>
             }
           </ion-select>
         </div>
       </div>
-      <ion-input type="number" [(ngModel)]="amount" (ionInput)="calculate()" class="huge-input text-5xl" placeholder="0"></ion-input>
+      <ion-input type="number" [ngModel]="amount()" (ngModelChange)="amount.set($event)" (ionInput)="calculate()" class="huge-input text-5xl" placeholder="0"></ion-input>
     </div>
 
     <!-- Swap Icon -->
@@ -39,7 +46,14 @@
       <div class="flex justify-between items-center mb-4">
         <span class="text-[10px] uppercase tracking-widest text-[var(--brand-accent)] font-bold">To</span>
         <div class="bg-[var(--brand-accent)]/10 rounded-lg px-2">
-          <ion-select [(ngModel)]="toCurrency" (ionChange)="calculate()" interface="popover" toggle-icon="chevron-down-outline" class="text-xs font-bold text-[var(--brand-accent)] min-h-0 h-8">
+          <ion-select
+            [ngModel]="toCurrency()"
+            (ngModelChange)="toCurrency.set($event)"
+            (ionChange)="calculate()"
+            interface="popover"
+            toggle-icon="chevron-down-outline"
+            class="text-xs font-bold text-[var(--brand-accent)] min-h-0 h-8"
+          >
             @for (curr of currencies; track curr.value) {
               <ion-select-option [value]="curr.value">{{ curr.value }}</ion-select-option>
             }

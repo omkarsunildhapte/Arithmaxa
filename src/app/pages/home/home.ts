@@ -1,17 +1,16 @@
 import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { IonContent, IonIcon, IonButton, IonFooter, NavController, ModalController } from '@ionic/angular/standalone';
-import { RouterLink } from '@angular/router';
+import { ONBOARDING_SLIDES, PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from '@constants/index';
 import { addIcons } from 'ionicons';
 import { chevronForwardOutline } from 'ionicons/icons';
 import { FeedbackModal } from '../../shared/feedback/feedback-modal';
 import { OnboardingService } from '@services/onboarding/onboarding.service';
-import { OnboardingSlide } from '@appTypes/index';
 addIcons({ chevronForwardOutline });
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [IonContent, IonIcon, RouterLink, IonButton, IonFooter],
+  imports: [IonContent, IonIcon, IonButton, IonFooter],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './home.html',
   styleUrls: ['./home.css'],
@@ -22,13 +21,12 @@ export class Home implements AfterViewInit {
   private onboarding = inject(OnboardingService);
   private readonly swiperEl = viewChild.required<ElementRef>('swiperEl');
 
-  // prettier-ignore
-  slides: OnboardingSlide[] = [
-    { title: 'Basic Arithmetic', htmlTitle: 'Basic<br>Arithmetic', description: 'Perform essential mathematical operations with lightning speed and unmatched precision.' },
-    { title: 'Occupational & Logic', htmlTitle: 'Occupational<br>&amp;<br>Logic', description: 'Handle complex logical grouping and advanced mathematical expressions with absolute ease.' },
-    { title: 'Scientific Functions', htmlTitle: 'Scientific<br>Functions', description: 'Access high-level scientific functions: Logarithms, Trigonometry, and Power operations.' },
-    { title: 'Calculation History', htmlTitle: 'Calculation<br>History', description: 'Never lose track of your work. Every result is stored and accessible at a single tap.' },
-  ];
+  // Opened in the system browser (target="_blank") rather than routed to:
+  // both documents are hosted on arithmaxa-website, not bundled in the app.
+  readonly privacyPolicyUrl = PRIVACY_POLICY_URL;
+  readonly termsOfServiceUrl = TERMS_OF_SERVICE_URL;
+
+  readonly slides = ONBOARDING_SLIDES;
 
   /** Index of the visible slide, kept in sync by (swiperslidechange). */
   readonly activeIndex = signal(0);

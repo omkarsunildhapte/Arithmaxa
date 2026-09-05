@@ -1,20 +1,8 @@
-/* Redundant styles removed - now using Tailwind CSS utilities */
-ion-toolbar {
-  --background: var(--brand-dark);
-  --color: #ffffff;
-  --border-width: 0;
-  --min-height: 70px;
-  padding: 0 16px;
-}
-
-.ai-content {
-  --background: var(--brand-dark);
-  height: 100%;
-}
-
-/* "Use expression" pill button — was a plain <button>, now <ion-button
-   fill="clear">; these vars strip Ionic's default chrome (uppercase text,
-   min-height, box-shadow) back down to the original bare-pill look. */
+/* "Use expression" pill button — <ion-button fill="clear">. Only the vars
+   Ionic doesn't already give a clear button are set here: transparent
+   backgrounds and --box-shadow: none are its defaults, so overriding them
+   was restating the framework. What's left is the real deviation — a visible
+   pill background, a border, and undoing MD's uppercase/letter-spacing. */
 .use-expr-btn {
   --background: rgba(255, 255, 255, 0.05);
   --background-activated: rgba(255, 255, 255, 0.1);
@@ -24,7 +12,6 @@ ion-toolbar {
   --border-style: solid;
   --border-color: rgba(255, 255, 255, 0.1);
   --color: var(--brand-accent);
-  --box-shadow: none;
   --padding-start: 1rem;
   --padding-end: 1rem;
   --padding-top: 0.5rem;
@@ -37,13 +24,12 @@ ion-toolbar {
   text-transform: none;
 }
 
-/* Mic + send circular icon buttons — were plain <button>, now
-   <ion-button fill="clear"> with an icon-only slot. */
+/* Mic + send circular icon buttons — <ion-button fill="clear"> with an
+   icon-only slot. --background-hover is the one background var worth
+   setting: clear buttons default to the primary colour at 4% opacity, and
+   these are meant to stay bare. */
 .icon-only-btn {
-  --background: transparent;
-  --background-activated: transparent;
   --background-hover: transparent;
-  --box-shadow: none;
   --padding-start: 0;
   --padding-end: 0;
   --color: #94a3b8;
@@ -63,40 +49,6 @@ ion-toolbar {
 
 .icon-only-btn.send-btn[disabled] {
   opacity: 0.3;
-}
-
-/* Small copy-to-clipboard button under each message bubble. */
-.copy-msg-btn {
-  width: 1.75rem;
-  height: 1.75rem;
-  font-size: 0.9rem;
-  margin-top: 0.15rem;
-}
-
-/* Header toggle for on-device (LocalLLM) vs cloud (OpenRouter) processing. */
-.local-llm-btn {
-  --color: #94a3b8;
-}
-
-.local-llm-btn.active {
-  --color: var(--brand-accent);
-}
-
-/* Photo attached via the Camera plugin — both the composer preview and the
-   inline copy rendered inside a sent message bubble. */
-.chat-image {
-  max-width: 8rem;
-  max-height: 8rem;
-  border-radius: 0.75rem;
-  object-fit: cover;
-  display: block;
-}
-
-/* "Reading photo…" hint while on-device OCR (TextRecognition) runs. */
-.ocr-status {
-  font-size: 0.72rem;
-  color: var(--brand-accent);
-  font-style: italic;
 }
 
 /* Chat input — was a plain <textarea>, now <ion-textarea autoGrow>. Same

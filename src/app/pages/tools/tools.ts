@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { IonContent, IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, NavController, ModalController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { swapHorizontalOutline, calendarOutline, calculatorOutline, flaskOutline, statsChartOutline, shapesOutline, chevronBackOutline, bodyOutline, cashOutline } from 'ionicons/icons';
@@ -8,15 +8,10 @@ import { AgeCalc } from './components/age-calc/age-calc';
 import { DiscountCalc } from './components/discount-calc/discount-calc';
 import { CurrencyConverter } from './components/currency-converter/currency-converter';
 import { BmiCalc } from './components/bmi-calc/bmi-calc';
-import { SelectOption, ToolCard, ToolComponent } from '@appTypes/index';
-import {
-  DEFAULT_TOOL_MODAL_BREAKPOINT,
-  PERCENTAGE_CALC_MODAL_BREAKPOINT,
-  AGE_CALC_MODAL_BREAKPOINT,
-  DISCOUNT_CALC_MODAL_BREAKPOINT,
-  CURRENCY_CONVERTER_MODAL_BREAKPOINT,
-  BMI_CALC_MODAL_BREAKPOINT,
-} from '@constants/index';
+import { ToolComponent } from '@appTypes/index';
+import { ConsentService } from '@services/consent/consent.service';
+// prettier-ignore
+import { DEFAULT_TOOL_MODAL_BREAKPOINT, PERCENTAGE_CALC_MODAL_BREAKPOINT, AGE_CALC_MODAL_BREAKPOINT, DISCOUNT_CALC_MODAL_BREAKPOINT, CURRENCY_CONVERTER_MODAL_BREAKPOINT, BMI_CALC_MODAL_BREAKPOINT, PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL, UNIT_OPTIONS, TOOL_CARDS } from '@constants/index';
 
 addIcons({ swapHorizontalOutline, calendarOutline, calculatorOutline, flaskOutline, statsChartOutline, shapesOutline, chevronBackOutline, bodyOutline, cashOutline });
 
@@ -31,43 +26,23 @@ addIcons({ swapHorizontalOutline, calendarOutline, calculatorOutline, flaskOutli
 export class Tools {
   private navCtrl = inject(NavController);
   private modalCtrl = inject(ModalController);
+  private consent = inject(ConsentService);
 
-  protected readonly unitsMap: Record<string, SelectOption[]> = {
-    length: [
-      { value: 'm', label: 'Meters (m)' },
-      { value: 'km', label: 'Kilometers (km)' },
-      { value: 'mile', label: 'Miles (mi)' },
-      { value: 'foot', label: 'Feet (ft)' },
-    ],
-    weight: [
-      { value: 'kg', label: 'Kilograms (kg)' },
-      { value: 'g', label: 'Grams (g)' },
-      { value: 'lb', label: 'Pounds (lb)' },
-    ],
-    temp: [
-      { value: 'C', label: 'Celsius (°C)' },
-      { value: 'F', label: 'Fahrenheit (°F)' },
-      { value: 'K', label: 'Kelvin (K)' },
-    ],
-  };
+  // Tools is the app's only screen reachable at any time that has room for
+  // a legal footer — Home is behind onboardingGuard (first run only) and
+  // the calculator header is already full. Both documents open on
+  // arithmaxa-website; "Privacy Settings" reopens the consent sheet, which
+  // is where the toggles and Delete My Data now live.
+  protected readonly privacyPolicyUrl = PRIVACY_POLICY_URL;
+  protected readonly termsOfServiceUrl = TERMS_OF_SERVICE_URL;
 
-  // Tile colors cycle through the brand's cyan/blue family (primary, accent,
-  // and their lighter/darker ion-color-primary-tint/shade derivatives from
-  // styles.css) instead of an arbitrary rainbow per tool — keeps the grid
-  // visually distinguishable row to row while staying on-brand. Plain hex
-  // (not var(--x)) is required here: the template appends an alpha suffix
-  // to this string directly ('#22ecf3' + '15'), which only works on a
-  // literal hex color, not a var() reference.
-  tools: ToolCard[] = [
-    { id: 'length', name: 'Length', subtitle: 'Distance', icon: 'swap-horizontal-outline', color: '#22ecf3' },
-    { id: 'weight', name: 'Weight', subtitle: 'Mass Units', icon: 'calculator-outline', color: '#06a5da' },
-    { id: 'temp', name: 'Temp', subtitle: 'Thermal', icon: 'flask-outline', color: '#43eff5' },
-    { id: 'percentage', name: 'Percent', subtitle: 'Ratio Calc', icon: 'stats-chart-outline', color: '#1dc9cf' },
-    { id: 'age', name: 'Age', subtitle: 'Date Diff', icon: 'calendar-outline', color: '#22ecf3' },
-    { id: 'discount', name: 'Discount', subtitle: 'Price Cut', icon: 'shapes-outline', color: '#06a5da' },
-    { id: 'currency', name: 'Currency', subtitle: 'Live Rates', icon: 'cash-outline', color: '#43eff5' },
-    { id: 'bmi', name: 'BMI', subtitle: 'Health', icon: 'body-outline', color: '#1dc9cf' },
-  ];
+  protected readonly unitsMap = UNIT_OPTIONS;
+
+  /** The grid, in signal form per AGENTS.md §6. The data itself is static —
+   *  TOOL_CARDS never changes at runtime — but reading it as tools() keeps the
+   *  template's access uniform with the rest of the app's state, and means a
+   *  later filter or search can be added without touching the markup. */
+  readonly tools = signal(TOOL_CARDS);
 
   async selectTool(tool: string) {
     let component: ToolComponent | undefined;
@@ -118,5 +93,9 @@ export class Tools {
 
   goToCalculator() {
     this.navCtrl.navigateBack(['/arithmaxa']);
+  }
+
+  openPrivacySettings(): void {
+    this.consent.openSettings();
   }
 }

@@ -3,8 +3,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { AiService } from './ai.service';
-import { AI_CHAT_PATH } from '@constants/index';
-import { environment } from '../../environments/environment';
+import { AI_CHAT_PATH, AI_LOCAL_SESSION_ID, AI_OFFLINE_ERROR, AI_SYSTEM_PROMPT } from '@constants/index';
+import { environment } from '@environments/environment';
 import { LocalLLM } from '@capacitor/local-llm';
 import { NetworkService } from '@services/network/network.service';
 
@@ -139,7 +139,7 @@ describe('AiService', () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     httpMock.expectNone(CHAT_URL);
-    expect(LocalLLM.prompt).toHaveBeenCalledWith(expect.objectContaining({ prompt: 'What is 2+2?' }));
+    expect(LocalLLM.prompt).toHaveBeenCalledWith({ sessionId: AI_LOCAL_SESSION_ID, instructions: AI_SYSTEM_PROMPT, prompt: 'What is 2+2?' });
     expect(service.loading()).toBe(false);
     expect(service.messages()).toEqual([
       { role: 'user', content: 'What is 2+2?' },
@@ -196,7 +196,7 @@ describe('AiService', () => {
 
     offlineHttpMock.expectNone(CHAT_URL);
     expect(offlineService.loading()).toBe(false);
-    expect(offlineService.error()).toBe("You're offline. Check your connection and try again.");
+    expect(offlineService.error()).toBe(AI_OFFLINE_ERROR);
     expect(offlineService.messages()).toEqual([]);
   });
 });

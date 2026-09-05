@@ -5,7 +5,8 @@ import { httpResource } from '@angular/common/http';
 import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonSelect, IonSelectOption, IonSpinner, ModalController, IonFooter, IonInput } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { closeOutline, swapVerticalOutline, chevronDownOutline, refreshOutline } from 'ionicons/icons';
-import { ExchangeResponse, SelectOption } from '@appTypes/index';
+import { CURRENCY_OPTIONS } from '@constants/index';
+import { ExchangeResponse } from '@appTypes/index';
 
 addIcons({ closeOutline, swapVerticalOutline, chevronDownOutline, refreshOutline });
 
@@ -19,25 +20,11 @@ addIcons({ closeOutline, swapVerticalOutline, chevronDownOutline, refreshOutline
 export class CurrencyConverter {
   private modalCtrl = inject(ModalController);
 
-  readonly currencies: SelectOption[] = [
-    { value: 'USD', label: 'USD — US Dollar' },
-    { value: 'EUR', label: 'EUR — Euro' },
-    { value: 'GBP', label: 'GBP — British Pound' },
-    { value: 'INR', label: 'INR — Indian Rupee' },
-    { value: 'JPY', label: 'JPY — Japanese Yen' },
-    { value: 'CAD', label: 'CAD — Canadian Dollar' },
-    { value: 'AUD', label: 'AUD — Australian Dollar' },
-    { value: 'CHF', label: 'CHF — Swiss Franc' },
-    { value: 'CNY', label: 'CNY — Chinese Yuan' },
-    { value: 'AED', label: 'AED — UAE Dirham' },
-    { value: 'SGD', label: 'SGD — Singapore Dollar' },
-    { value: 'MXN', label: 'MXN — Mexican Peso' },
-    { value: 'BRL', label: 'BRL — Brazilian Real' },
-  ];
+  readonly currencies = CURRENCY_OPTIONS;
 
-  amount: number = 1;
-  fromCurrency: string = 'USD';
-  toCurrency: string = 'INR';
+  readonly amount = signal<number>(1);
+  readonly fromCurrency = signal<string>('USD');
+  readonly toCurrency = signal<string>('INR');
 
   private readonly ratesResource = httpResource<ExchangeResponse>(() => 'https://open.er-api.com/v6/latest/USD');
 
@@ -72,7 +59,7 @@ export class CurrencyConverter {
   calculate() {
     if (!this.ratesResource.hasValue()) return;
     const r = this.ratesResource.value().rates;
-    const inUsd = this.amount / r[this.fromCurrency];
-    this.result.set(inUsd * r[this.toCurrency]);
+    const inUsd = this.amount() / r[this.fromCurrency()];
+    this.result.set(inUsd * r[this.toCurrency()]);
   }
 }

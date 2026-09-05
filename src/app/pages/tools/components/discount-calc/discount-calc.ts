@@ -19,8 +19,8 @@ export class DiscountCalc {
   private toolsService = inject(ToolsService);
   private modalCtrl = inject(ModalController);
 
-  originalPrice: number = 0;
-  discountPercent: number = 0;
+  readonly originalPrice = signal<number>(0);
+  readonly discountPercent = signal<number>(0);
   discountedPrice = signal<number>(0);
 
   dismiss() {
@@ -28,7 +28,7 @@ export class DiscountCalc {
   }
 
   calculate() {
-    const res = this.toolsService.discount(this.originalPrice, this.discountPercent);
+    const res = this.toolsService.discount(this.originalPrice(), this.discountPercent());
     this.discountedPrice.set(res);
   }
 }

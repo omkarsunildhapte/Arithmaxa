@@ -14,37 +14,11 @@
   font-weight: 500;
 }
 
-/* Value X / Value Y — now that there's no shared outer premium-card, each
-   gets the same lightweight box treatment as .unit-selector and
-   .result-panel below, so the three read as one consistent set of sections
-   instead of two bare inputs floating next to boxed ones. margin-bottom: 0
-   overrides .input-group's global 1.5rem (styles.css) — spacing between
-   sections comes from the parent's flex gap now, not this. */
-.input-card {
-  margin-bottom: 0;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1.25rem;
-  padding: 1rem 1.25rem;
-}
-
 /* .huge-input's global font-size (2.5rem, styles.css — sized for a single
    full-width calculator display) is too large for two of these stacked in
    a row here. */
 .compact-input-field {
   font-size: 1.75rem;
-}
-
-/* Final Result — tinted to match the rest of the app's brand-primary
-   accent instead of the plain neutral glass-panel look, so the answer
-   reads as the payoff of the calculation rather than just another box.
-   margin-top: 0 overrides .glass-panel's global 1.5rem (styles.css) for
-   the same reason as .input-card above — the parent's flex gap spaces
-   sections now, not this. */
-.result-panel {
-  margin-top: 0;
-  border-color: rgba(34, 236, 243, 0.2);
-  background: rgba(34, 236, 243, 0.06);
 }
 
 .result-value {

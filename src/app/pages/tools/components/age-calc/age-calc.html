@@ -15,7 +15,7 @@
     <!-- Input Card -->
     <div class="premium-card !m-0 !mb-4">
       <span class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold block mb-4">Date of Birth</span>
-      <ion-input type="date" [(ngModel)]="birthDate" (ionChange)="calculate()" [max]="maxDate" class="huge-input text-4xl"></ion-input>
+      <ion-input type="date" [ngModel]="birthDate()" (ngModelChange)="birthDate.set($event)" (ionChange)="calculate()" [max]="maxDate" class="huge-input text-4xl"></ion-input>
       @if (dateError(); as error) {
         <p class="text-xs text-red-400 font-medium mt-2">{{ error }}</p>
       }
@@ -39,22 +39,21 @@
             <span class="text-xs uppercase tracking-widest text-[var(--brand-accent)] font-bold">Years</span>
           </div>
 
-          <div class="grid grid-cols-2 gap-x-8 gap-y-5 mt-8 w-full justify-items-center pt-6 border-t border-[var(--brand-accent)]/10">
-            <div class="flex flex-col items-center">
-              <span class="text-2xl font-bold text-white">{{ age.months }}</span>
-              <span class="text-[9px] uppercase tracking-widest text-[#94a3b8]">Months</span>
-            </div>
-            <div class="flex flex-col items-center">
-              <span class="text-2xl font-bold text-white">{{ age.days }}</span>
-              <span class="text-[9px] uppercase tracking-widest text-[#94a3b8]">Days</span>
-            </div>
-            <div class="flex flex-col items-center">
-              <span class="text-2xl font-bold text-white">{{ age.hours }}</span>
-              <span class="text-[9px] uppercase tracking-widest text-[#94a3b8]">Hours</span>
-            </div>
-            <div class="flex flex-col items-center">
-              <span class="text-2xl font-bold text-white">{{ age.minutes }}</span>
-              <span class="text-[9px] uppercase tracking-widest text-[#94a3b8]">Minutes</span>
+          <!-- The same span counted wholly in each unit (10 years is also 120
+             months, 3653 days, ...), not the leftovers after the years.
+             Driven by ageTotals(), which resolves AGE_TOTAL_UNITS against
+             the current result. The numbers run to nine digits, so they are
+             formatted with separators; Seconds carries fullWidth because a
+             fifth tile has no partner in a two-column grid. -->
+          <div class="w-full mt-8 pt-6 border-t border-[var(--brand-accent)]/10">
+            <span class="text-[9px] uppercase tracking-widest text-[#94a3b8] block text-center mb-5">Same age, counted in one unit</span>
+            <div class="grid grid-cols-2 gap-x-8 gap-y-5 justify-items-center">
+              @for (total of ageTotals(); track total.id) {
+                <div class="flex flex-col items-center" [class.col-span-2]="total.fullWidth">
+                  <span class="text-xl font-bold text-white tabular-nums">{{ total.value | number }}</span>
+                  <span class="text-[9px] uppercase tracking-widest text-[#94a3b8]">{{ total.label }}</span>
+                </div>
+              }
             </div>
           </div>
         </div>

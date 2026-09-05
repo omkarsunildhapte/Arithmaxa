@@ -46,9 +46,9 @@
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </ion-button>
     <div class="legal-links">
-      <a routerLink="/privacy" class="legal-link">Privacy Policy</a>
+      <a [href]="privacyPolicyUrl" target="_blank" rel="noopener noreferrer" class="legal-link">Privacy Policy</a>
       <span class="link-sep">·</span>
-      <a routerLink="/terms" class="legal-link">Terms of Service</a>
+      <a [href]="termsOfServiceUrl" target="_blank" rel="noopener noreferrer" class="legal-link">Terms of Service</a>
       <span class="link-sep">·</span>
       <ion-button fill="clear" class="legal-link feedback-trigger" (click)="openFeedback()">Feedback</ion-button>
     </div>

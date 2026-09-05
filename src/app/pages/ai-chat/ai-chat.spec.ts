@@ -149,7 +149,7 @@ describe('AiChatPage', () => {
     expect(nav.goBack).not.toHaveBeenCalled();
   });
 
-  it('ngOnInit() registers a hardware back-button handler above NavigationService\'s own priority', () => {
+  it("ngOnInit() registers a hardware back-button handler above NavigationService's own priority", () => {
     expect(subscribeWithPriority).toHaveBeenCalledWith(15, expect.any(Function));
   });
 

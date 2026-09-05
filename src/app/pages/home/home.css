@@ -1,7 +1,3 @@
-.home-content {
-  --background: var(--brand-dark);
-}
-
 .welcome-container {
   display: flex;
   flex-direction: column;

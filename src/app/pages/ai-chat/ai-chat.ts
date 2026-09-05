@@ -3,19 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { IonButton, IonButtons, IonContent, IonFooter, IonHeader, IonIcon, IonSpinner, IonTextarea, IonTitle, IonToolbar, Platform } from '@ionic/angular/standalone';
 import type { Subscription } from 'rxjs';
 import { addIcons } from 'ionicons';
-import {
-  cameraOutline,
-  checkmarkOutline,
-  chevronBackOutline,
-  closeOutline,
-  copyOutline,
-  hardwareChipOutline,
-  micOffOutline,
-  micOutline,
-  sendOutline,
-  sparklesOutline,
-  trashOutline,
-} from 'ionicons/icons';
+// prettier-ignore
+import { cameraOutline, checkmarkOutline, chevronBackOutline, closeOutline, copyOutline, hardwareChipOutline, micOffOutline, micOutline, sendOutline, sparklesOutline, trashOutline } from 'ionicons/icons';
 import { AiService } from '@services/ai/ai.service';
 import { CalculatorService } from '@services/calculator/calculator.service';
 import { NavigationService } from '@services/navigation/navigation.service';

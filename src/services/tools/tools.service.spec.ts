@@ -85,6 +85,50 @@ describe('ToolsService', () => {
 
       jest.useRealTimers();
     });
+
+    it('also expresses the span wholly in each unit — 4 years is 48 months is 1461 days', () => {
+      // Anniversary-exact so the calendar breakdown is all zeros below the
+      // years and the totals are the only interesting output. Both dates sit
+      // in June, so a DST-observing timezone is on the same offset at each
+      // end and the day count stays exact.
+      jest.useFakeTimers().setSystemTime(new Date(2024, 5, 15, 10, 15));
+      const birthDate = new Date(2020, 5, 15, 10, 15);
+
+      const age = service.calculateAge(birthDate);
+
+      expect(age.years).toBe(4);
+      expect(age.totalMonths).toBe(48);
+      // 3 common years + 2024's leap day.
+      expect(age.totalDays).toBe(1461);
+      expect(age.totalHours).toBe(1461 * 24);
+      expect(age.totalMinutes).toBe(1461 * 24 * 60);
+      expect(age.totalSeconds).toBe(1461 * 24 * 60 * 60);
+
+      jest.useRealTimers();
+    });
+
+    it('counts every month lived in totalMonths, unlike the 0-11 months remainder', () => {
+      jest.useFakeTimers().setSystemTime(new Date(2024, 5, 15, 10, 15));
+      const birthDate = new Date(2022, 0, 15, 10, 15);
+
+      const age = service.calculateAge(birthDate);
+
+      expect(age.years).toBe(2);
+      expect(age.months).toBe(5);
+      expect(age.totalMonths).toBe(29);
+
+      jest.useRealTimers();
+    });
+
+    it('counts real elapsed days across a leap day rather than assuming 365-day years', () => {
+      // 2024-02-28 -> 2024-03-01 is 2 days because 2024-02-29 exists.
+      jest.useFakeTimers().setSystemTime(new Date(2024, 2, 1, 12, 0));
+      const birthDate = new Date(2024, 1, 28, 12, 0);
+
+      expect(service.calculateAge(birthDate).totalDays).toBe(2);
+
+      jest.useRealTimers();
+    });
   });
 
   describe('calculateBmi', () => {

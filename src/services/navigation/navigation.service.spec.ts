@@ -3,6 +3,10 @@ import { Platform, ModalController, AlertController, ActionSheetController, Popo
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NavigationService } from './navigation.service';
+import { App } from '@capacitor/app';
+import { EXIT_TOAST_MESSAGE } from '@constants/index';
+
+jest.mock('@capacitor/app', () => ({ App: { exitApp: jest.fn() } }));
 
 describe('NavigationService', () => {
   let service: NavigationService;
@@ -17,6 +21,7 @@ describe('NavigationService', () => {
   let locationMock: { back: jest.Mock };
 
   beforeEach(() => {
+    jest.mocked(App.exitApp).mockClear();
     backButtonHandler = undefined;
     subscribeWithPriority = jest.fn((_priority: number, handler: () => void | Promise<void>) => {
       backButtonHandler = handler;
@@ -45,6 +50,13 @@ describe('NavigationService', () => {
       ],
     });
     service = TestBed.inject(NavigationService);
+  });
+
+  // Not inside the one test that spies on Date.now: a failing expect() before
+  // its mockRestore() would leave the clock pinned for every test after it,
+  // turning one real failure into a cascade of unrelated ones.
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('init() registers a single back-button handler at priority 10', () => {
@@ -82,8 +94,28 @@ describe('NavigationService', () => {
 
     await backButtonHandler!();
 
-    expect(toastCtrlMock.create).toHaveBeenCalledWith(expect.objectContaining({ message: 'Press back again to exit' }));
+    expect(toastCtrlMock.create).toHaveBeenCalledWith(expect.objectContaining({ message: EXIT_TOAST_MESSAGE }));
     expect(locationMock.back).not.toHaveBeenCalled();
+  });
+
+  it('re-shows the toast instead of exiting when the second press comes after the window closed', async () => {
+    routerMock.url = '/arithmaxa';
+    service.init();
+
+    // Real epoch values: lastBackPress starts at 0, so a small fake "now"
+    // would land inside the window and read the first press as the second.
+    const start = Date.now();
+    const now = jest.spyOn(Date, 'now');
+    now.mockReturnValue(start);
+    await backButtonHandler!();
+    toastCtrlMock.create.mockClear();
+
+    // 2.5s later — past EXIT_CONFIRM_WINDOW_MS, so this is a fresh first press.
+    now.mockReturnValue(start + 2_500);
+    await backButtonHandler!();
+
+    expect(App.exitApp).not.toHaveBeenCalled();
+    expect(toastCtrlMock.create).toHaveBeenCalledTimes(1);
   });
 
   it('navigates back via Location on a non-home route with no overlay open', async () => {
@@ -106,6 +138,7 @@ describe('NavigationService', () => {
 
     expect(toastCtrlMock.create).not.toHaveBeenCalled();
     expect(locationMock.back).not.toHaveBeenCalled();
+    expect(App.exitApp).toHaveBeenCalled();
   });
 
   describe('goBack()', () => {
